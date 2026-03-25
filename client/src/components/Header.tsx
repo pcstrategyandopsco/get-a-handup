@@ -66,7 +66,7 @@ export function Header({ onLoadScenario, onSaveProgress, onLoadTestScenario }: H
             e.target.value = ''
           }}
         />
-        {import.meta.env.DEV && onLoadTestScenario && (
+        {onLoadTestScenario && (
           <ScenarioDropdown
             ref={dropdownRef}
             open={scenarioOpen}
