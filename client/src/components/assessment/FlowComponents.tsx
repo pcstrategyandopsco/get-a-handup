@@ -33,6 +33,7 @@ function getWaterfallRows(s: IncomeScenario): WaterfallRow[] {
   if (s.gross_weekly > 0) rows.push({ label: 'Wages', amount: s.gross_weekly })
   if (s.tax_weekly + s.acc_weekly > 0) rows.push({ label: 'Tax & ACC', amount: -(s.tax_weekly + s.acc_weekly) })
   if (s.abatement_weekly > 0) rows.push({ label: 'Abatement', amount: -s.abatement_weekly })
+  if ((s.childcare_cost_weekly ?? 0) > 0) rows.push({ label: 'Childcare', amount: -(s.childcare_cost_weekly!) })
   if (s.benefit_weekly > 0) rows.push({ label: 'Benefit', amount: s.benefit_weekly })
   if (s.supplements_weekly > 0) rows.push({ label: 'Supplements', amount: s.supplements_weekly })
   if (s.work_incentives_weekly > 0) rows.push({ label: 'Tax credits', amount: s.work_incentives_weekly })

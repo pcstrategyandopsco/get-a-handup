@@ -92,19 +92,26 @@ expected_entitlements:
 
 # Transition analysis expectations
 transition_expected:
-  verdict: better_working
+  verdict: trap
   reasoning: >
     Current: $434/wk SPS + $305/wk AS (Auckland zone 1, sole parent 2+ kids) + $32 WEP = ~$772/wk.
-    Full-time min wage off-benefit: $926 gross - tax/ACC + IWTC $72 + AB $60 = ~$900/wk net.
-    Net gain: +$129/wk — better_working. IWTC ($72/wk) is the key compensating factor for
-    sole parents. Part-time on-benefit ($983/wk at 20hrs) is actually best due to 30c abatement.
+    Full-time min wage off-benefit: $926 gross - tax/ACC + IWTC $72 + AB $60 = ~$900/wk net
+    BEFORE childcare. With 1 child aged 3-4 ($150/wk childcare), net drops to ~$750/wk.
+    Net loss: ~-$21/wk — trap. The childcare cost for the pre-school child wipes out the
+    work incentive gains. Once the child turns 5 and enters school, the verdict flips to
+    better_working.
 
 notes:
   - >
-    This is the scenario where NZ's tax credit system works as intended.
-    IWTC alone ($72.46/wk) plus the lower SPS abatement rate (30c vs 70c)
-    make the transition to work clearly beneficial.
+    Before childcare costs were modelled, this scenario showed better_working because
+    IWTC ($72.46/wk) and the lower SPS abatement rate (30c vs 70c) compensated for
+    lost supplements. With realistic childcare costs for the 3-year-old ($150/wk),
+    the economics flip to trap — demonstrating why childcare is the key barrier.
   - >
     The MFTC provides a guaranteed floor of $598/wk — if net income would
     be lower, MFTC tops up the difference. This is the safety net for
     low-wage sole parents that most people don't know exists.
+  - >
+    Once the 3-year-old turns 5 and enters school, childcare costs drop to zero
+    and the verdict returns to better_working. This is the key insight the tool
+    now surfaces — timing matters for the transition decision.

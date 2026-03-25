@@ -89,7 +89,7 @@ function ScenarioRow({ scenario, isCurrent, isDebt, isBest }: { scenario: Income
       <span className="transition-row-label">{scenario.label}</span>
       <span className="transition-row-gross">{fmt(scenario.gross_weekly)}</span>
       <span className="transition-row-deductions">
-        -{fmt(scenario.tax_weekly + scenario.acc_weekly + scenario.abatement_weekly)}
+        -{fmt(scenario.tax_weekly + scenario.acc_weekly + scenario.abatement_weekly + (scenario.childcare_cost_weekly ?? 0))}
       </span>
       <span className="transition-row-additions">
         +{fmt(scenario.benefit_weekly + scenario.supplements_weekly + scenario.work_incentives_weekly)}

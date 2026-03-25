@@ -24,6 +24,7 @@ eligibility:
     - fact: is_sole_parent
       op: eq
       value: true
+      critical: true
     - fact: youngest_child_under_14
       op: eq
       value: true

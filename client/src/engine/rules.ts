@@ -182,7 +182,13 @@ export function buildFacts(answers: IntakeAnswers): Record<string, unknown> {
     relocating_for_employment: answers['housing.need_to_move'] === 'Yes' && answers['employment.seeking_work'] === 'Yes',
     has_tenancy_costs: answers['housing.need_to_move'] === 'Yes',
     on_social_housing_wait_list: false, // not asked directly
-    is_working_sufficient_hours: hours >= 20,
+    is_working_sufficient_hours: hasPartner
+      ? (hours + Math.round(partnerIncome / 23.15)) >= 30
+      : hours >= 20,
+    partner_estimated_hours: hasPartner ? Math.round(partnerIncome / 23.15) : 0,
+    couple_combined_income: hasPartner ? income + partnerIncome : income,
+    couple_income_high: hasPartner && (income + partnerIncome) > 250,
+    partner_income_above_abatement: hasPartner && partnerIncome > 160,
     not_employed: answers['income.employed'] !== 'Yes',
     not_in_education: !isStudent,
     needs_establishment_support: answers['situation.family_violence'] === 'Yes' || (relationship === 'Separated' && answers['housing.need_to_move'] === 'Yes'),
@@ -300,8 +306,13 @@ function evaluateBenefit(benefit: Benefit, facts: Record<string, unknown>): Enti
     const result = evaluateRule(rule, facts)
     if (result.evaluated) {
       evaluated++
-      if (result.pass) passed++
-      else failed++
+      if (result.pass) {
+        passed++
+      } else {
+        failed++
+        // If a critical rule fails, exclude benefit entirely
+        if (rule.critical) return null
+      }
     }
   }
 

@@ -70,6 +70,11 @@ export function App() {
     URL.revokeObjectURL(url)
   }, [intake.answers])
 
+  const handleLoadTestScenario = useCallback((answers: IntakeAnswers) => {
+    intake.loadScenario(answers)
+    setScreen('assessment')
+  }, [intake.loadScenario])
+
   const handleLoadScenario = useCallback((file: File) => {
     const reader = new FileReader()
     reader.onload = () => {
@@ -108,7 +113,11 @@ export function App() {
 
   return (
     <div className="app">
-      <Header onLoadScenario={handleLoadScenario} onSaveProgress={handleSaveProgress} />
+      <Header
+        onLoadScenario={handleLoadScenario}
+        onSaveProgress={handleSaveProgress}
+        onLoadTestScenario={handleLoadTestScenario}
+      />
       <Sidebar
         currentSectionIndex={intake.currentSectionIndex}
         isComplete={intake.isComplete}

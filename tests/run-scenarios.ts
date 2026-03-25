@@ -20,7 +20,7 @@ const benefits = JSON.parse(fs.readFileSync(path.join(DIST, 'benefits.json'), 'u
 const ratesJson = JSON.parse(fs.readFileSync(path.join(DIST, 'rates.json'), 'utf-8'))
 const rates: RateData = ratesJson['2026-04-01']
 
-type Rule = { fact: string; op: string; value?: unknown }
+type Rule = { fact: string; op: string; value?: unknown; critical?: boolean }
 type Benefit = {
   id: string; name: string; category: string; frequency: string
   legal_basis?: string; eligibility: { min_age?: number | null; max_age?: number | null; residency?: string[]; requires_benefit?: boolean; rules?: Rule[]; conditions?: string[] }
@@ -172,7 +172,13 @@ function buildFacts(answers: Record<string, unknown>): Record<string, unknown> {
     needs_to_relocate: answers['housing.need_to_move'] === 'Yes',
     relocating_for_employment: answers['housing.need_to_move'] === 'Yes' && answers['employment.seeking_work'] === 'Yes',
     has_tenancy_costs: answers['housing.need_to_move'] === 'Yes',
-    is_working_sufficient_hours: hours >= 20,
+    is_working_sufficient_hours: hasPartner
+      ? (hours + Math.round(partnerIncome / 23.15)) >= 30
+      : hours >= 20,
+    partner_estimated_hours: hasPartner ? Math.round(partnerIncome / 23.15) : 0,
+    couple_combined_income: hasPartner ? income + partnerIncome : income,
+    couple_income_high: hasPartner && (income + partnerIncome) > 250,
+    partner_income_above_abatement: hasPartner && partnerIncome > 160,
     not_employed: answers['income.employed'] !== 'Yes',
     needs_establishment_support: answers['situation.family_violence'] === 'Yes' || (relationship === 'Separated' && answers['housing.need_to_move'] === 'Yes'),
     needs_long_term_care: answers['health.residential_care'] === 'Yes' && (answers['health.duration'] === 'More than 2 years' || answers['health.duration'] === 'Permanent / lifelong'),
@@ -236,8 +242,13 @@ function evaluateBenefit(benefit: Benefit, facts: Record<string, unknown>) {
     ruleResults.push({ rule, ...result })
     if (result.evaluated) {
       evaluated++
-      if (result.pass) passed++
-      else failed++
+      if (result.pass) {
+        passed++
+      } else {
+        failed++
+        // If a critical rule fails, exclude benefit entirely
+        if (rule.critical) return null
+      }
     }
   }
 

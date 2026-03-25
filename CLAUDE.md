@@ -2,6 +2,11 @@
 
 NZ Social Security entitlement gap analyser. Zero-knowledge architecture — no personal data touches the server.
 
+## Workflow Rules
+
+- **Never push to remote without explicit user approval.** Commits are fine, but `git push` requires the user to say "push".
+- **Never attribute commits to Claude.** No `Co-Authored-By` or similar.
+
 ## Project Overview
 
 A client-side tool that guides users through intake questions, evaluates eligibility for ~75 NZ government benefits against machine-readable rules, computes transition-to-work analysis, generates a cryptographically signed briefing document for WINZ appointments, and collects anonymous outcome data.

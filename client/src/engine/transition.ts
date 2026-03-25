@@ -188,6 +188,28 @@ export function computeWorkIncentives(
   return { total, items }
 }
 
+// ── Childcare cost estimation ──
+
+export function estimateChildcareCost(facts: Record<string, unknown>, rates: RateData): number {
+  if (facts.has_children !== true) return 0
+  const childcare = rates.childcare
+  if (!childcare) return 0
+
+  const ages = facts.child_ages as string[] | undefined
+  if (!ages || ages.length === 0) return 0
+
+  let cost = 0
+  for (const age of ages) {
+    if (age === 'Under 1 year' || age === '1 – 2 years') {
+      cost += childcare.under_3_weekly
+    } else if (age === '3 – 4 years') {
+      cost += childcare.age_3_to_5_weekly
+    }
+    // 5+ are in school, no childcare cost
+  }
+  return cost
+}
+
 // ── Scenario builder ──
 
 export function buildScenario(
@@ -210,7 +232,11 @@ export function buildScenario(
   let supplements = 0
 
   if (onBenefit) {
-    abatement = computeAbatement(gross, abatementParams)
+    // For couples, partner income is included in abatement calculation
+    const partnerIncome = Number(facts.partner_income ?? 0)
+    const hasPartner = facts.has_partner === true
+    const abatementInput = hasPartner ? gross + partnerIncome : gross
+    abatement = computeAbatement(abatementInput, abatementParams)
     benefit = Math.max(0, benefitBase - abatement)
     // On benefit: keep supplements (DA stays, AS partially, TAS may be lost)
     supplements = getSupplementsWeekly(results, facts, rates, false)
@@ -228,7 +254,10 @@ export function buildScenario(
     offBenefitHousing = rates.work_incentives?.accommodation_benefit?.max_weekly ?? 0
   }
 
-  const net = gross - tax - acc - abatement + benefit + supplements + incentives.total + offBenefitHousing
+  // Childcare costs: deduct when working and has young children
+  const childcareCost = weeklyHours > 0 ? estimateChildcareCost(facts, rates) : 0
+
+  const net = gross - tax - acc - abatement - childcareCost + benefit + supplements + incentives.total + offBenefitHousing
   const effectiveTaxRate = gross > 0 ? 1 - (net / gross) : 0
 
   return {
@@ -240,6 +269,7 @@ export function buildScenario(
     abatement_weekly: abatement,
     supplements_weekly: supplements + offBenefitHousing,
     work_incentives_weekly: incentives.total,
+    childcare_cost_weekly: childcareCost,
     net_weekly: net,
     net_annual: net * 52,
     effective_tax_rate: Math.max(0, effectiveTaxRate),
@@ -287,12 +317,15 @@ function buildStudyScenarios(
   const brackets = rates.tax_brackets
   const accLevy = rates.acc_levy
 
+  // Childcare costs: studying full-time requires childcare for young children
+  const childcareCost = estimateChildcareCost(facts, rates)
+
   // ── Scenario 1: Student Allowance + Accommodation Benefit ──
   const saRate = lookupSARate(facts, rates)
   const saTax = computeWeeklyTax(saRate, brackets)
   const saAcc = saRate * accLevy
   const abMax = sl?.accommodation_benefit?.max_weekly ?? 60
-  const saNet = saRate - saTax - saAcc + abMax
+  const saNet = saRate - saTax - saAcc + abMax - childcareCost
 
   const saScenario: IncomeScenario = {
     label: 'Student Allowance + AB',
@@ -303,6 +336,7 @@ function buildStudyScenarios(
     abatement_weekly: 0,
     supplements_weekly: abMax,
     work_incentives_weekly: 0,
+    childcare_cost_weekly: childcareCost,
     net_weekly: saNet,
     net_annual: saNet * 52,
     effective_tax_rate: saRate > 0 ? 1 - (saNet / saRate) : 0,
@@ -310,7 +344,7 @@ function buildStudyScenarios(
 
   // ── Scenario 2: Stay on benefit + TIA ──
   const tiaWeekly = sl?.training_incentive_allowance?.weekly_equivalent ?? 106.75
-  const tiaBenefitNet = currentNet + tiaWeekly
+  const tiaBenefitNet = currentNet + tiaWeekly - childcareCost
 
   const tiaScenario: IncomeScenario = {
     label: 'Stay on benefit + TIA',
@@ -321,6 +355,7 @@ function buildStudyScenarios(
     abatement_weekly: 0,
     supplements_weekly: currentSupplements,
     work_incentives_weekly: tiaWeekly,
+    childcare_cost_weekly: childcareCost,
     net_weekly: tiaBenefitNet,
     net_annual: tiaBenefitNet * 52,
     effective_tax_rate: 0,
@@ -329,6 +364,7 @@ function buildStudyScenarios(
   // ── Scenario 3: Student Loan living costs (DEBT) ──
   const slLiving = sl?.student_loan_living_costs?.weekly ?? 323.43
   // Student loan is not taxable but it's debt — no supplements, no AB without SA
+  const slNet = slLiving - childcareCost
   const slScenario: IncomeScenario = {
     label: 'Student Loan only (DEBT)',
     gross_weekly: slLiving,
@@ -338,8 +374,9 @@ function buildStudyScenarios(
     abatement_weekly: 0,
     supplements_weekly: 0,
     work_incentives_weekly: 0,
-    net_weekly: slLiving,
-    net_annual: slLiving * 52,
+    childcare_cost_weekly: childcareCost,
+    net_weekly: slNet,
+    net_annual: slNet * 52,
     effective_tax_rate: 0,
     is_debt: true,
   }
@@ -372,6 +409,11 @@ function buildStudyScenarios(
   }
   if (results.some(r => r.entitlement_type === 'COMMUNITY_SERVICES_CARD')) {
     losses.push('Community Services Card')
+  }
+  if (childcareCost > 0) {
+    const ages = facts.child_ages as string[] | undefined
+    const youngChildren = (ages ?? []).filter(a => a === 'Under 1 year' || a === '1 – 2 years' || a === '3 – 4 years').length
+    losses.push(`Estimated childcare ($${childcareCost}/wk for ${youngChildren} child${youngChildren !== 1 ? 'ren' : ''} under 5)`)
   }
 
   // Verdict: compare SA scenario vs current
@@ -414,7 +456,10 @@ export function computeStudyProjection(
     offBenefitHousing = rates.work_incentives?.accommodation_benefit?.max_weekly ?? 0
   }
 
-  const postStudyNet = gross - tax - acc + incentives.total + offBenefitHousing
+  // Childcare costs: working full-time post-study requires childcare for young children
+  const childcareCost = estimateChildcareCost(facts, rates)
+
+  const postStudyNet = gross - tax - acc - childcareCost + incentives.total + offBenefitHousing
 
   const postStudyScenario: IncomeScenario = {
     label: `Working at $${targetHourly.toFixed(2)}/hr`,
@@ -425,6 +470,7 @@ export function computeStudyProjection(
     abatement_weekly: 0,
     supplements_weekly: offBenefitHousing,
     work_incentives_weekly: incentives.total,
+    childcare_cost_weekly: childcareCost,
     net_weekly: postStudyNet,
     net_annual: postStudyNet * 52,
     effective_tax_rate: gross > 0 ? Math.max(0, 1 - (postStudyNet / gross)) : 0,
@@ -495,7 +541,11 @@ export function computeTransition(
   const asWeekly = getASWeekly(facts, rates)
 
   // Current scenario: on benefit with declared earnings
-  const currentAbatement = computeAbatement(currentEarnings, abatementParams)
+  // For couples, partner income counts towards abatement (SSA 2018 Schedule 4)
+  const partnerIncome = Number(facts.partner_income ?? 0)
+  const hasPartner = facts.has_partner === true
+  const currentAbatementInput = hasPartner ? currentEarnings + partnerIncome : currentEarnings
+  const currentAbatement = computeAbatement(currentAbatementInput, abatementParams)
   const currentBenefit = Math.max(0, benefitBase - currentAbatement)
   const currentSupplements = getSupplementsWeekly(results, facts, rates, false)
   const currentTax = computeWeeklyTax(currentEarnings, rates.tax_brackets)
@@ -561,6 +611,13 @@ export function computeTransition(
   if (results.some(r => r.entitlement_type === 'TEMPORARY_ADDITIONAL_SUPPORT')) losses.push('Temporary Additional Support')
   if (results.some(r => r.entitlement_type === 'WINTER_ENERGY_PAYMENT')) losses.push('Winter Energy Payment')
   if (results.some(r => r.entitlement_type === 'COMMUNITY_SERVICES_CARD')) losses.push('Community Services Card')
+
+  const childcareCost = estimateChildcareCost(facts, rates)
+  if (childcareCost > 0) {
+    const ages = facts.child_ages as string[] | undefined
+    const youngChildren = (ages ?? []).filter(a => a === 'Under 1 year' || a === '1 – 2 years' || a === '3 – 4 years').length
+    losses.push(`Estimated childcare ($${childcareCost}/wk for ${youngChildren} child${youngChildren !== 1 ? 'ren' : ''} under 5)`)
+  }
 
   const netGainAtFulltime = ftScenario.net_weekly - currentNet
   let verdict: 'better_working' | 'marginal' | 'trap'

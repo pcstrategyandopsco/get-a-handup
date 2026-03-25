@@ -156,6 +156,15 @@ work_incentives:
     max_weekly: 60
     note: "Off-benefit housing support — much lower than AS"
 
+# ── CHILDCARE COSTS ──
+# Estimated out-of-pocket costs for transition modelling
+# Under 3: no 20hrs ECE subsidy available
+# Ages 3-5: after 20hrs ECE subsidy (reduced cost)
+childcare:
+  under_3_weekly: 300
+  age_3_to_5_weekly: 150
+  note: "Estimated out-of-pocket costs for transition modelling. Under 3: no 20hrs ECE. Ages 3-5: after 20hrs ECE subsidy."
+
 # ── STUDYLINK ──
 # Student Allowance and Student Loan living costs rates
 # Source: MSD MAP April 2025 (net after M tax)

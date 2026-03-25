@@ -56,7 +56,8 @@
                 "type": "string",
                 "enum": ["eq", "neq", "in", "not_in", "gt", "gte", "lt", "lte", "exists", "not_exists"]
               },
-              "value": {}
+              "value": {},
+              "critical": { "type": "boolean" }
             }
           }
         },

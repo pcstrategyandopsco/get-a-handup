@@ -27,6 +27,9 @@ eligibility:
     - fact: is_seeking_work
       op: eq
       value: true
+    - fact: couple_income_high
+      op: neq
+      value: true
   conditions:
     - "Must be 18 years or older"
     - "Must be a New Zealand citizen or permanent resident"

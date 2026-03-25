@@ -30,6 +30,9 @@ eligibility:
     - fact: years_in_nz
       op: gte
       value: 2
+    - fact: couple_income_high
+      op: neq
+      value: true
   conditions:
     - "Must be 18 years or older"
     - "Must have a health condition or disability that restricts work capacity to less than 15 hours per week, OR"

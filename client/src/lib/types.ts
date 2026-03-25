@@ -61,6 +61,7 @@ export type Rule = {
   fact: string
   op: RuleOp
   value?: unknown
+  critical?: boolean
 }
 
 export type BenefitCategory = 'main' | 'supplement' | 'hardship' | 'housing' | 'family' | 'employment' | 'health' | 'residential' | 'other'
@@ -131,6 +132,7 @@ export type IncomeScenario = {
   abatement_weekly: number
   supplements_weekly: number
   work_incentives_weekly: number
+  childcare_cost_weekly?: number
   net_weekly: number
   net_annual: number
   effective_tax_rate: number
@@ -180,6 +182,10 @@ export type RateData = {
     independent_earner_tax_credit: { annual: number; income_min: number; income_max: number; requires_off_benefit: boolean }
     minimum_family_tax_credit: { annual_floor: number; requires_children: boolean; requires_off_benefit: boolean; min_hours_single: number; min_hours_couple: number }
     accommodation_benefit: { max_weekly: number; note: string }
+  }
+  childcare?: {
+    under_3_weekly: number
+    age_3_to_5_weekly: number
   }
   studylink?: {
     student_allowance: Record<string, number>

@@ -1,0 +1,101 @@
+# Test Scenario: Married couple — husband works, wife not working, 2 kids under 3
+# Based on Reddit post: wife breastfeeding, husband earns $693/wk (30hrs), 2 kids
+#
+# Key assertions:
+# - SPS must NOT surface (has partner — not a sole parent)
+# - JS may surface as POSSIBLE (couple_income_high reduces confidence)
+# - WFF should surface (family with children)
+# - Accommodation Supplement should surface
+
+scenario:
+  name: "Couple — husband working, wife not working, 2 kids under 3"
+  description: >
+    Married couple. Husband works 30hrs at $23.10/hr ($693/wk). Wife not
+    currently working (breastfeeding). Two children under 3. Renting in
+    Wellington at $550/wk. Not currently on any benefit. The tool should NOT
+    surface Sole Parent Support (she has a partner). Jobseeker Support may
+    surface but with reduced confidence due to high partner income.
+
+intake_answers:
+  # TRIAGE
+  triage.reason: "Full assessment of everything I might be entitled to"
+
+  # PERSONAL
+  personal.age: 28
+  personal.residency: "NZ Citizen"
+  personal.years_in_nz: 28
+  personal.relationship: "Married / civil union"
+  personal.partner_income: 693
+
+  # HOUSING
+  housing.type: "Renting"
+  housing.cost: 550
+  housing.region: "Wellington"
+  housing.social_housing: "No"
+  housing.arrears: "No"
+  housing.need_to_move: "No"
+
+  # INCOME
+  income.employed: "No"
+  income.hours: 0
+  income.amount: 0
+  income.benefit: "No"
+  income.assets: "Under $8,100"
+
+  # HEALTH
+  health.condition: "No"
+
+  # CHILDREN
+  children.dependent: "Yes"
+  children.count: 2
+  children.ages:
+    - "Under 1 year"
+    - "1 – 2 years"
+  children.childcare: "No"
+  children.disability: "No"
+  children.caring_for_other: "No"
+
+  # EDUCATION
+  education.studying: "No"
+
+  # EMPLOYMENT
+  employment.seeking_work: "No"
+  employment.seasonal: "No"
+  employment.self_employed: "No"
+
+  # HISTORY
+  history.past_denied: "No"
+
+  # SITUATION
+  situation.emergency: "No"
+  situation.family_violence: "No"
+  situation.recently_released: "No"
+  situation.refugee: "No"
+  situation.carer: "No"
+
+expected_entitlements:
+  should_surface:
+    - id: working-for-families-tax-credit
+      reasoning: "Family with children, income qualifies"
+    - id: accommodation-supplement
+      reasoning: "Renting in Wellington, low personal income"
+
+  should_not_surface:
+    - id: sole-parent-support
+      reasoning: "Has partner — not a sole parent. Critical rule must exclude."
+
+notes:
+  - >
+    This scenario tests the critical rule flag on SPS. Previously, SPS had 6 rules
+    and is_sole_parent failing gave 83% pass ratio = POSSIBLE. With critical: true,
+    having a partner now excludes SPS entirely.
+  - >
+    Partner earns $693/wk — well above $250/wk threshold. couple_income_high = true
+    means the couple_income_high neq true rule on JS fails, reducing confidence.
+    JS may still surface as POSSIBLE but with lower confidence reflecting the
+    significant partner income that would trigger heavy abatement.
+  - >
+    Transition scenarios now include childcare cost deduction for 2 kids under 3
+    (~$600/wk at $300/wk each). This makes the true cost of working visible — a
+    stay-at-home parent going to work must pay for childcare, which dramatically
+    changes the economics of the transition.
