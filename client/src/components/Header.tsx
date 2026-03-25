@@ -19,7 +19,7 @@ export function Header({ onLoadScenario, onSaveProgress }: HeaderProps) {
       <div className="header-right">
         <a
           className="header-load-btn"
-          href="/docs/how-it-works.html"
+          href="./how-it-works.html"
           target="_blank"
           rel="noopener noreferrer"
         >
