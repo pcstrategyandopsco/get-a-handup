@@ -1,0 +1,145 @@
+# Test Scenario: Reddit "On JS-Medical, want to study Masters full-time"
+# Source: reddit.com/r/newzealand — discussion about studying while on benefit
+#
+# This person represents a gap the tool couldn't previously address:
+# 1. Has a permanent condition limiting work capacity to <15 hrs/wk
+# 2. Currently on Jobseeker Support with medical certificate (JS-Medical)
+# 3. Wants to study a Masters degree full-time
+# 4. Key interactions:
+#    - Student Allowance NOT available for Masters — person must stay on benefit or take loan
+#    - SLP allows full-time study while keeping benefit (better path for disabled students)
+#    - JS-Medical treats study hours = work capacity hours — >15hrs study may lose deferral
+#    - Training Incentive Allowance available for study costs if on benefit
+#    - Student Loan Living Costs available as supplementary income (but it's a loan)
+
+scenario:
+  name: "JS-Medical recipient wanting to study Masters full-time"
+  description: >
+    35yo NZ citizen with permanent condition, work capacity <15 hrs/wk,
+    currently on Jobseeker Support with medical cert. Wants to study Masters
+    full-time (4 papers). Single, renting in Wellington, low assets.
+    The tool should surface SLP as the better pathway (can study while on SLP),
+    flag that Student Allowance is NOT available for Masters, and show
+    Student Loan Living Costs as an option.
+
+intake_answers:
+  # PERSONAL
+  personal.age: 35
+  personal.residency: "NZ Citizen"
+  personal.years_in_nz: 35
+  personal.relationship: "Single"
+
+  # HOUSING
+  housing.type: "Renting"
+  housing.cost: 300
+  housing.region: "Wellington"
+  housing.social_housing: "No"
+  housing.arrears: "No"
+  housing.need_to_move: "No"
+
+  # INCOME
+  income.employed: "No"
+  income.hours: 0
+  income.amount: 0
+  income.benefit: "Yes"
+  income.benefit_type: "Jobseeker Support"
+  income.current_supplements:
+    - "None of these"
+  income.assets: "Under $8,100"
+
+  # HEALTH
+  health.condition: "Yes"
+  health.duration: "Permanent / lifelong"
+  health.costs: "Yes"
+  health.cost_types:
+    - "GP / specialist visits"
+    - "Prescriptions / medication"
+  health.hours_able: "Less than 15 hrs"
+  health.residential_care: "No"
+
+  # CHILDREN
+  children.dependent: "No"
+  children.caring_for_other: "No"
+
+  # EDUCATION
+  education.studying: "Yes"
+  education.level: "Masters"
+  education.load: "Full-time"
+  education.papers: 4
+
+  # EMPLOYMENT
+  employment.seeking_work: "No"
+  employment.training_interest: "Yes"
+  employment.seasonal: "No"
+  employment.self_employed: "No"
+
+  # HISTORY
+  history.past_denied: "No"
+  history.upload: "Skip for now"
+
+  # SITUATION
+  situation.emergency: "No"
+  situation.family_violence: "No"
+  situation.recently_released: "No"
+  situation.refugee: "No"
+  situation.carer: "No"
+
+expected_entitlements:
+  should_surface:
+    - id: supported-living-payment
+      status: ENTITLED
+      reasoning: >
+        Permanent condition, <15hr work capacity, 18+, NZ citizen. Meets SLP
+        criteria. Critical: SLP allows full-time study without losing benefit.
+        On JS-Medical, full-time study (40hrs/wk equivalent) may conflict with
+        the medical deferral that limits "work capacity" to <15hrs.
+
+    - id: training-incentive-allowance
+      status: ENTITLED
+      reasoning: >
+        On a main benefit and interested in training/education. TIA covers
+        study costs up to ~$1200/year. Must be on benefit to receive this.
+
+    - id: student-loan-living-costs
+      status: POSSIBLE
+      reasoning: >
+        Is a student studying full-time. Student Loan Living Costs available
+        for all levels including Masters. However, cannot receive alongside
+        a main benefit — would need to leave benefit first. Surfaced as
+        POSSIBLE because currently on benefit.
+
+    - id: accommodation-supplement
+      status: ENTITLED
+      reasoning: >
+        Renting $300/wk in Wellington (Zone 1), single, on benefit.
+
+    - id: community-services-card
+      status: ENTITLED
+      reasoning: >
+        On a main benefit — automatic entitlement.
+
+  should_not_surface:
+    - id: student-allowance
+      reasoning: >
+        Masters level study — Student Allowance is NOT available for
+        postgraduate study above Honours level. This is the key exclusion.
+
+    - id: accommodation-benefit-students
+      reasoning: >
+        Linked to Student Allowance eligibility. Since Student Allowance
+        is excluded for Masters, this is also excluded.
+
+notes:
+  - >
+    The critical insight: SLP is the better pathway for disabled students.
+    On SLP there are no work test obligations, so full-time study doesn't
+    conflict. On JS-Medical, WINZ treats study hours as "activity" that
+    may be counted against the medical deferral.
+  - >
+    Student Allowance gap: Not available for Masters or PhD. This forces
+    postgrad students with disabilities to either stay on WINZ benefit
+    (losing Student Allowance housing support) or take on loan debt.
+  - >
+    Training Incentive Allowance is the bridge — it helps with study costs
+    while staying on benefit, but maxes at ~$1200/year which won't cover
+    full Masters fees.

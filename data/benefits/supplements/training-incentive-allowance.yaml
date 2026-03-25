@@ -1,0 +1,92 @@
+id: training-incentive-allowance
+name: Training Incentive Allowance
+category: supplement
+frequency: weekly
+taxable: false
+legal_basis: "Section 175, Social Security Act 2018"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/training-incentive-allowance.html"
+description: "Help with study costs for beneficiaries undertaking approved training or education"
+eligibility:
+  min_age: 16
+  max_age: null
+  residency: [citizen, permanent_resident]
+  residence_years: 0
+  requires_benefit: true
+  requires_application: true
+  rules:
+    - fact: on_benefit
+      op: eq
+      value: true
+    - fact: in_approved_training
+      op: eq
+      value: true
+  conditions:
+    - "Must be receiving a main benefit"
+    - "Must be enrolled in approved training or education"
+    - "Course must be 12 weeks or more"
+    - "Course must be NZQF levels 1–7 (certificate through bachelor's — excludes postgrad)"
+    - "Training must be likely to lead to employment"
+    - "Must meet participation requirements of benefit"
+rates:
+  effective: "2026-04-01"
+  max_weekly: "$138.77"
+  max_annual: "$5,550.80"
+  description: "$138.77/wk paid with benefit, up to $5,550.80 per 52-week period. Can be taken as weekly payments (transport, childcare, Wi-Fi), upfront lump sum (fees, laptop, books), or a combination."
+income_test:
+  applies: false
+  description: "Already receiving a benefit, so income has been assessed"
+asset_test:
+  applies: false
+friction:
+  documentation_required:
+    - "Proof of enrollment in approved training"
+    - "Course details and costs"
+    - "Quotes for equipment (laptop, accessories) — do NOT buy before approval"
+    - "Receipts for study-related expenses"
+  typical_processing: "3-4 weeks"
+  known_issues:
+    - "Training must be pre-approved by case manager"
+    - "Appointment must be within 28 days of course start"
+    - "Equipment costs (laptop, mouse, case) paid via green payment card, not bank account"
+    - "Extended warranties and product care plans are not covered"
+    - "Limited to NZQF levels 1–7 — postgraduate study is excluded"
+    - "Annual cap may not cover full costs of study"
+  deflection_patterns:
+    - "Training deemed not likely to lead to employment"
+    - "Beneficiaries discouraged from pursuing education"
+    - "Preference for short-term job-focused courses over longer-term education"
+    - "Told to use Student Loan instead of TIA (they are separate entitlements and can be used together)"
+
+advocacy:
+  appointment_strategy: >
+    TIA is up to $138.77/wk for study costs while on benefit. Critical process:
+    get quotes FIRST (laptop, fees, books), book appointment within 28 days of
+    course start, and know that equipment is paid via green payment card — not
+    into your bank account. TIA and Student Loan are separate entitlements and
+    can be used together.
+
+  talking_points:
+    - "I am enrolled in [course] at [provider] starting [date]. Here is my enrolment confirmation"
+    - "I have quotes for the equipment I need: [laptop $X, books $Y, fees $Z]"
+    - "I understand TIA covers up to $138.77/wk or $5,550.80 per year for study-related costs"
+    - "I also have a Student Loan — TIA is a separate entitlement under s175 SSA 2018 and they can be used together"
+
+  common_objections:
+    - objection: "This training won't lead to employment"
+      counter: "This qualification in [field] has clear employment pathways. The Act requires training 'likely to lead to employment' — it doesn't require a guaranteed job offer."
+      cite: "s175 Social Security Act 2018"
+    - objection: "You should use your Student Loan for that"
+      counter: "TIA and Student Loan are separate entitlements under different legislation. TIA covers costs Student Loan doesn't — transport, childcare, equipment. They are designed to be used together."
+      cite: "s175 Social Security Act 2018"
+    - objection: "We can't approve that equipment"
+      counter: "I have quotes for equipment required by my course. The TIA guidelines include equipment costs. Which specific items are you declining, and on what basis?"
+    - objection: "You need to be looking for work, not studying"
+      counter: "Section 175 explicitly provides for beneficiaries in approved training. Education is a pathway to employment. My benefit conditions include this training."
+
+  escalation_triggers:
+    - trigger: "Appointment booked more than 28 days from course start"
+      action: "Request an earlier appointment urgently — TIA must be approved before course starts. If no earlier appointment available, ask for phone approval."
+    - trigger: "Equipment purchase declined or delayed"
+      action: "Confirm payment will be via green payment card at the retailer. Do NOT buy equipment yourself and seek reimbursement — that is not how TIA works."
+    - trigger: "TIA declined for approved course"
+      action: "Request written reasons under s12 SSA 2018. If the course is NZQF levels 1-7 and 12+ weeks, the legal basis for decline is narrow."

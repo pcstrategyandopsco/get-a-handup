@@ -1,0 +1,68 @@
+id: youth-payment
+name: Youth Payment
+category: main
+frequency: weekly
+taxable: true
+legal_basis: "section 173 Social Security Act 2018"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/youth-payment.html"
+description: "Weekly payment for 16-17 year olds who are not in education, training, or employment and require financial support"
+
+eligibility:
+  min_age: 16
+  max_age: 17
+  residency: [citizen, permanent_resident]
+  residence_years: 2
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: age
+      op: gte
+      value: 16
+    - fact: age
+      op: lte
+      value: 17
+    - fact: not_in_education
+      op: eq
+      value: true
+    - fact: residency_status
+      op: in
+      value: [citizen, permanent_resident]
+    - fact: years_in_nz
+      op: gte
+      value: 2
+  conditions:
+    - "Must be aged 16 or 17 years"
+    - "Must not be in education, training, or employment"
+    - "Must be unable to live with parents or guardians, or have parents unable to support"
+    - "Must participate in activities to prepare for work or training"
+    - "Must be a New Zealand citizen or permanent resident"
+    - "Must have been resident in New Zealand for at least 2 years"
+
+rates:
+  effective: "2026-04-01"
+  max_weekly: "$227.04"
+  description: "Base rate for young person aged 16-17. Lower than adult benefit rates"
+
+income_test:
+  applies: true
+  description: "Income from work and other sources is tested. Abatement applies to income over certain thresholds"
+
+asset_test:
+  applies: true
+  single: 8100
+  couple_or_sole_parent: 16200
+
+friction:
+  documentation_required:
+    - "Proof of identity"
+    - "Proof of age"
+    - "Evidence of not being in education or employment"
+    - "Evidence of inability to receive parental support"
+    - "Bank account details"
+  typical_processing: "1-2 weeks"
+  known_issues:
+    - "Must demonstrate genuine inability to live with or be supported by parents"
+    - "Mandatory participation in youth services and activities"
+    - "Transitions to adult benefits at age 18"
+  deflection_patterns:
+    - "May be encouraged to return to education or training instead"

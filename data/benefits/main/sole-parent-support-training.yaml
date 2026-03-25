@@ -1,0 +1,73 @@
+id: sole-parent-support-training
+name: Sole Parent Support - Training Incentive
+category: main
+frequency: weekly
+taxable: true
+legal_basis: "section 30 Social Security Act 2018"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/sole-parent-support.html"
+description: "Weekly payment for sole parents undertaking approved training or education to improve employment prospects, with additional training incentive allowance"
+
+eligibility:
+  min_age: 18
+  max_age: null
+  residency: [citizen, permanent_resident]
+  residence_years: 2
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: age
+      op: gte
+      value: 18
+    - fact: is_sole_parent
+      op: eq
+      value: true
+    - fact: has_children
+      op: eq
+      value: true
+    - fact: in_approved_training
+      op: eq
+      value: true
+    - fact: residency_status
+      op: in
+      value: [citizen, permanent_resident]
+    - fact: years_in_nz
+      op: gte
+      value: 2
+  conditions:
+    - "Must be 18 years or older"
+    - "Must be the sole parent of one or more dependent children"
+    - "Must be undertaking approved training or education"
+    - "Training must be approved by Work and Income as likely to improve employment prospects"
+    - "Must be a New Zealand citizen or permanent resident"
+    - "Must have been resident in New Zealand for at least 2 years"
+
+rates:
+  effective: "2026-04-01"
+  max_weekly: "$434.68"
+  description: "Same base rate as Sole Parent Support, plus additional Training Incentive Allowance while in approved training"
+
+income_test:
+  applies: true
+  description: "Income from work and other sources is tested. Training Incentive Allowance is not counted as income. Abatement applies to income over certain thresholds"
+
+asset_test:
+  applies: true
+  single: 8100
+  couple_or_sole_parent: 16200
+
+friction:
+  documentation_required:
+    - "Proof of identity"
+    - "Birth certificates for dependent children"
+    - "Proof of sole parent status"
+    - "Proof of enrollment in approved training or education"
+    - "Training plan approved by Work and Income"
+    - "Bank account details"
+  typical_processing: "2-3 weeks"
+  known_issues:
+    - "Training must be pre-approved by Work and Income before starting"
+    - "Not all training courses qualify - must meet specific criteria"
+    - "Must maintain satisfactory progress in training to continue receiving benefit"
+  deflection_patterns:
+    - "May be directed to other training support programs"
+    - "Strict approval process for what qualifies as suitable training"

@@ -1,0 +1,50 @@
+id: telephone-allowance
+name: Telephone Allowance
+category: supplement
+frequency: weekly
+taxable: false
+legal_basis: "Social Security Act 2018"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/telephone-allowance.html"
+description: "Help with phone costs for people who are isolated or have disabilities requiring regular phone contact"
+eligibility:
+  min_age: 16
+  max_age: null
+  residency: [citizen, permanent_resident]
+  residence_years: 0
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: has_condition
+      op: eq
+      value: true
+    - fact: low_income
+      op: eq
+      value: true
+  conditions:
+    - "Must have a disability or health condition requiring phone for safety/support, OR be geographically isolated"
+    - "Must have low income"
+    - "Phone must be essential for contact with support services or emergency assistance"
+rates:
+  effective: "2026-04-01"
+  max_weekly: "Varies based on assessed need"
+  notes: "Amount varies depending on phone costs and circumstances"
+income_test:
+  applies: true
+  description: "Income must be below threshold"
+asset_test:
+  applies: false
+friction:
+  documentation_required:
+    - "Medical certificate if claiming due to disability"
+    - "Evidence of isolation if claiming for that reason"
+    - "Phone bills showing costs"
+    - "Proof of income"
+  typical_processing: "3-4 weeks"
+  known_issues:
+    - "Less well-known supplement"
+    - "Definition of 'isolation' can be subjectively applied"
+    - "May not cover full cost of modern phone plans"
+  deflection_patterns:
+    - "Told to use cheaper phone plans or prepay"
+    - "Narrow interpretation of medical necessity"
+    - "Geographic isolation threshold can be strict"

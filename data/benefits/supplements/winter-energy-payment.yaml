@@ -1,0 +1,38 @@
+id: winter-energy-payment
+name: Winter Energy Payment
+category: supplement
+frequency: automatic
+taxable: false
+legal_basis: "Section 69, Social Security Act 2018"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/winter-energy-payment.html"
+description: "Automatic weekly payment during winter months (May to October) to help with heating costs"
+eligibility:
+  min_age: null
+  max_age: null
+  residency: [citizen, permanent_resident]
+  residence_years: 0
+  requires_benefit: true
+  requires_application: false
+  rules:
+    - fact: on_benefit
+      op: eq
+      value: true
+  conditions:
+    - "Must be receiving a main benefit, New Zealand Superannuation, or Veteran's Pension"
+    - "Automatically paid during winter months (May 1 to October 1)"
+rates:
+  effective: "2026-04-01"
+  max_weekly: "$31.82"
+  notes: "$20.46 per week for single people, $31.82 per week for couples. Paid automatically"
+income_test:
+  applies: false
+  description: "No income test - automatically paid to all eligible beneficiaries"
+asset_test:
+  applies: false
+friction:
+  documentation_required: []
+  typical_processing: "Automatic - no application needed"
+  known_issues:
+    - "Some people not aware they are receiving it as it's included in regular payment"
+    - "Rate may not cover actual winter heating costs"
+  deflection_patterns: []

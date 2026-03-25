@@ -1,0 +1,45 @@
+id: long-term-residential-care
+name: Long-Term Residential Care
+category: residential
+frequency: weekly
+taxable: false
+legal_basis: "Social Security Act 2018"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/residential-care-subsidy.html"
+description: "Weekly funding for long-term residential care for people with chronic conditions requiring ongoing 24-hour care and support"
+eligibility:
+  min_age: null
+  max_age: null
+  residency: [citizen, permanent_resident]
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: has_chronic_condition
+      op: eq
+      value: true
+    - fact: needs_long_term_care
+      op: eq
+      value: true
+  conditions:
+    - "Must have a chronic condition requiring long-term care"
+    - "Must be assessed as requiring 24-hour care and support"
+    - "Must be in an approved long-term care facility"
+    - "Care needs cannot be met in community setting"
+rates:
+  effective: "2026-04-01"
+  description: "varies based on care level and individual financial contribution"
+income_test:
+  applies: true
+friction:
+  documentation_required:
+    - "Comprehensive medical assessment"
+    - "Needs assessment from approved assessor"
+    - "Care facility placement confirmation"
+    - "Full financial disclosure"
+  typical_processing: "4-8 weeks after all assessments complete"
+  known_issues:
+    - "Limited availability of appropriate facilities"
+    - "Young people may be placed in aged care facilities"
+    - "Complex interaction with health funding for some conditions"
+  deflection_patterns:
+    - "May suggest family caregiving as alternative"
+    - "Long assessment process can delay access to care"

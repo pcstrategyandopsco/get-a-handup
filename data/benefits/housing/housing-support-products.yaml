@@ -1,0 +1,46 @@
+id: housing-support-products
+name: Housing Support Products
+category: housing
+frequency: as-needed
+taxable: false
+legal_basis: "Section 68 Social Security Act 2018"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/housing-support.html"
+description: "Various housing-related financial assistance products. Umbrella for various housing support options"
+eligibility:
+  min_age: 16
+  max_age: null
+  residency: [citizen, permanent_resident]
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: low_income
+      op: eq
+      value: true
+    - fact: has_housing_need
+      op: eq
+      value: true
+  conditions:
+    - "Must have low income and limited assets"
+    - "Must have a housing-related need"
+    - "Specific eligibility varies by support product"
+rates:
+  effective: "2026-04-01"
+  max_weekly: "Varies by specific product and need"
+income_test:
+  applies: true
+asset_test:
+  applies: true
+friction:
+  documentation_required:
+    - "Proof of housing need"
+    - "Proof of income and assets"
+    - "Specific documents vary by product"
+  typical_processing: "5-15 working days depending on product"
+  known_issues:
+    - "Complex range of products with varying criteria"
+    - "Difficult to navigate which product applies"
+    - "Inconsistent application between case managers"
+  deflection_patterns:
+    - "Being directed to wrong product"
+    - "Being told needs don't fit any product"
+    - "Being given conflicting information"

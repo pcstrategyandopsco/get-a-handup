@@ -1,0 +1,119 @@
+id: disability-allowance
+name: Disability Allowance
+category: supplement
+frequency: weekly
+taxable: false
+legal_basis: "Sections 85-87, Social Security Act 2018"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/disability-allowance.html"
+description: "Weekly payment to help with regular ongoing costs from a disability or health condition"
+eligibility:
+  min_age: 16
+  max_age: null
+  residency: [citizen, permanent_resident]
+  residence_years: 0
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: has_condition
+      op: eq
+      value: true
+    - fact: has_ongoing_disability_costs
+      op: eq
+      value: true
+  conditions:
+    - "Must have a disability or health condition that will last at least 6 months"
+    - "Must have regular ongoing costs related to the disability or health condition"
+    - "Costs must not be covered by other agencies (e.g., ACC, health system)"
+rates:
+  effective: "2026-04-01"
+  max_weekly: "$75.52"
+  notes: "Maximum rate per person"
+income_test:
+  applies: true
+  description: "Income is assessed but thresholds are relatively generous"
+asset_test:
+  applies: false
+friction:
+  documentation_required:
+    - "Medical certificate confirming disability or health condition"
+    - "Evidence of ongoing costs (receipts, invoices)"
+    - "Proof of income"
+  typical_processing: "3-4 weeks"
+  known_issues:
+    - "Medical certificate requirement can be a barrier"
+    - "Proving ongoing costs requires keeping detailed records"
+    - "6-month duration requirement can exclude people with serious short-term conditions"
+  deflection_patterns:
+    - "People told costs should be covered by health system when they are not"
+    - "Confusion about what qualifies as disability-related costs"
+
+advocacy:
+  appointment_strategy: >
+    DA covers ongoing additional costs from your disability — not just prescriptions.
+    Come with a full list of costs and a GP letter using the phrase
+    "ongoing costs arising from disability." Case managers don't list eligible
+    categories — you must raise them.
+
+  statutory_basis: >
+    DA eligibility is set by s85 SSA 2018 (qualifying criteria), s86 (meaning
+    of disability costs), and s87 (rate and income test). These are in Subpart 9
+    of Part 2 — entirely separate from main benefit provisions. NO provision in
+    the Act excludes recipients of any specific main benefit (including SLP under
+    s40) from DA. MSD's own published guidance confirms: "You don't have to be
+    on a benefit to qualify." The only explicit DA exclusion is for people
+    receiving Residential Care Subsidy (s144). NOTE: While the statutory text
+    is clear, we have not identified specific SSAA or court decisions directly
+    ruling on whether being on SLP precludes DA. The statutory interpretation
+    is strong but untested in published case law.
+
+  talking_points:
+    - "I have [condition] which causes these ongoing costs: [list from cost diary]"
+    - "My GP has confirmed these are disability-related costs not covered by the health system"
+    - "I understand DA covers transport, power, diet, clothing, and medical costs — I'd like all categories assessed"
+    - "The $75.52/wk cap is per person — both my partner and I can claim separately if applicable"
+
+  common_objections:
+    - objection: "You're on SLP so you don't need DA"
+      counter: >
+        SLP (s40 SSA 2018) compensates for reduced earning capacity. DA (s85 SSA 2018)
+        covers ongoing disability-related costs. They are in separate subparts of the Act.
+        No provision excludes SLP recipients from DA. Your own website says 'You don't
+        have to be on a benefit to qualify.' Please show me the specific section that
+        prevents me from receiving both.
+      cite: "s40, s85 Social Security Act 2018"
+      statutory_strength: >
+        Strong — based on statutory text and MSD's own published guidance. No
+        exclusion clause exists. However, no specific SSAA decision has directly
+        ruled on this point. If declined, a Review of Decision (s391) is the
+        mechanism to test this interpretation.
+    - objection: "The health system should cover that"
+      counter: "Section 85 SSA 2018 specifically covers costs NOT covered elsewhere. Here is my GP's letter confirming these costs are not covered by ACC or the public health system."
+      cite: "s85 Social Security Act 2018"
+    - objection: "That's not a disability-related cost"
+      counter: "This cost arises directly from my condition because [explain causation]. My GP letter confirms it. Section 86 defines disability costs broadly as 'regular ongoing additional costs arising from the person's disability.'"
+      cite: "s86 Social Security Act 2018"
+    - objection: "Your costs are too low to qualify"
+      counter: "There is no minimum threshold in the Act. Section 85 requires 'regular ongoing costs' — mine are $[X]/week as documented."
+      cite: "s85 Social Security Act 2018"
+    - objection: "You need to come back with more evidence"
+      counter: "I have my GP letter, 4 weeks of receipts, and a cost breakdown. What specific additional evidence is required? Please put that in writing per s12 SSA 2018."
+
+  escalation_triggers:
+    - trigger: "Application declined without clear reason"
+      action: "Request the decision in writing with specific legal reasons under s12 SSA 2018. File a Review of Decision under s391."
+    - trigger: "Declined because already on another benefit"
+      action: >
+        Ask the case manager to identify the specific section of the Act that
+        excludes your benefit type from DA. There is no such section. If they
+        cannot cite one, the decline is without legal basis. File a Review of
+        Decision (s391) and note the procedural failure under s12.
+    - trigger: "Told to come back in 6 months"
+      action: "Costs must be 'regular' but the Act doesn't specify a minimum duration before applying. Ask for the assessment now with current evidence."
+    - trigger: "Only some costs approved"
+      action: "Ask which costs were excluded and why. Request written reasons per s12. Each excluded cost can be individually reviewed."
+    - trigger: "Not notified of decline"
+      action: >
+        Under s12 SSA 2018, MSD must provide written reasons for decisions.
+        Not being notified is itself a procedural failure. Note the date you
+        discovered the decline, how you found out, and include this in your
+        Review of Decision application. This strengthens the ROD case.

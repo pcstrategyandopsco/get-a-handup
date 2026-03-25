@@ -1,0 +1,46 @@
+id: tenancy-costs
+name: Tenancy Costs Assistance
+category: housing
+frequency: one-off
+taxable: false
+legal_basis: "Section 68 Social Security Act 2018"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/tenancy-costs.html"
+description: "Help with letting fees and similar tenancy start-up costs"
+eligibility:
+  min_age: 16
+  max_age: null
+  residency: [citizen, permanent_resident]
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: housing_type
+      op: eq
+      value: renting
+    - fact: has_tenancy_costs
+      op: eq
+      value: true
+  conditions:
+    - "Must be renting or starting a new tenancy"
+    - "Must have costs such as letting fees, reference checks"
+    - "Must have low income and limited assets"
+rates:
+  effective: "2026-04-01"
+  max_weekly: "Varies based on actual costs (typically up to $300)"
+income_test:
+  applies: true
+asset_test:
+  applies: true
+friction:
+  documentation_required:
+    - "Invoices or quotes for tenancy costs"
+    - "Tenancy agreement"
+    - "Proof of income and assets"
+  typical_processing: "5-10 working days"
+  known_issues:
+    - "May not cover all tenancy start-up costs"
+    - "Limited availability"
+    - "Often declined if costs seen as discretionary"
+  deflection_patterns:
+    - "Being told to negotiate with landlord or agency"
+    - "Being told to find properties without letting fees"
+    - "Being offered recoverable assistance instead"

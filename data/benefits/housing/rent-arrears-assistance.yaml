@@ -1,0 +1,82 @@
+id: rent-arrears-assistance
+name: Rent Arrears Assistance
+category: housing
+frequency: one-off
+taxable: false
+legal_basis: "Section 68 Social Security Act 2018"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/rent-arrears.html"
+description: "Help to pay rent arrears to prevent eviction"
+eligibility:
+  min_age: 16
+  max_age: null
+  residency: [citizen, permanent_resident]
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: housing_type
+      op: eq
+      value: renting
+    - fact: has_rent_arrears
+      op: eq
+      value: true
+    - fact: at_risk_of_eviction
+      op: eq
+      value: true
+  conditions:
+    - "Must be renting and have rent arrears"
+    - "Must be at risk of eviction"
+    - "Must demonstrate ability to maintain future rent payments"
+rates:
+  effective: "2026-04-01"
+  max_weekly: "Varies based on arrears amount and circumstances"
+income_test:
+  applies: true
+asset_test:
+  applies: true
+friction:
+  documentation_required:
+    - "Tenancy agreement"
+    - "Evidence of arrears (landlord statement)"
+    - "Eviction notice or warning"
+    - "Proof of income"
+  typical_processing: "3-10 working days (urgent cases faster)"
+  known_issues:
+    - "Often only partial payment of arrears"
+    - "May be offered as recoverable assistance"
+    - "Landlord cooperation required"
+  deflection_patterns:
+    - "Being told to negotiate payment plan with landlord"
+    - "Being blamed for financial mismanagement"
+    - "Being offered smaller amount than needed"
+
+advocacy:
+  appointment_strategy: >
+    Rent arrears assistance is near-guaranteed when you have a landlord letter
+    confirming arrears plus an eviction notice or 14-day notice. Bring both
+    documents. If offered only partial payment, push back — partial payment
+    may not prevent eviction. The goal is to clear the arrears and keep your
+    tenancy.
+
+  talking_points:
+    - "I have rent arrears of $[X] and am at risk of eviction — here is my landlord's letter and the 14-day notice"
+    - "I need the full arrears paid to prevent eviction, not a partial amount"
+    - "I can maintain future rent payments because [explain — e.g., Accommodation Supplement now in place, income stabilised]"
+    - "Losing my tenancy would cost MSD far more in emergency housing than clearing these arrears"
+
+  common_objections:
+    - objection: "You should negotiate a payment plan with your landlord"
+      counter: "My landlord has issued a 14-day notice. A payment plan won't prevent the eviction proceedings. I need the arrears cleared now."
+    - objection: "We can only pay part of the arrears"
+      counter: "Partial payment won't prevent eviction if my landlord proceeds with the Tenancy Tribunal application. What is the basis for the partial payment, and who pays the rest?"
+    - objection: "This will be recoverable (deducted from future benefit)"
+      counter: "I understand recovery may apply, but I need to keep my housing. Can the recovery rate be set at a manageable level so it doesn't create further hardship?"
+    - objection: "How did you get into arrears?"
+      counter: "The reason for the arrears is [explain briefly]. What matters now is preventing homelessness. I have a plan to maintain future payments."
+
+  escalation_triggers:
+    - trigger: "Full arrears not covered and eviction proceeding"
+      action: "Escalate urgently to supervisor. Explain the cost comparison: clearing arrears now vs emergency housing costs if evicted. Request the full amount."
+    - trigger: "Assistance declined entirely"
+      action: "Request written reasons under s12 SSA 2018. If you have an eviction notice and no other resources, the basis for decline is narrow."
+    - trigger: "Processing too slow — eviction deadline approaching"
+      action: "Flag the urgency with the eviction date. Request expedited processing. If necessary, ask for an emergency SNG to cover arrears while the application is processed."

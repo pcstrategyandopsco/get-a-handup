@@ -1,0 +1,47 @@
+id: accommodation-benefit-students
+name: Accommodation Benefit (Students)
+category: other
+frequency: weekly
+taxable: false
+legal_basis: "Student Allowances Regulations 1998"
+source_url: "https://www.studylink.govt.nz/products/a-z-products/accommodation-benefit.html"
+description: "StudyLink equivalent of the Accommodation Supplement. Weekly payment toward accommodation costs for students receiving Student Allowance who are not living at home."
+eligibility:
+  min_age: 18
+  max_age: 65
+  residency: [citizen, permanent_resident]
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: is_student
+      op: eq
+      value: true
+    - fact: is_postgrad_above_honours
+      op: eq
+      value: false
+  conditions:
+    - "Must be receiving or eligible for Student Allowance"
+    - "Must be paying rent, board, or mortgage — not living rent-free"
+    - "Replaces WINZ Accommodation Supplement when moving to StudyLink"
+    - "Not available for Masters or PhD students (linked to Student Allowance eligibility)"
+    - "Apply through StudyLink, not Work and Income"
+rates:
+  effective: "2026-04-01"
+  max_weekly: "$60"
+  notes: "Flat rate up to $60/week depending on accommodation costs. Lower than WINZ Accommodation Supplement maximums."
+income_test:
+  applies: true
+  description: "Linked to Student Allowance income test"
+asset_test:
+  applies: false
+friction:
+  documentation_required:
+    - "Tenancy agreement or board confirmation"
+    - "Proof of accommodation costs"
+  typical_processing: "Processed with Student Allowance application"
+  known_issues:
+    - "Maximum rate ($60/wk) significantly lower than WINZ Accommodation Supplement ($165-$305/wk)"
+    - "Students switching from benefit to study lose substantial housing support"
+    - "Not available to students only receiving Student Loan (must have Student Allowance)"
+  deflection_patterns:
+    - "Students not informed of the drop in housing support when transitioning from benefit to study"

@@ -1,0 +1,213 @@
+# Test Scenario: Reddit "SLP vs Jobseekers with medical certificate"
+# Source: reddit.com/r/newzealand — discussion about being stuck on Jobseeker
+# with medical deferral when SLP would be more appropriate
+#
+# This person represents a common pattern:
+# 1. Has a permanent/long-term condition limiting work to <15 hrs/wk
+# 2. Is on Jobseeker Support with medical certificate (JS-Medical)
+# 3. Should arguably be on Supported Living Payment (SLP) which:
+#    - Pays more ($371.52/wk vs $337.74/wk base rate)
+#    - Has far more generous abatement (30c/$1 vs 70c/$1 above threshold)
+#    - Has no work test obligations
+#    - Is harder to get — MSD actively resists granting it
+# 4. The friction is the key insight: "incredibly difficult to get granted
+#    even if doctors sign it off"
+#
+# Reddit thread reveals:
+# - Multiple people reporting MSD refusing SLP despite doctor certification
+# - People stuck on JS-Medical for years when they legally qualify for SLP
+# - The 70c/$1 abatement on JS makes part-time work financially punishing
+# - SLP's 30c/$1 abatement would make part-time work viable
+# - Some people don't even know SLP exists as an option
+
+scenario:
+  name: "SLP candidate stuck on Jobseeker — medical deferral"
+  description: >
+    Adult 40+ with a permanent disability/condition that limits work capacity to
+    under 15 hours per week. Currently on Jobseeker Support with a medical
+    certificate (JS-Medical) but should be assessed for Supported Living Payment.
+    Not currently working due to condition severity. Renting in Auckland.
+    Single, no children. Has ongoing health-related costs including medication,
+    specialist visits, and extra power for heating. This is a gatekeeping scenario —
+    the person legally qualifies for SLP but MSD has kept them on JS-Medical.
+
+intake_answers:
+  # PERSONAL
+  personal.age: 42
+  personal.residency: "NZ Citizen"
+  personal.years_in_nz: 42
+  personal.relationship: "Single"
+
+  # HOUSING
+  housing.type: "Renting"
+  housing.cost: 350
+  housing.region: "Auckland"
+  housing.social_housing: "No"
+  housing.arrears: "No"
+  housing.need_to_move: "No"
+
+  # INCOME
+  income.employed: "No"
+  income.hours: 0
+  income.amount: 0
+  income.benefit: "Yes"
+  income.benefit_type: "Jobseeker Support"
+  income.current_supplements:
+    - "None of these"
+  income.assets: "Under $8,100"
+
+  # HEALTH
+  health.condition: "Yes"
+  health.duration: "Permanent / lifelong"
+  health.costs: "Yes"
+  health.cost_types:
+    - "GP / specialist visits"
+    - "Prescriptions / medication"
+    - "Extra power / heating"
+    - "Transport to appointments"
+  health.hours_able: "Less than 15 hrs"
+  health.residential_care: "No"
+
+  # CHILDREN
+  children.dependent: "No"
+  children.caring_for_other: "No"
+
+  # EMPLOYMENT
+  employment.seeking_work: "No"
+  employment.training_interest: "No"
+  employment.seasonal: "No"
+  employment.self_employed: "No"
+
+  # HISTORY
+  history.past_denied: "No"
+  history.upload: "Skip for now"
+
+  # SITUATION
+  situation.emergency: "No"
+  situation.family_violence: "No"
+  situation.recently_released: "No"
+  situation.refugee: "No"
+  situation.carer: "No"
+
+expected_entitlements:
+  should_surface:
+    - id: supported-living-payment
+      status: ENTITLED
+      reasoning: >
+        This is the KEY finding. Person has a permanent condition limiting work
+        capacity to <15 hrs/wk, is 18+, NZ citizen, resident 2+ years.
+        Meets all statutory criteria for SLP under s40 Social Security Act 2018.
+        SLP pays $371.52/wk vs JS $337.74/wk — a $33.78/wk difference on base
+        rate alone. More critically, SLP abatement is 30c/$1 vs JS 70c/$1,
+        meaning if they ever manage part-time work, they keep far more earnings.
+        MSD friction: "incredibly difficult to get granted even if doctors sign it off"
+
+    - id: accommodation-supplement
+      status: ENTITLED
+      reasoning: >
+        Renting at $350/wk in Auckland (Zone 1), single no children.
+        Max AS for this profile in Area 1 is $165/wk. On benefit income only,
+        well under the income threshold. Almost certainly not receiving this
+        if they say they're getting "none of these" supplements.
+
+    - id: disability-allowance
+      status: POSSIBLE
+      reasoning: >
+        Has permanent condition with ongoing GP, specialist, medication,
+        transport, and extra power costs. Classic DA candidate. Max $75.52/wk.
+        Requires itemised costs from GP. This is the most commonly missed
+        supplement — many people on JS-Medical don't know about it.
+
+    - id: winter-energy-payment
+      status: ENTITLED
+      reasoning: >
+        On a main benefit. WEP is automatic May-October. $20.46/wk single.
+        Has extra power costs already, so this is particularly relevant.
+
+    - id: temporary-additional-support
+      status: POSSIBLE
+      reasoning: >
+        On benefit only (no employment income), paying $350/wk rent in Auckland.
+        Benefit income (~$338/wk gross, ~$290 net) doesn't cover rent alone.
+        TAS is designed for exactly this shortfall. Requires essential cost
+        breakdown at appointment.
+
+    - id: community-services-card
+      status: ENTITLED
+      reasoning: >
+        On a main benefit — automatic entitlement. Gives discounted GP visits
+        ($19.50 instead of ~$55-70) and $5 prescriptions. Given they have
+        ongoing GP and prescription costs, this is critical. If not already
+        held, every appointment is costing them 3x what it should.
+
+  should_not_surface:
+    - id: sole-parent-support
+      reasoning: "No children, not a sole parent"
+    - id: childcare-assistance
+      reasoning: "No children"
+    - id: orphans-benefit
+      reasoning: "No children in care"
+    - id: working-for-families
+      reasoning: "No dependent children"
+
+# Financial comparison: JS-Medical vs SLP
+# This is what the tool should help people understand
+benefit_comparison:
+  jobseeker_medical:
+    base_weekly_gross: 337.74
+    base_weekly_net: ~290.00
+    abatement_threshold: 160
+    abatement_rate: 0.70
+    work_test: "Medical certificate deferral (renewed every 13 weeks)"
+    effective_marginal_tax_above_threshold: ~0.82  # 70% abatement + tax on remainder
+    friction_notes:
+      - "Must renew medical certificate every 13 weeks"
+      - "Case manager may challenge medical cert at any renewal"
+      - "Work test obligations technically still apply — need medical deferral"
+      - "Can be reclassified to work-ready JS at any review"
+
+  supported_living_payment:
+    base_weekly_gross: 371.52
+    base_weekly_net: ~318.00
+    abatement_threshold: 160
+    abatement_rate: 0.30
+    work_test: "None"
+    effective_marginal_tax_above_threshold: ~0.48  # 30% abatement + tax on remainder
+    friction_notes:
+      - "Requires work capacity medical assessment (separate from GP cert)"
+      - "MSD designated doctor may override treating specialist opinion"
+      - "Assessment focuses on ANY work, not the person's previous occupation"
+      - "Appeals process exists but takes months"
+      - "Reddit: 'incredibly difficult to get granted even if doctors sign it off'"
+
+  weekly_difference:
+    base_rate: 33.78
+    if_working_10hrs_at_25:
+      js_medical_net_gain: ~45.00   # After 70% abatement + tax
+      slp_net_gain: ~130.00         # After 30% abatement + tax
+      difference: ~85.00            # SLP makes part-time work viable
+
+notes:
+  - >
+    The core Reddit insight: MSD has a financial incentive to keep people on
+    JS-Medical rather than granting SLP. JS has harsher abatement (70c vs 30c)
+    and work test obligations that can be used to sanction/reduce payments.
+    SLP removes these control mechanisms.
+  - >
+    Multiple Reddit commenters report being denied SLP despite specialist
+    letters confirming <15hr work capacity. The designated doctor system
+    allows MSD to override treating clinicians.
+  - >
+    This scenario tests whether the engine correctly identifies SLP as an
+    entitlement when the person meets all statutory criteria but is currently
+    on JS-Medical. The tool's value is in surfacing this option so the person
+    can advocate for reassessment.
+  - >
+    The missing supplements (AS, DA, TAS, CSC) represent potentially $200-300/wk
+    in additional support this person is likely not receiving. Combined with
+    the SLP base rate increase, the total gap could be $250-350/wk.
+  - >
+    Key advocacy point: Under s40 Social Security Act 2018, if work capacity
+    is restricted to <15hrs/wk by a health condition, SLP is the correct
+    benefit. There is no discretion — if the medical threshold is met, SLP
+    must be granted. The friction is in the assessment process, not the law.

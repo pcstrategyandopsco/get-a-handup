@@ -1,0 +1,54 @@
+id: student-allowance
+name: Student Allowance
+category: other
+frequency: weekly
+taxable: true
+legal_basis: "Student Allowances Regulations 1998"
+source_url: "https://www.studylink.govt.nz/products/a-z-products/student-allowance.html"
+description: "Weekly payment from StudyLink for full-time students with low personal and parental/partner income. Not available for postgraduate study above Honours level."
+eligibility:
+  min_age: 18
+  max_age: 65
+  residency: [citizen, permanent_resident]
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: is_student
+      op: eq
+      value: true
+    - fact: is_postgrad_above_honours
+      op: eq
+      value: false
+  conditions:
+    - "Must be enrolled full-time at an approved tertiary provider"
+    - "Not available for Masters or PhD study — only up to Honours level"
+    - "Income must be below threshold"
+    - "Cannot receive Student Allowance alongside a main WINZ benefit"
+    - "Parental income tested if under 24 and no dependent children"
+    - "Partner income tested if in a relationship"
+    - "Apply through StudyLink, not Work and Income"
+rates:
+  effective: "2026-04-01"
+  max_weekly: "$340.38"
+  notes: "Rate varies by age, living situation, and whether single/partnered. Amount shown is single 24+ living away from home."
+income_test:
+  applies: true
+  description: "Personal income above $268.13/wk reduces allowance. Parental income tested if under 24."
+asset_test:
+  applies: false
+friction:
+  documentation_required:
+    - "Proof of enrollment (StudyLink verifies with provider)"
+    - "IRD number"
+    - "Bank account details"
+    - "Partner income details (if applicable)"
+    - "Parental income details (if under 24)"
+  typical_processing: "2-4 weeks before course start"
+  known_issues:
+    - "Not available for Masters or PhD — a major gap for disabled students who need income support during postgrad"
+    - "Parental income test excludes many students whose parents do not actually support them"
+    - "Cannot be received alongside any main benefit — must choose one pathway"
+    - "Study breaks: allowance stops during breaks unless enrolled in summer school"
+  deflection_patterns:
+    - "Students told to take Student Loan instead without being informed of allowance eligibility"
+    - "StudyLink application process separate from WINZ — falls through the cracks"

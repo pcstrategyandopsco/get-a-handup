@@ -1,0 +1,50 @@
+id: school-costs-assistance
+name: School Costs Assistance
+category: family
+frequency: one-off
+taxable: false
+legal_basis: "Social Security Act 2018"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/special-needs-grant.html"
+description: "One-off payment to help with school-related costs such as uniforms, stationery, and school fees"
+eligibility:
+  min_age: null
+  max_age: null
+  residency: [citizen, permanent_resident]
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: has_children
+      op: eq
+      value: true
+    - fact: has_school_costs
+      op: eq
+      value: true
+    - fact: low_income
+      op: eq
+      value: true
+  conditions:
+    - "Must have school-aged children"
+    - "Cannot afford essential school costs"
+    - "Low income or on benefit"
+rates:
+  effective: "2026-04-01"
+  max_weekly: "Variable one-off payment based on need"
+income_test:
+  applies: true
+  note: "Must demonstrate financial hardship"
+asset_test:
+  applies: true
+  note: "Limited assets"
+friction:
+  documentation_required:
+    - "School enrollment confirmation"
+    - "Quotes or invoices for school items"
+    - "Income and asset information"
+  typical_processing: "2-3 weeks"
+  known_issues:
+    - "Paid via Special Needs Grant - discretionary"
+    - "May only cover partial costs"
+    - "Usually only available once per year"
+  deflection_patterns:
+    - "Suggesting school should provide assistance"
+    - "Referring to charitable organizations"

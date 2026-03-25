@@ -1,0 +1,41 @@
+id: job-search-allowance
+name: Job Search Allowance
+category: employment
+frequency: one-off
+taxable: false
+legal_basis: "Social Security Act 2018, Section 183"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/job-search-allowance.html"
+description: "Financial help with job search costs including travel, clothing for interviews, and other employment-related expenses"
+eligibility:
+  min_age: null
+  max_age: null
+  residency: [citizen, permanent_resident]
+  requires_benefit: true
+  requires_application: true
+  rules:
+    - fact: on_benefit
+      op: eq
+      value: true
+    - fact: is_seeking_work
+      op: eq
+      value: true
+  conditions:
+    - "Must be receiving a benefit"
+    - "Must be actively seeking work"
+    - "Must demonstrate genuine job search activity"
+rates:
+  effective: "2026-04-01"
+  description: "varies - typically up to $300 for interview clothing, travel costs reimbursed"
+income_test:
+  applies: false
+friction:
+  documentation_required:
+    - "Evidence of job interviews or applications"
+    - "Receipts for expenses"
+  typical_processing: "1-2 weeks"
+  known_issues:
+    - "Many beneficiaries unaware this assistance exists"
+    - "Requires upfront payment then reimbursement in some cases"
+  deflection_patterns:
+    - "Case managers may not proactively inform clients"
+    - "Documentation requirements can be barriers"

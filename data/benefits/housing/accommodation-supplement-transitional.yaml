@@ -1,0 +1,47 @@
+id: accommodation-supplement-transitional
+name: Accommodation Supplement (Transitional)
+category: housing
+frequency: weekly
+taxable: false
+legal_basis: "Section 61E Social Security Act 2018"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/accommodation-supplement.html"
+description: "Transitional support for accommodation costs while waiting for social housing"
+eligibility:
+  min_age: 16
+  max_age: null
+  residency: [citizen, permanent_resident]
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: on_social_housing_wait_list
+      op: eq
+      value: true
+    - fact: has_accommodation_costs
+      op: eq
+      value: true
+  conditions:
+    - "Must be on social housing wait list"
+    - "Must have accommodation costs (rent, board, mortgage)"
+    - "Must meet income and asset thresholds"
+rates:
+  effective: "2026-04-01"
+  max_weekly: "Varies by location and household size (typically $100-$300 per week)"
+income_test:
+  applies: true
+asset_test:
+  applies: true
+friction:
+  documentation_required:
+    - "Proof of social housing registration"
+    - "Tenancy agreement or accommodation costs proof"
+    - "Proof of income"
+    - "Asset declarations"
+  typical_processing: "10-15 working days"
+  known_issues:
+    - "Often insufficient to cover actual accommodation costs"
+    - "Complex calculation methodology"
+    - "Long processing times"
+  deflection_patterns:
+    - "Being told to find cheaper accommodation"
+    - "Being told to increase income"
+    - "Complex income abatement reducing payment"

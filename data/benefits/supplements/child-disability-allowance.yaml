@@ -1,0 +1,43 @@
+id: child-disability-allowance
+name: Child Disability Allowance
+category: supplement
+frequency: fortnightly
+taxable: false
+legal_basis: "Section 39, Social Security Act 2018"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/child-disability-allowance.html"
+description: "Payment for parents or principal caregivers of children with serious disabilities requiring constant care and attention"
+eligibility:
+  min_age: null
+  max_age: null
+  residency: [citizen, permanent_resident]
+  residence_years: 0
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: has_child_with_disability
+      op: eq
+      value: true
+  conditions:
+    - "Child must require constant care and attention significantly more than other children of same age"
+    - "Child must be under 18 years old"
+    - "Must be the principal caregiver of the child"
+rates:
+  effective: "2026-04-01"
+  max_weekly: "$57.50"
+  notes: "Paid fortnightly ($115.00 per fortnight)"
+income_test:
+  applies: false
+asset_test:
+  applies: false
+friction:
+  documentation_required:
+    - "Medical certificate detailing child's disability and care requirements"
+    - "Evidence of being the principal caregiver"
+  typical_processing: "4-6 weeks"
+  known_issues:
+    - "Definition of 'constant care and attention' can be subjective"
+    - "Medical assessments can be lengthy and stressful for families"
+    - "Rate has not kept pace with actual care costs"
+  deflection_patterns:
+    - "Strict interpretation of 'constant care' requirement"
+    - "Comparison to other children same age can be used to deny applications"

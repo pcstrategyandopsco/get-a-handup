@@ -1,0 +1,45 @@
+id: residential-care-subsidy
+name: Residential Care Subsidy
+category: residential
+frequency: weekly
+taxable: false
+legal_basis: "s136 Social Security Act 2018"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/residential-care-subsidy.html"
+description: "Weekly subsidy for people in aged residential care facilities who cannot afford the full cost of care"
+eligibility:
+  min_age: 65
+  max_age: null
+  residency: [citizen, permanent_resident]
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: age
+      op: gte
+      value: 65
+    - fact: in_residential_care
+      op: eq
+      value: true
+  conditions:
+    - "Must be 65 or over, or have a qualifying health condition if under 65"
+    - "Must be assessed as requiring residential care"
+    - "Must be in an approved residential care facility"
+    - "Income and assets must be below thresholds"
+rates:
+  effective: "2026-04-01"
+  description: "varies based on level of care required and individual contribution capacity"
+income_test:
+  applies: true
+friction:
+  documentation_required:
+    - "Needs assessment and service coordination (NASC) assessment"
+    - "InterRAI assessment for care level"
+    - "Full financial disclosure including all assets and income"
+    - "Property valuations if applicable"
+  typical_processing: "4-6 weeks after all documentation provided"
+  known_issues:
+    - "Complex asset testing can delay applications"
+    - "Asset thresholds may force sale of family home"
+    - "Different rules for couples can be confusing"
+  deflection_patterns:
+    - "May suggest family should contribute to costs"
+    - "Complex financial assessment can discourage applications"

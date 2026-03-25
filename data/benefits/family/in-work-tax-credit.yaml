@@ -1,0 +1,49 @@
+id: in-work-tax-credit
+name: In-Work Tax Credit
+category: family
+frequency: weekly
+taxable: false
+legal_basis: "Tax Administration Act 1994, Part M"
+source_url: "https://www.ird.govt.nz/working-for-families/in-work-tax-credit"
+description: "Additional Working for Families payment for working families who are not receiving a main benefit"
+eligibility:
+  min_age: null
+  max_age: null
+  residency: [citizen, permanent_resident]
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: has_children
+      op: eq
+      value: true
+    - fact: is_working_sufficient_hours
+      op: eq
+      value: true
+    - fact: on_benefit
+      op: neq
+      value: true
+  conditions:
+    - "Must have dependent children"
+    - "Couples must work combined 30+ hours per week"
+    - "Sole parents must work 20+ hours per week"
+    - "Cannot be receiving a main benefit"
+rates:
+  effective: "2026-04-01"
+  max_weekly: "$72.46 per week for up to 3 children; additional for 4+ children"
+income_test:
+  applies: true
+  note: "Income tested as part of Working for Families"
+asset_test:
+  applies: false
+friction:
+  documentation_required:
+    - "IRD number"
+    - "Proof of employment and hours worked"
+    - "Birth certificates of children"
+    - "Income details"
+  typical_processing: "2-4 weeks"
+  known_issues:
+    - "Administered by IRD"
+    - "Cannot receive if on any main benefit"
+    - "Work hour requirements strictly enforced"
+  deflection_patterns: []

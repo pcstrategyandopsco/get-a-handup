@@ -1,0 +1,49 @@
+id: student-loan-living-costs
+name: Student Loan Living Costs
+category: other
+frequency: weekly
+taxable: false
+legal_basis: "Student Loan Scheme Act 2011"
+source_url: "https://www.studylink.govt.nz/products/a-z-products/student-loan/living-costs.html"
+description: "Loan-funded weekly living costs payment from StudyLink. Available for all study levels including postgraduate. This is a LOAN — it must be repaid through the tax system after study."
+eligibility:
+  min_age: 18
+  max_age: null
+  residency: [citizen, permanent_resident]
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: is_student
+      op: eq
+      value: true
+    - fact: study_load
+      op: eq
+      value: "full-time"
+  conditions:
+    - "WARNING: This is a LOAN, not a grant — repayable via IRD after study"
+    - "Must be enrolled full-time at an approved tertiary provider"
+    - "Available for all study levels including Masters and PhD"
+    - "Cannot receive alongside a main WINZ benefit"
+    - "12% repayment rate on income above $22,828/year after study"
+    - "Interest-free while living in NZ"
+rates:
+  effective: "2026-04-01"
+  max_weekly: "$316.98"
+  notes: "Fixed weekly rate. Paid directly to student's bank account."
+income_test:
+  applies: false
+  description: "No income test for loan eligibility, but borrowing adds to total debt."
+asset_test:
+  applies: false
+friction:
+  documentation_required:
+    - "Proof of enrollment (StudyLink verifies with provider)"
+    - "IRD number"
+    - "Bank account details"
+  typical_processing: "1-2 weeks"
+  known_issues:
+    - "Students not always informed this creates a debt obligation"
+    - "Living costs amount may not cover actual living expenses"
+    - "Repayment obligations begin when earning above threshold, regardless of whether study is complete"
+  deflection_patterns:
+    - "Students discouraged from borrowing without full explanation of interest-free terms within NZ"

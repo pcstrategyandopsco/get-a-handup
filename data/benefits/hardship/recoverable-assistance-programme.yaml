@@ -1,0 +1,49 @@
+id: recoverable-assistance-programme
+name: Recoverable Assistance Programme
+category: hardship
+frequency: one-off
+taxable: false
+legal_basis: "Section 68 Social Security Act 2018"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/recoverable-assistance.html"
+description: "Interest-free loan for essential items such as whitegoods, car repairs, and school costs. Recoverable through deductions from future benefit payments"
+eligibility:
+  min_age: 16
+  max_age: null
+  residency: [citizen, permanent_resident]
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: on_benefit
+      op: eq
+      value: true
+    - fact: low_income
+      op: eq
+      value: true
+    - fact: has_essential_need
+      op: eq
+      value: true
+  conditions:
+    - "Must be receiving a benefit or have low income"
+    - "Must have an essential need for items that can be specified"
+    - "Must be able to afford repayments from benefit or income"
+rates:
+  effective: "2026-04-01"
+  max_weekly: "Varies by need and repayment capacity"
+income_test:
+  applies: true
+asset_test:
+  applies: true
+friction:
+  documentation_required:
+    - "Quotes for items needed"
+    - "Proof of income"
+    - "Evidence of essential need"
+  typical_processing: "5-10 working days"
+  known_issues:
+    - "Repayment deductions can reduce benefit below liveable levels"
+    - "Limited to specific items and suppliers"
+    - "Can affect ability to get other hardship assistance"
+  deflection_patterns:
+    - "Being told to save up instead"
+    - "Being told the item is not essential"
+    - "Being offered lower amount than needed"

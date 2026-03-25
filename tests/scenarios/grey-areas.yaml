@@ -1,0 +1,475 @@
+# Grey Areas: Where MSD Discretion and Judgement Determine Outcomes
+#
+# This file catalogues the grey areas in NZ welfare — the places where
+# the law says one thing but MSD practice produces another, where a case
+# manager's subjective judgement can swing outcomes by hundreds of dollars
+# per week, and where beneficiaries lose out because they don't know the
+# rules well enough to push back.
+#
+# These are NOT test scenarios. They are a structured inventory of the
+# discretionary decision points the tool must eventually help people
+# navigate. Each grey area is sourced from Reddit threads, legal analysis,
+# or known MSD practice patterns.
+#
+# This is where the tool will eventually deliver real benefit: not just
+# "you qualify for X" but "here's the grey area, here's what MSD will
+# likely argue, here's the legal basis for pushing back, and here's what
+# to say at your appointment."
+
+# ═══════════════════════════════════════════════════════════════════════
+# 1. RELATIONSHIP CLASSIFICATION
+# ═══════════════════════════════════════════════════════════════════════
+
+relationship_classification:
+  law: "s3 Social Security Act 2018 — 'relationship in the nature of marriage'"
+  statutory_factors:
+    - "living together in the same household"
+    - "financial interdependence — shared bank accounts, expenses, assets"
+    - "commitment to a shared life"
+    - "care of children together"
+    - "public reputation as a couple"
+  msd_practice:
+    - "Applies factors far more aggressively than the statute suggests"
+    - "Sexual engagement alone treated as evidence of relationship"
+    - "Social media activity used as evidence (photos, relationship status)"
+    - "Electoral roll address matching used to flag cohabitation"
+    - "A single use of the word 'girlfriend' or 'partner' in any MSD interaction can trigger investigation"
+    - "Ace/asexual people classified as 'in a relationship' despite no sexual component"
+  financial_impact:
+    single_js_rate: "$337.74/wk"
+    couple_js_rate: "$562.18/wk combined ($281.09 each)"
+    partner_earning_67500: "Benefit reduced to $0 — partner income exceeds abatement threshold"
+    swing: "~$500+/wk total support (incl supplements) to $0"
+  reddit_evidence:
+    - source: "r/newzealand — 'Relationships when on the benefit'"
+      upvotes: 36
+      consensus: "Don't declare until living together (162 upvotes on top comment)"
+      key_quote: "I'm ace, and they declared me and my ex as a couple, even though we didn't have sex, didn't live together, and didn't share expenses"
+  tool_gaps:
+    - id: relationship-question-too-simple
+      current: "Single / In a relationship-de facto / Married / Separated / Widowed"
+      needed: |
+        Must distinguish:
+        1. Single (no romantic partner)
+        2. Dating / casual (not cohabiting, no financial interdependence)
+        3. De facto / cohabiting (shared household — MSD counts this)
+        4. Married / civil union
+        Options 2 and 3 have radically different benefit implications but
+        are currently conflated into one choice.
+    - id: partner-income-not-modelled
+      current: "No benefit rules use has_partner or household_income"
+      needed: "Partner income testing for all main benefits. Flag risk of reduction/cancellation."
+    - id: no-relationship-risk-warning
+      current: "Tool gives no guidance on relationship declaration"
+      needed: |
+        Surface the s3 SSA 2018 factors so people can self-assess.
+        Warn about the financial impact before they answer the question.
+        Note: the tool should inform, not advise concealment.
+  advocacy_points:
+    - "All five statutory factors must be considered together — no single factor is determinative"
+    - "Not living together weighs heavily against classification as a 'relationship in the nature of marriage'"
+    - "Financial independence (separate accounts, no shared expenses) is strong counter-evidence"
+    - "Request the written decision citing which specific factors MSD relied on"
+    - "Right to review under s12 SSA 2018 if classification is disputed"
+
+# ═══════════════════════════════════════════════════════════════════════
+# 2. WORK CAPACITY ASSESSMENT — SLP vs JS-MEDICAL
+# ═══════════════════════════════════════════════════════════════════════
+
+work_capacity_assessment:
+  law: "s40 Social Security Act 2018 — work capacity restricted to <15hrs/wk"
+  grey_area: |
+    The law says: if a health condition restricts work capacity to <15hrs/wk,
+    SLP must be granted. There is no discretion in the statute — if the medical
+    threshold is met, the benefit follows. But MSD interprets "work capacity"
+    subjectively through their designated doctor system, which can override
+    the treating clinician's opinion.
+  msd_practice:
+    - "MSD designated doctor can override GP/specialist assessment of work capacity"
+    - "Assessment focuses on capacity for ANY work, not the person's actual occupation or skills"
+    - "People kept on JS-Medical for years despite meeting SLP criteria"
+    - "'Incredibly difficult to get granted even if doctors sign it off' — Reddit"
+    - "13-week medical certificate renewal cycle creates constant churn and anxiety"
+    - "Case managers may discourage SLP applications ('you're doing fine on JS')"
+  financial_impact:
+    js_medical_rate: "$337.74/wk"
+    slp_rate: "$371.52/wk"
+    base_difference: "$33.78/wk"
+    abatement_difference: "JS 70c/$1 vs SLP 30c/$1 above threshold"
+    if_working_10hrs_at_25:
+      js_net_gain: "~$45/wk (after 70% abatement + tax)"
+      slp_net_gain: "~$130/wk (after 30% abatement + tax)"
+      difference: "~$85/wk — SLP makes part-time work viable"
+  reddit_evidence:
+    - source: "r/newzealand — 'SLP vs Jobseeker with medical certificate'"
+      finding: "Multiple people reporting denial despite specialist letters"
+    - source: "r/newzealand — 'JS-Medical studying'"
+      finding: "Study hours counted as 'activity' against medical deferral on JS, not on SLP"
+  tool_gaps:
+    - id: js-vs-js-medical-not-distinguished
+      current: "Tool surfaces JS as ENTITLED but can't recommend JS-Medical variant"
+      needed: |
+        When has_condition=true and work capacity is limited, flag that
+        JS-Medical (with medical deferral) removes job search obligations.
+        Without this, people face work test sanctions despite disability.
+    - id: slp-borderline-not-flagged
+      current: "SLP surfaces as POSSIBLE when work capacity is 15-30hrs"
+      needed: |
+        For people at the boundary (15-30hrs but with permanent condition),
+        the tool should explain the SLP threshold and suggest requesting
+        a formal work capacity assessment. Many people self-report higher
+        capacity than they actually have.
+  advocacy_points:
+    - "Under s40, if medical evidence supports <15hr capacity, SLP must be granted — no discretion"
+    - "Right to bring own medical evidence to counter designated doctor assessment"
+    - "Request copy of designated doctor's report under OIA"
+    - "Treating specialist opinion should carry more weight than a one-off MSD assessment"
+    - "Appeal pathway: internal review → Benefits Review Committee → Social Security Appeal Authority"
+    - "If on JS-Medical wanting to study: SLP is the better pathway (no work test = study doesn't conflict)"
+
+# ═══════════════════════════════════════════════════════════════════════
+# 3. DISABILITY ALLOWANCE — WHAT COUNTS AS AN ELIGIBLE COST
+# ═══════════════════════════════════════════════════════════════════════
+
+disability_allowance_costs:
+  law: "s28A Social Security Act 2018 — ongoing additional costs arising from disability"
+  grey_area: |
+    DA covers "additional costs arising from the person's disability" up to
+    $75.52/wk. But what counts as an "additional cost" is heavily discretionary.
+    Case managers routinely reject legitimate costs, and beneficiaries don't
+    know the full range of what's claimable.
+  commonly_missed_costs:
+    - category: "Transport"
+      examples: ["Mileage to GP/specialist at 28c/km", "Taxi to appointments when unable to drive", "Bus fares to medical appointments"]
+      grey: "MSD may challenge frequency of appointments or whether public transport was available"
+    - category: "Prescriptions & medication"
+      examples: ["Prescription co-pays", "Over-the-counter medications recommended by GP", "Supplements prescribed by specialist"]
+      grey: "OTC items often rejected despite GP recommendation. Get a letter."
+    - category: "Power & heating"
+      examples: ["Extra power costs due to condition (being home all day, medical equipment, heating needs)"]
+      grey: "Hard to prove 'extra' — MSD may compare to average household. Keep bills from before and after condition."
+    - category: "Clothing & footwear"
+      examples: ["Extra wear due to mobility aids", "Specialised footwear", "Continence supplies"]
+      grey: "Often not mentioned by case managers. Must be raised by applicant."
+    - category: "Gender-affirming care"
+      examples: ["HRT prescriptions", "Endocrinologist visits", "Mental health support", "Blood tests for hormone monitoring"]
+      grey: "Not proactively flagged by case managers. Trans beneficiaries frequently unaware these qualify."
+    - category: "Diet"
+      examples: ["Special dietary requirements due to condition (coeliac, diabetes, etc.)"]
+      grey: "Requires GP letter confirming medical necessity. Amount often disputed."
+    - category: "Communication"
+      examples: ["Phone/internet for health management, telehealth appointments"]
+      grey: "Telephone Allowance exists separately but is tiny. Excess costs can go on DA."
+  msd_practice:
+    - "Case managers do not proactively list all eligible cost categories"
+    - "Beneficiaries must know to ask — there is no checklist provided"
+    - "GP 'cost certificate' wording matters: 'ongoing costs arising from disability' is the magic phrase"
+    - "Costs must be 'additional' — i.e., costs you wouldn't have without the disability"
+    - "Receipts and documentation required, but a GP letter listing costs is often sufficient"
+  tool_gaps:
+    - id: da-cost-categories-not-surfaced
+      current: "Tool asks about health cost types but doesn't map them to DA-eligible categories"
+      needed: |
+        When DA surfaces, show a checklist of eligible cost categories with
+        examples. Prompt the user to consider costs they may not have thought of.
+        This is pure information — telling people what they're legally entitled
+        to claim.
+  advocacy_points:
+    - "Ask GP to write a letter listing ALL ongoing costs arising from disability"
+    - "Include transport, power, diet, clothing — not just prescriptions and appointments"
+    - "The $75.52/wk cap is per person — both partners in a couple can claim separately"
+    - "If a cost is rejected, request written reasons and consider review under s12"
+    - "Keep a 4-week cost diary before your appointment — real numbers are harder to dispute"
+
+# ═══════════════════════════════════════════════════════════════════════
+# 4. TEMPORARY ADDITIONAL SUPPORT — THE HARDSHIP CATCH-ALL
+# ═══════════════════════════════════════════════════════════════════════
+
+temporary_additional_support:
+  law: "s80 Social Security Act 2018"
+  grey_area: |
+    TAS is the gap-filler: it covers the shortfall between income (including
+    benefit) and essential costs. But "essential costs" is where discretion
+    lives. Case managers decide what's essential, what amounts are reasonable,
+    and whether costs are "avoidable." This is the benefit most often
+    under-granted or not mentioned at all.
+  msd_practice:
+    - "Case managers often don't mention TAS exists — it must be asked for"
+    - "Requires full financial breakdown of income and essential costs"
+    - "'Essential' is narrowly interpreted: rent, power, basic food. Medical costs sometimes excluded."
+    - "Reviewed every 13 weeks — can be reduced or cancelled at review"
+    - "Amount is discretionary: same financial situation can produce different TAS amounts with different case managers"
+    - "Must have explored all other avenues of support first (AS, DA, etc.)"
+  tool_gaps:
+    - id: tas-cost-breakdown-not-guided
+      current: "Tool surfaces TAS as POSSIBLE/ENTITLED but gives no guidance on the cost breakdown"
+      needed: |
+        Walk the user through building their essential cost breakdown:
+        rent, power, food, medical, transport, phone, insurance.
+        This IS the TAS application. Having the numbers ready is the
+        difference between getting $20/wk and $80/wk.
+  advocacy_points:
+    - "You have a legal right to apply for TAS — case managers cannot refuse to assess"
+    - "Prepare a detailed weekly budget BEFORE the appointment"
+    - "Include ALL essential costs, not just rent: power, food, medical, transport"
+    - "If the amount seems low, ask how it was calculated and what costs were excluded"
+    - "TAS is in addition to other supplements — it's not either/or"
+
+# ═══════════════════════════════════════════════════════════════════════
+# 5. SPECIAL NEEDS GRANTS — THE INVISIBLE ENTITLEMENT
+# ═══════════════════════════════════════════════════════════════════════
+
+special_needs_grants:
+  law: "s65 Social Security Act 2018"
+  grey_area: |
+    SNGs are one-off payments for essential needs that can't be met from
+    existing income. There is no statutory limit on frequency or total amount.
+    But MSD applies unofficial internal limits and case managers routinely
+    deny grants by claiming the need isn't "essential" or that the person
+    should have budgeted for it.
+  msd_practice:
+    - "No proactive offering — must be specifically requested"
+    - "Unofficial internal caps on frequency (e.g., 'you already had one this month')"
+    - "Broad discretion on what's 'essential': food grants usually approved, clothing often denied"
+    - "'Could you have budgeted for this?' is used to deny — but statute doesn't require perfect budgeting"
+    - "Emergency food grants are almost never denied but case managers may try to redirect to food banks first"
+    - "Whiteware (fridge, washing machine) grants available but rarely offered"
+  tool_gaps:
+    - id: sng-categories-not-listed
+      current: "Tool surfaces SNG as ENTITLED/POSSIBLE but doesn't list what can be granted"
+      needed: |
+        Show categories: food, clothing, bedding, whiteware, medical costs,
+        school costs, car repairs (if needed for employment). People don't
+        know to ask for things like a fridge replacement.
+  advocacy_points:
+    - "There is no legal limit on how many SNGs you can receive"
+    - "If denied, ask for the decision in writing with the specific legal basis"
+    - "Food grants should not be replaced with a food bank referral — that's deflection"
+    - "Whiteware grants exist: fridge, washing machine, beds, heaters"
+    - "School-related costs (uniforms, stationery, camps) are eligible"
+
+# ═══════════════════════════════════════════════════════════════════════
+# 6. BENEFIT TRANSITIONS — WHAT YOU LOSE WHEN YOU SWITCH
+# ═══════════════════════════════════════════════════════════════════════
+
+benefit_transitions:
+  grey_area: |
+    Moving between benefits (JS → SLP, benefit → StudyLink, benefit → work)
+    involves transitions where people routinely lose supplements they were
+    entitled to keep, or fail to pick up new ones. MSD does not proactively
+    manage these transitions. The gap between "old support ends" and "new
+    support starts" can be weeks of zero income.
+  common_traps:
+    - transition: "JS-Medical → SLP"
+      risk: "Supplements (AS, DA, TAS) may be cancelled and need to be re-applied for"
+      reality: "Most supplements carry over but case managers may not action this"
+    - transition: "Benefit → Student Allowance"
+      risk: |
+        Lose WINZ Accommodation Supplement (up to $305/wk) and get StudyLink
+        Accommodation Benefit (max $60/wk) — a $245/wk drop in housing
+        support. Also lose TAS, DA (must reapply through different system).
+      reality: "This is the biggest hidden cost of studying for beneficiaries"
+    - transition: "Benefit → Employment"
+      risk: |
+        Stand-down period before benefit cancels, but supplements stop
+        immediately. If job falls through within 13 weeks, can reapply
+        without stand-down — but many people don't know this.
+      reality: "Fear of losing benefit prevents people from trying work"
+    - transition: "Relationship declaration"
+      risk: |
+        Single rate → couple rate. All income testing recalculated.
+        Partner's income assessed. Supplements may be reduced or cancelled.
+        Can happen retroactively — MSD may demand repayment for the period
+        they determine the relationship existed.
+      reality: "People hide relationships to survive. MSD knows this and investigates."
+  tool_gaps:
+    - id: transition-modelling
+      current: "Tool evaluates current snapshot only, no transition analysis"
+      needed: |
+        When someone is on benefit X and qualifies for benefit Y, show
+        what they would gain AND lose in the transition. This is critical
+        for JS→SLP and benefit→StudyLink transitions.
+
+# ═══════════════════════════════════════════════════════════════════════
+# 7. CASE MANAGER DISCRETION — THE HUMAN VARIABLE
+# ═══════════════════════════════════════════════════════════════════════
+
+case_manager_discretion:
+  grey_area: |
+    Many benefits involve case manager discretion: TAS amounts, SNG
+    approval, training approval, hardship assessment. The same person with
+    the same circumstances can get materially different outcomes depending
+    on which case manager they see. This is by design — it gives MSD
+    flexibility — but in practice it means outcomes are inconsistent
+    and often depend on the beneficiary's ability to advocate.
+  known_patterns:
+    - "Newer case managers tend to follow policy more strictly (less discretion used)"
+    - "Experienced case managers may know more options but also more ways to deny"
+    - "Phone appointments produce worse outcomes than in-person (harder to advocate)"
+    - "Monday mornings and Friday afternoons produce worse outcomes (anecdotal but consistent)"
+    - "Having documentation ready shifts the dynamic from 'requesting' to 'confirming'"
+    - "Mentioning specific section numbers of the SSA signals legal awareness"
+  tool_contribution: |
+    The tool's core value is equalising information asymmetry. A person who
+    walks into a WINZ appointment knowing the specific section of the SSA 2018
+    that supports their claim, with a printed list of what they're entitled to,
+    with documentation ready — that person gets a materially different outcome
+    than someone who says "I think I might be eligible for something?"
+
+    The signed briefing document is the mechanism: it turns vague awareness
+    into a specific, legally-grounded list of entitlements. The case manager
+    knows that someone with a printed, signed document is more likely to
+    appeal if denied. This changes the calculation.
+
+# ═══════════════════════════════════════════════════════════════════════
+# 8. ABATEMENT TRAPS — THE POVERTY CEILING
+# ═══════════════════════════════════════════════════════════════════════
+
+abatement_traps:
+  law: "Schedule 4, Social Security Act 2018"
+  grey_area: |
+    Not discretionary per se — abatement rates are set by law. But the
+    interaction between abatement, tax, and ACC levies creates effective
+    marginal tax rates above 80% that beneficiaries rarely understand until
+    they're caught. The "poverty trap" is structural, not discretionary,
+    but the tool can surface it.
+  key_rates:
+    js_abatement: "70c per $1 above $160/wk threshold"
+    slp_abatement: "30c per $1 above $160/wk threshold"
+    effective_marginal_rate_js: "~82% (70% abatement + PAYE + ACC)"
+    effective_marginal_rate_slp: "~48% (30% abatement + PAYE + ACC)"
+  reddit_evidence:
+    - "Multiple threads: 'it's not worth working' on JS due to 70c abatement"
+    - "People unaware SLP has 30c rate — the benefit they don't know to ask for"
+  tool_gaps:
+    - id: abatement-calculator-not-implemented
+      current: "Tool doesn't calculate take-home impact of earning while on benefit"
+      needed: |
+        Show the person: "If you earn $X/wk, your benefit reduces by $Y,
+        you pay $Z tax, your net gain is $W." This makes the poverty trap
+        visible and quantifiable. For JS→SLP candidates, showing the
+        abatement difference is the most powerful argument for switching.
+
+# ═══════════════════════════════════════════════════════════════════════
+# 9. COMPLIANCE SANCTIONS — PUNISHMENT WITHOUT DUE PROCESS
+# ═══════════════════════════════════════════════════════════════════════
+
+compliance_sanctions:
+  law: "s102-s117 Social Security Act 2018 — obligations and sanctions"
+  grey_area: |
+    MSD can reduce or suspend benefit for non-compliance with obligations
+    (missing appointments, not meeting work test, etc.). The "traffic light"
+    system (green → orange → red) escalates sanctions automatically. But
+    the prerequisite — that MSD actually notified the person of the
+    obligation — is often not verified before sanctions are applied.
+    Beneficiaries are sanctioned first and must prove non-receipt, reversing
+    the burden of proof.
+  msd_practice:
+    - "Notifications sent via MyMSD letters, email, or text — but delivery is unreliable"
+    - "MyMSD shows letters before email/text notifications arrive"
+    - "Sanctions applied automatically when appointment is marked as 'no show'"
+    - "Case managers may refuse to investigate notification failure"
+    - "Traffic light escalation: orange (5 days to respond) → red (benefit reduced)"
+    - "Being at 'red' can reduce benefit by 50% or more"
+    - "Complaining about a sanction can trigger further scrutiny and additional sanctions"
+    - "Back-pay for wrongful sanctions often delayed — 'extra $20 on top of normal payment'"
+    - "New case managers tend to be more rigid ('very straight forward')"
+  financial_impact:
+    normal_payment: "~$380/wk (JS + small AS)"
+    after_first_sanction: "$55/wk (one example)"
+    after_escalation: "$160/wk (same person, after complaint denied)"
+    consequence: "Cannot afford rent or food. One notification failure → weeks of crisis."
+  notification_obligation:
+    law: "s102 SSA 2018 — MSD must notify beneficiaries of obligations"
+    reality: |
+      MSD's notification systems are unreliable. Emails don't arrive,
+      texts aren't sent, letters are delayed. MyMSD portal shows letters
+      but beneficiaries aren't always checking it proactively. When
+      notification fails, MSD treats it as the beneficiary's problem.
+    legal_position: |
+      If MSD cannot produce evidence that notification was sent AND
+      received (or at minimum, sent to the correct address/number),
+      the sanction has no legal basis. The obligation to comply arises
+      only after proper notification. This is basic procedural fairness.
+  reddit_evidence:
+    - source: "r/newzealand — 'Benefit got cut for not turning up for appointment'"
+      upvotes: 180
+      pattern: "Person never received notification. Case manager refused to investigate. Benefit cut from $380 to $55, then to $160 after complaint denied."
+    - source: "Same thread — multiple similar stories"
+      examples:
+        - "Benefit cancelled for 'refusing work' — actually just ticked 'day shift' preference on application"
+        - "Call centre agreed to cancel appointment, didn't actually cancel it, benefit cut"
+        - "90-day'd from job on day 89, took 3 weeks to reinstate benefit"
+  taking_advantage_analysis: |
+    The Reddit thread shows zero evidence of system abuse. The person:
+    - Is actively seeking work and genuinely wants a job
+    - Lives frugally ("don't waste money on stupid stuff")
+    - Proactively contacted MSD when payment was wrong
+    - Filed a complaint through proper channels
+    - Was punished for a notification failure they had no control over
+
+    This is the OPPOSITE of taking advantage. The system is taking
+    advantage of the person's vulnerability and lack of knowledge about
+    appeal rights. The person didn't know they could file a Review of
+    Decision, request the notification evidence, contact their MP, or
+    get a free advocate. Strangers on Reddit provided better support
+    than the case manager.
+  tool_gaps:
+    - id: sanctions-not-modelled
+      current: "Tool has no concept of sanctions, compliance obligations, or appeal rights"
+      needed: |
+        When on_benefit=true, surface a "know your rights" section:
+        - MSD must notify you of all appointments and obligations
+        - If benefit is reduced, you can file a Review of Decision (s12 SSA 2018)
+        - Request evidence that notification was sent (OIA)
+        - File a complaint via MSD website (faster than ROD)
+        - Contact MP's office for ministerial inquiry
+        - Free advocates available through CAB and Community Law
+    - id: emergency-grants-not-prominent
+      current: "SNG surfaces as one of many entitlements"
+      needed: |
+        When in_emergency=true and on_benefit=true, SNG for food should
+        be surfaced as IMMEDIATE — top of list, distinct from regular
+        entitlements. This is the difference between eating and not eating.
+    - id: rent-arrears-pathway
+      current: "RAP surfaces but no guidance on arrears"
+      needed: |
+        When has_rent_arrears=true, show specific pathway: get landlord
+        letter → apply for RAP for arrears → this prevents eviction.
+  advocacy_points:
+    - "Request a copy of the notification MSD claims they sent — they must provide this under the OIA"
+    - "File an online complaint at MSD website — triggers call from manager, faster than ROD"
+    - "File a Review of Decision under s12 SSA 2018 — formal review that must address the notification failure"
+    - "Contact your MP's office — ministerial inquiry goes directly to branch manager"
+    - "Get a free WINZ advocate from Citizens Advice Bureau or Community Law"
+    - "Apply for a Special Needs Grant for food IMMEDIATELY — this is almost never denied"
+    - "If rent is behind, get landlord letter and apply for rent arrears through RAP"
+    - "The case manager's obligation to notify is not optional — it is a statutory requirement under s102"
+
+# ═══════════════════════════════════════════════════════════════════════
+# TOOL ROADMAP: GREY AREA CAPABILITIES
+# ═══════════════════════════════════════════════════════════════════════
+#
+# Phase 1 (current): Binary rule evaluation — "you likely qualify for X"
+#   ✓ Implemented. 73 benefits, rules-based, data-driven.
+#
+# Phase 2 (next): Risk and transition warnings
+#   - Relationship declaration risk warnings
+#   - Partner income impact modelling
+#   - Benefit transition gain/loss analysis
+#   - JS vs JS-Medical vs SLP pathway guidance
+#
+# Phase 3 (target): Advocacy support
+#   - Specific SSA section citations for each grey area
+#   - Checklist of eligible DA cost categories
+#   - TAS essential cost breakdown builder
+#   - Abatement calculator showing take-home impact
+#   - "What to say at your appointment" for each entitlement
+#   - Case manager discretion patterns and counter-strategies
+#
+# Phase 4 (aspiration): Pattern detection
+#   - Aggregate outcome data reveals which grey areas produce the most
+#     denials by region, benefit type, and case manager patterns
+#   - Feed this back into the tool: "In your region, X% of DA claims for
+#     transport costs are initially denied but Y% succeed on review"
+#   - OIA ammunition: anonymised denial patterns for advocacy groups

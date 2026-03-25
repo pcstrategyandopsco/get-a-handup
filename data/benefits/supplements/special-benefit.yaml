@@ -1,0 +1,45 @@
+id: special-benefit
+name: Special Benefit
+category: supplement
+frequency: weekly
+taxable: false
+legal_basis: "Social Security Act 2018 (transitional provisions)"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/special-benefit.html"
+description: "Legacy supplement for people who were receiving it before Temporary Additional Support was introduced in 2006. Grandparented provision."
+eligibility:
+  min_age: null
+  max_age: null
+  residency: [citizen, permanent_resident]
+  residence_years: 0
+  requires_benefit: false
+  requires_application: false
+  rules:
+    - fact: has_existing_special_benefit
+      op: eq
+      value: true
+  conditions:
+    - "Must have been receiving Special Benefit before April 1, 2006"
+    - "No new applications accepted - closed to new recipients"
+    - "Continues as long as circumstances remain substantially the same"
+rates:
+  effective: "2026-04-01"
+  max_weekly: "Varies by individual case"
+  notes: "Rate set based on historical assessment. Generally more generous than current TAS"
+income_test:
+  applies: true
+  description: "Income test rules from time of original grant continue to apply"
+asset_test:
+  applies: true
+  single: 8100
+  couple_or_sole_parent: 16200
+  notes: "Asset limits have been updated to current thresholds"
+friction:
+  documentation_required:
+    - "Regular income and circumstance reviews"
+  typical_processing: "Not applicable - closed to new recipients"
+  known_issues:
+    - "Not available to new applicants"
+    - "Recipients may lose it if they transfer to TAS"
+    - "Many recipients not aware they may have more generous terms than TAS"
+  deflection_patterns:
+    - "Some recipients pressured to transition to TAS which may give them less support"

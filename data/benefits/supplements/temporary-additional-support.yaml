@@ -1,0 +1,90 @@
+id: temporary-additional-support
+name: Temporary Additional Support
+category: supplement
+frequency: weekly
+taxable: false
+legal_basis: "Section 64, Social Security Act 2018"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/temporary-additional-support.html"
+description: "Weekly top-up payment when essential living costs exceed income after taxes and other entitlements"
+eligibility:
+  min_age: 16
+  max_age: null
+  residency: [citizen, permanent_resident]
+  residence_years: 0
+  requires_benefit: true
+  requires_application: true
+  rules:
+    - fact: on_benefit
+      op: eq
+      value: true
+    - fact: essential_costs_exceed_income
+      op: eq
+      value: true
+  conditions:
+    - "Must be receiving a main benefit or supplementary assistance"
+    - "Essential costs must exceed income after tax and other assistance"
+    - "Costs must be essential and unavoidable"
+    - "Must have explored all other options for assistance"
+rates:
+  effective: "2026-04-01"
+  max_weekly: "$97"
+  notes: "Maximum rate varies based on circumstances. Payment is generally up to the shortfall between essential costs and income"
+income_test:
+  applies: true
+  description: "All income is assessed. TAS covers the gap between income and essential costs"
+asset_test:
+  applies: true
+  single: 8100
+  couple_or_sole_parent: 16200
+  notes: "Same asset limits as Accommodation Supplement"
+friction:
+  documentation_required:
+    - "Detailed breakdown of all essential costs (rent, utilities, food, transport, etc.)"
+    - "Receipts and bills for all claimed costs"
+    - "Proof of all income sources"
+    - "Bank statements"
+    - "Evidence that all other assistance options have been explored"
+  typical_processing: "2-4 weeks"
+  known_issues:
+    - "Very high documentation burden requiring detailed cost tracking"
+    - "Subjective assessment of what counts as 'essential'"
+    - "Time-limited and requires regular reapplication"
+    - "Case managers have significant discretion"
+  deflection_patterns:
+    - "Costs deemed non-essential or avoidable"
+    - "People told to reduce spending rather than receiving assistance"
+    - "Complex calculation process leads to confusion and incorrect assessments"
+
+advocacy:
+  appointment_strategy: >
+    TAS exists to cover the gap between your essential costs and your income.
+    Prepare a detailed cost breakdown before your appointment — rent, power,
+    food, transport, medical. The more precise your numbers, the harder it is
+    to deny. You have a right to apply; "have you tried spending less" is not
+    a legal basis for decline.
+
+  talking_points:
+    - "My essential costs are $[X]/week and my income after tax and other assistance is $[Y]/week"
+    - "Here is my cost breakdown with receipts for the past 4 weeks"
+    - "I have already applied for all other assistance I'm eligible for — Accommodation Supplement, DA, etc."
+    - "I understand TAS covers the shortfall between essential costs and income under s64 SSA 2018"
+
+  common_objections:
+    - objection: "Those costs aren't essential"
+      counter: "Rent, power, food, and transport to medical appointments are essential costs under any reasonable interpretation. Which specific cost are you excluding, and on what legal basis?"
+      cite: "s64 Social Security Act 2018"
+    - objection: "You should reduce your spending"
+      counter: "The Act requires assessment of essential costs against income — not budgeting advice. I'm asking for my entitlement to be assessed."
+      cite: "s64 Social Security Act 2018"
+    - objection: "You haven't explored all other options"
+      counter: "I am receiving [list current assistance]. What specific other options do you believe I should explore? Please put that in writing."
+    - objection: "Your bank statements show discretionary spending"
+      counter: "TAS is assessed on essential costs versus income, not spending patterns. My essential costs exceed my income by $[X]/week regardless."
+
+  escalation_triggers:
+    - trigger: "TAS declined without detailed calculation"
+      action: "Request the written calculation showing how your essential costs were assessed against income. If no calculation was done, the assessment is incomplete."
+    - trigger: "Told you don't qualify because you're managing"
+      action: "'Managing' by going without food or medication is not a reason to decline. Request written reasons under s12 SSA 2018."
+    - trigger: "Amount granted seems too low"
+      action: "Ask for the calculation breakdown. Check each cost line was included at the correct amount. Request a review if costs were underestimated."

@@ -1,0 +1,70 @@
+id: sole-parent-support
+name: Sole Parent Support
+category: main
+frequency: weekly
+taxable: true
+legal_basis: "section 30 Social Security Act 2018"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/sole-parent-support.html"
+description: "Weekly payment for sole parents caring for dependent children under 14 years old"
+
+eligibility:
+  min_age: 18
+  max_age: null
+  residency: [citizen, permanent_resident]
+  residence_years: 2
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: age
+      op: gte
+      value: 18
+    - fact: has_children
+      op: eq
+      value: true
+    - fact: is_sole_parent
+      op: eq
+      value: true
+    - fact: youngest_child_under_14
+      op: eq
+      value: true
+    - fact: residency_status
+      op: in
+      value: [citizen, permanent_resident]
+    - fact: years_in_nz
+      op: gte
+      value: 2
+  conditions:
+    - "Must be 18 years or older"
+    - "Must be the sole parent of one or more dependent children"
+    - "Youngest child must be under 14 years old"
+    - "Must be a New Zealand citizen or permanent resident"
+    - "Must have been resident in New Zealand for at least 2 years"
+
+rates:
+  effective: "2026-04-01"
+  max_weekly: "$434.68"
+  description: "Base rate for sole parent. Additional amounts may apply for each dependent child"
+
+income_test:
+  applies: true
+  description: "Income from work and other sources is tested. Abatement applies to income over certain thresholds"
+  thresholds:
+    - weekly: 160
+      abatement_rate: 0.30
+
+asset_test:
+  applies: true
+  single: 8100
+  couple_or_sole_parent: 16200
+
+friction:
+  documentation_required:
+    - "Proof of identity"
+    - "Birth certificates for dependent children"
+    - "Proof of sole parent status"
+    - "Bank account details"
+  typical_processing: "1-2 weeks"
+  known_issues:
+    - "Establishing sole parent status can be complex in shared care situations"
+    - "Part-time work obligations apply when youngest child reaches certain ages"
+  deflection_patterns: []

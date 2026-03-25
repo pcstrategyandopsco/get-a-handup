@@ -1,0 +1,49 @@
+id: participation-allowance
+name: Participation Allowance
+category: supplement
+frequency: as-needed
+taxable: false
+legal_basis: "Social Security Act 2018"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/participation-allowance.html"
+description: "Covers costs of participating in approved employment programmes, such as transport, childcare, or equipment"
+eligibility:
+  min_age: 16
+  max_age: null
+  residency: [citizen, permanent_resident]
+  residence_years: 0
+  requires_benefit: true
+  requires_application: true
+  rules:
+    - fact: on_benefit
+      op: eq
+      value: true
+    - fact: in_employment_programme
+      op: eq
+      value: true
+  conditions:
+    - "Must be receiving a main benefit"
+    - "Must be participating in an approved employment programme"
+    - "Must have genuine costs related to participation"
+    - "Costs must not be covered by other assistance"
+rates:
+  effective: "2026-04-01"
+  max_weekly: "Varies based on costs"
+  notes: "Amount varies depending on participation costs (transport, childcare, etc.)"
+income_test:
+  applies: false
+  description: "Already receiving a benefit, so income has been assessed"
+asset_test:
+  applies: false
+friction:
+  documentation_required:
+    - "Evidence of enrollment in employment programme"
+    - "Proof of participation costs"
+    - "Receipts for expenses"
+  typical_processing: "1-2 weeks"
+  known_issues:
+    - "May require pre-approval for some costs"
+    - "Limited to approved employment programmes"
+    - "Coverage may not extend to all actual costs"
+  deflection_patterns:
+    - "Told costs should be minimal or covered elsewhere"
+    - "Reluctance to cover full childcare costs"

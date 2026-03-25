@@ -1,0 +1,97 @@
+id: emergency-benefit
+name: Emergency Benefit
+category: main
+frequency: weekly
+taxable: true
+legal_basis: "section 74 Social Security Act 2018"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/emergency-benefit.html"
+description: "Discretionary hardship benefit available when no other benefit qualifies but person is in immediate financial hardship"
+
+eligibility:
+  min_age: 18
+  max_age: null
+  residency: [citizen, permanent_resident]
+  residence_years: null
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: age
+      op: gte
+      value: 18
+    - fact: no_qualifying_benefit
+      op: eq
+      value: true
+    - fact: in_hardship
+      op: eq
+      value: true
+    - fact: residency_status
+      op: in
+      value: [citizen, permanent_resident]
+  conditions:
+    - "Must be 18 years or older"
+    - "Must not qualify for any other main benefit"
+    - "Must be in immediate financial hardship"
+    - "Must be a New Zealand citizen or permanent resident"
+    - "Discretionary approval by Work and Income case manager"
+
+rates:
+  effective: "2026-04-01"
+  max_weekly: "Varies"
+  description: "Rate is discretionary and determined based on individual circumstances and hardship needs. May be equivalent to other main benefit rates"
+
+income_test:
+  applies: true
+  description: "Income and assets are assessed as part of hardship determination. Similar thresholds to other main benefits"
+
+asset_test:
+  applies: true
+  single: 8100
+  couple_or_sole_parent: 16200
+
+friction:
+  documentation_required:
+    - "Proof of identity"
+    - "Evidence of hardship circumstances"
+    - "Proof of ineligibility for other benefits"
+    - "Bank account details"
+    - "Any relevant supporting documentation"
+  typical_processing: "1-2 weeks"
+  known_issues:
+    - "Discretionary nature means outcomes can vary between case managers"
+    - "High evidence burden to prove hardship and lack of alternatives"
+    - "Often granted for limited time periods requiring reapplication"
+  deflection_patterns:
+    - "May be declined if case manager believes other support options exist"
+    - "Strict assessment of genuine hardship"
+
+advocacy:
+  appointment_strategy: >
+    Emergency Benefit is the last-resort benefit under s74 when you don't
+    qualify for any other main benefit but are in genuine hardship. It is
+    discretionary, so documentation is critical. Come with evidence of your
+    hardship and evidence that you've been declined or are ineligible for
+    other benefits. Frame it as: "I have no other option."
+
+  talking_points:
+    - "I am in immediate financial hardship and do not qualify for any other main benefit"
+    - "I have applied for / been declined [list other benefits tried] — here is the evidence"
+    - "Under s74 SSA 2018, Emergency Benefit exists for exactly this situation"
+    - "I need income support while my circumstances are resolved"
+
+  common_objections:
+    - objection: "You should apply for Jobseeker instead"
+      counter: "I don't meet the criteria for Jobseeker because [reason — e.g., residency requirement, not seeking work due to circumstances]. Emergency Benefit under s74 is for people who can't access other benefits."
+      cite: "s74 Social Security Act 2018"
+    - objection: "Your hardship isn't severe enough"
+      counter: "I have no income and cannot meet basic needs. Here is my bank statement showing my situation. The Act requires 'hardship' — there is no threshold for severity."
+      cite: "s74 Social Security Act 2018"
+    - objection: "This is only temporary — what's your plan?"
+      counter: "I understand it may be time-limited. My plan is [explain]. But I need income support now while I work towards that."
+
+  escalation_triggers:
+    - trigger: "Emergency Benefit declined"
+      action: "Request written reasons immediately. If you are in genuine hardship with no other benefit available, the decline should cite specific legal grounds. File a Review of Decision."
+    - trigger: "Granted for very short period only"
+      action: "Ask what specific circumstances need to change for extension. Get that in writing so you can demonstrate compliance when reapplying."
+    - trigger: "Told to rely on family or charity"
+      action: "Family support and charity are not substitutes for statutory entitlements. You have a right to be assessed under s74 regardless of informal support options."

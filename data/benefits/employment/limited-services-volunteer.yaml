@@ -1,0 +1,42 @@
+id: limited-services-volunteer
+name: Limited Services Volunteer Programme
+category: employment
+frequency: as-needed
+taxable: false
+legal_basis: "Social Security Act 2018, Part 2"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/limited-services-volunteer.html"
+description: "Volunteer work experience programme to help beneficiaries gain recent work experience and references"
+eligibility:
+  min_age: null
+  max_age: null
+  residency: [citizen, permanent_resident]
+  requires_benefit: true
+  requires_application: true
+  rules:
+    - fact: on_benefit
+      op: eq
+      value: true
+    - fact: interested_in_volunteering
+      op: eq
+      value: true
+  conditions:
+    - "Must be receiving a benefit"
+    - "Must be interested in gaining work experience through volunteering"
+    - "Must be matched with suitable volunteer opportunity"
+    - "Volunteer hours must not interfere with job seeking obligations"
+rates:
+  effective: "2026-04-01"
+  description: "varies - volunteer placement provided, may include travel reimbursement"
+income_test:
+  applies: false
+friction:
+  documentation_required:
+    - "Volunteer placement agreement"
+    - "Host organization details"
+  typical_processing: "2-4 weeks for placement"
+  known_issues:
+    - "Limited volunteer placements available"
+    - "Some beneficiaries prefer paid work over volunteering"
+  deflection_patterns:
+    - "Programme name 'limited services' can be confusing"
+    - "Voluntary nature means uptake is limited"

@@ -1,0 +1,47 @@
+id: clothing-allowance
+name: Clothing Allowance
+category: supplement
+frequency: fortnightly
+taxable: false
+legal_basis: "Social Security Act 2018"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/clothing-allowance.html"
+description: "Help with extra clothing costs for people with disabilities or health conditions that require special clothing or cause excessive wear"
+eligibility:
+  min_age: 16
+  max_age: null
+  residency: [citizen, permanent_resident]
+  residence_years: 0
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: has_condition
+      op: eq
+      value: true
+    - fact: has_extra_clothing_costs
+      op: eq
+      value: true
+  conditions:
+    - "Must have a disability or health condition"
+    - "Condition must result in extra clothing costs (special clothing needs or excessive wear)"
+    - "Costs must be ongoing"
+rates:
+  effective: "2026-04-01"
+  max_weekly: "Varies based on assessed need"
+  notes: "Amount varies depending on specific clothing needs and costs"
+income_test:
+  applies: true
+  description: "Income is assessed but thresholds are relatively generous"
+asset_test:
+  applies: false
+friction:
+  documentation_required:
+    - "Medical certificate confirming disability or health condition"
+    - "Evidence of extra clothing costs"
+    - "Proof of income"
+  typical_processing: "3-4 weeks"
+  known_issues:
+    - "Less well-known than Disability Allowance"
+    - "Proving link between condition and clothing costs can be difficult"
+  deflection_patterns:
+    - "Told to claim under Disability Allowance instead"
+    - "Narrow interpretation of what qualifies as disability-related clothing costs"

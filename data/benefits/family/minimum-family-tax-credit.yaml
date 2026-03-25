@@ -1,0 +1,51 @@
+id: minimum-family-tax-credit
+name: Minimum Family Tax Credit
+category: family
+frequency: weekly
+taxable: false
+legal_basis: "section ME 1 Income Tax Act 2007"
+source_url: "https://www.ird.govt.nz/working-for-families/types/minimum-family-tax-credit"
+description: "Tops up family income to a minimum threshold ($31,096/year or $598/week) for families with children who are working but not on a main benefit. Ensures families are not worse off working than on benefit."
+
+eligibility:
+  min_age: 18
+  max_age: null
+  residency: [citizen, permanent_resident]
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: has_children
+      op: eq
+      value: true
+    - fact: on_main_benefit
+      op: eq
+      value: false
+    - fact: is_working_sufficient_hours
+      op: eq
+      value: true
+  conditions:
+    - "Must have dependent children"
+    - "Must not be receiving a main benefit"
+    - "Must be working at least 20 hours per week (single) or 30 hours combined (couple)"
+    - "Family income must be below the minimum threshold"
+
+rates:
+  effective: "2026-04-01"
+  max_weekly: "$598"
+  description: "Tops up net family income to $598/week ($31,096/year). Amount varies based on current income."
+
+income_test:
+  applies: true
+  description: "Pays the difference between actual family income and $31,096/year. Only applies when income is below the floor."
+
+friction:
+  documentation_required:
+    - "Proof of employment and hours"
+    - "Income details for all family members"
+    - "IRD number"
+  typical_processing: "2-4 weeks via IRD"
+  known_issues:
+    - "Many families do not know this exists"
+    - "Interacts with other Working for Families credits"
+    - "Must be claimed through IRD, not MSD"
+  deflection_patterns: []

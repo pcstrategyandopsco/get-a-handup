@@ -1,0 +1,45 @@
+id: residential-support-subsidy
+name: Residential Support Subsidy
+category: residential
+frequency: weekly
+taxable: false
+legal_basis: "Social Security Act 2018"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/residential-support.html"
+description: "Weekly subsidy for people in community residential support services such as group homes, providing accommodation and support for people with disabilities"
+eligibility:
+  min_age: null
+  max_age: null
+  residency: [citizen, permanent_resident]
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: has_condition
+      op: eq
+      value: true
+    - fact: in_community_residential_care
+      op: eq
+      value: true
+  conditions:
+    - "Must have a disability or health condition"
+    - "Must be assessed as requiring residential support"
+    - "Must be in an approved residential support service"
+    - "Support needs cannot be met through community-based support alone"
+rates:
+  effective: "2026-04-01"
+  description: "varies based on level of support required and individual circumstances"
+income_test:
+  applies: true
+friction:
+  documentation_required:
+    - "Needs assessment from approved service"
+    - "Medical/disability documentation"
+    - "Service provider approval and agreement"
+    - "Income verification"
+  typical_processing: "4-6 weeks after needs assessment"
+  known_issues:
+    - "Limited availability of approved residential support services"
+    - "Long waiting lists in some areas"
+    - "May require moving to different area for placement"
+  deflection_patterns:
+    - "May suggest community-based support is sufficient"
+    - "Wait times can be used to delay decisions"

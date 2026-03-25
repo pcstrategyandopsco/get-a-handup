@@ -1,0 +1,36 @@
+id: work-preparation
+name: Work Preparation Services
+category: employment
+frequency: as-needed
+taxable: false
+legal_basis: "Social Security Act 2018, Part 2"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/work-preparation.html"
+description: "Comprehensive work preparation services including CV writing, interview preparation, and job matching assistance"
+eligibility:
+  min_age: null
+  max_age: null
+  residency: [citizen, permanent_resident]
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: is_seeking_work
+      op: eq
+      value: true
+  conditions:
+    - "Must be actively seeking work"
+    - "Must be willing to engage with employment services"
+rates:
+  effective: "2026-04-01"
+  description: "varies - services provided at no cost"
+income_test:
+  applies: false
+friction:
+  documentation_required:
+    - "Registration with Work and Income employment services"
+  typical_processing: "immediate to 1 week"
+  known_issues:
+    - "Quality and availability of services varies by location"
+    - "Services may be generic rather than tailored"
+  deflection_patterns:
+    - "Long wait times for one-on-one assistance"
+    - "Group workshops may not suit all learning styles"

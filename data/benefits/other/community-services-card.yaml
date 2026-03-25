@@ -1,0 +1,44 @@
+id: community-services-card
+name: Community Services Card
+category: other
+frequency: automatic
+taxable: false
+legal_basis: "Social Security Act 2018"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/community-services-card.html"
+description: "Discount card providing reduced costs for health services, prescriptions, and some other community services for low-income individuals and families"
+eligibility:
+  min_age: null
+  max_age: null
+  residency: [citizen, permanent_resident]
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: low_income
+      op: eq
+      value: true
+    - fact: on_benefit
+      op: eq
+      value: true
+  conditions:
+    - "Income must be below threshold, or automatically eligible if receiving benefit"
+    - "Provides discounts on prescriptions, GP visits, and other health services"
+    - "Automatically issued to beneficiaries"
+    - "Working families can apply based on income"
+rates:
+  effective: "2026-04-01"
+  description: "card provides access to discounted services rather than direct payment"
+income_test:
+  applies: true
+friction:
+  documentation_required:
+    - "Income verification (if not on benefit)"
+    - "Identification"
+    - "Dependent children details"
+  typical_processing: "1-2 weeks for non-beneficiaries, automatic for beneficiaries"
+  known_issues:
+    - "Many eligible working families unaware of entitlement"
+    - "Income thresholds not well publicized"
+    - "Some health providers don't accept or advertise CSC discounts"
+  deflection_patterns:
+    - "Complex income calculation may discourage applications"
+    - "Staff may not proactively inform of eligibility"

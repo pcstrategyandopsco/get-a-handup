@@ -1,0 +1,231 @@
+# Legal References — Statutes, Regulations, and Judgements
+#
+# This file is the tool's growing citation library. Every assertion about
+# entitlement, procedure, or rights should trace back to an entry here.
+#
+# Structure:
+#   statutes:     Acts of Parliament (primary law)
+#   regulations:  Delegated legislation under an Act
+#   judgements:    Court/tribunal decisions with precedential value
+#   policy:       MSD operational policy, manuals, code of conduct
+#   commentary:   Authoritative secondary sources (Law Commission, Ombudsman, etc.)
+#
+# Confidence levels:
+#   enacted    — in force, directly quotable
+#   repealed   — no longer in force (historical reference)
+#   persuasive — not binding but cited in practice
+#   internal   — MSD policy, not statute
+
+# ─── STATUTES ───────────────────────────────────────────────────────────
+
+statutes:
+
+  - id: ssa-2018
+    title: Social Security Act 2018
+    short: SSA 2018
+    url: "https://www.legislation.govt.nz/act/public/2018/0032/latest/whole.html"
+    status: enacted
+    sections:
+
+      - ref: "s3"
+        topic: Interpretation — relationship status
+        summary: >
+          Defines "spouse or partner" and "relationship in the nature of
+          marriage." Factors include financial interdependence, shared
+          household, commitment. Used to determine single vs couple rates.
+        used_by: [relationship-declaration, accommodation-supplement]
+        confidence_note: "Statute is clear on factors; application is discretionary."
+
+      - ref: "s12"
+        topic: Duty to give reasons for decisions
+        summary: >
+          MSD must give written reasons for any decision that affects a
+          person's entitlement. Failure to provide written reasons is itself
+          a procedural ground for complaint and strengthens any Review of
+          Decision application.
+        used_by: [all]
+        confidence_note: "Enacted. Frequently breached in practice."
+
+      - ref: "s40"
+        topic: Supported Living Payment — eligibility
+        summary: >
+          Grants SLP to people who are permanently and severely restricted
+          in capacity for work because of a health condition, injury, or
+          disability. Assessed by designated doctor. Separate from Jobseeker
+          Support (s25). A person on SLP retains access to supplementary
+          entitlements including DA.
+        used_by: [supported-living-payment]
+        confidence_note: "Enacted. No exclusion clause for DA."
+
+      - ref: "s85"
+        topic: Disability Allowance — eligibility
+        summary: >
+          Provides a weekly payment toward regular ongoing costs caused by
+          a disability or health condition expected to last 6+ months. The
+          disability must cause additional costs not met by other agencies.
+          NO provision excludes recipients of any particular main benefit.
+        used_by: [disability-allowance]
+        confidence_note: >
+          Enacted. Statute does not bar SLP recipients. No known case law
+          directly ruling on whether SLP precludes DA — but statutory text
+          contains no such exclusion, and MSD's own guidance says "You
+          don't have to be on a benefit to qualify."
+
+      - ref: "s86"
+        topic: Disability Allowance — meaning of disability costs
+        summary: >
+          Defines "disability costs" as regular ongoing additional costs
+          arising from the person's disability. Includes transport, medical
+          costs, special diet, power/heating for medical equipment, and
+          other costs certified by a medical practitioner.
+        used_by: [disability-allowance, power-and-heating-supplement]
+        confidence_note: "Enacted. Cost categories are illustrative, not exhaustive."
+
+      - ref: "s87"
+        topic: Disability Allowance — rate and income test
+        summary: >
+          Sets the maximum weekly rate ($75.52 as at April 2026) and
+          provides for income testing. Thresholds are relatively generous —
+          low-income earners and benefit recipients typically qualify.
+        used_by: [disability-allowance]
+        confidence_note: "Enacted. Rate updated by Order in Council."
+
+      - ref: "s65"
+        topic: Special Needs Grant
+        summary: >
+          Provides one-off grants for essential needs that cannot be met
+          from the person's own resources. Covers food, clothing, whiteware,
+          bedding, school costs, and other essentials. Highly discretionary.
+        used_by: [special-needs-grant]
+        confidence_note: "Enacted. Discretionary — not an entitlement per se."
+
+      - ref: "s80"
+        topic: Temporary Additional Support
+        summary: >
+          Provides weekly payment when a person's essential costs exceed
+          their income and other assistance. "Essential costs" is defined
+          broadly but assessed case-by-case. Maximum 13 weeks, renewable.
+        used_by: [temporary-additional-support]
+        confidence_note: "Enacted. 'Essential costs' is a discretionary determination."
+
+      - ref: "s102-117"
+        topic: Compliance and sanctions
+        summary: >
+          Governs obligations, sanctions for non-compliance, and
+          notification requirements. s102 sets obligations; s108-116 set
+          sanctions (traffic light system: first/second/third failure).
+          s110 requires MSD to notify the person BEFORE imposing a sanction.
+        used_by: [all]
+        confidence_note: "Enacted. Notification failures are common in practice."
+
+      - ref: "s391"
+        topic: Review of decisions — internal review
+        summary: >
+          Any person affected by a decision may apply for a review.
+          The review is conducted by a Benefits Review Committee (internal
+          to MSD but independent of the original decision-maker).
+        used_by: [all]
+        confidence_note: "Enacted. First step in the appeal pathway."
+
+      - ref: "s392"
+        topic: Appeal to Social Security Appeal Authority
+        summary: >
+          If dissatisfied with the Benefits Review Committee outcome, the
+          person may appeal to the Social Security Appeal Authority (SSAA),
+          an independent tribunal. SSAA decisions are binding on MSD.
+        used_by: [all]
+        confidence_note: "Enacted. Second step. SSAA decisions set precedent."
+
+  - id: psa-2020
+    title: Public Service Act 2020
+    short: PSA 2020
+    url: "https://www.legislation.govt.nz/act/public/2020/0040/latest/whole.html"
+    status: enacted
+    sections:
+
+      - ref: "Part 5"
+        topic: Standards of integrity and conduct
+        summary: >
+          Sets standards for public servants including acting lawfully,
+          impartially, and with integrity. Chief executives are responsible
+          for maintaining standards. Breaches are handled as employment
+          matters — not criminal. NZ abolished "misconduct in public office"
+          as a criminal offence.
+        used_by: [all]
+        confidence_note: >
+          Enacted. Key accountability gap: no criminal sanction for
+          individual officers who systematically deny valid entitlements.
+          Discipline is internal to MSD.
+
+  - id: pda-2022
+    title: Protected Disclosures (Protection of Whistleblowers) Act 2022
+    short: PDA 2022
+    url: "https://www.legislation.govt.nz/act/public/2022/0020/latest/whole.html"
+    status: enacted
+    sections:
+
+      - ref: "s10-14"
+        topic: Protected disclosures by public servants
+        summary: >
+          Protects public servants who report serious wrongdoing within
+          their organisation. Serious wrongdoing includes unlawful or
+          corrupt use of public resources, gross negligence, and oppressive
+          or grossly negligent conduct by a public official. Relevant
+          where an MSD employee witnesses systematic deflection of
+          valid entitlements.
+        used_by: []
+        confidence_note: "Enacted. Protects reporters, does not create sanctions."
+
+# ─── POLICY ─────────────────────────────────────────────────────────────
+
+policy:
+
+  - id: msd-code-of-conduct
+    title: MSD Code of Conduct
+    date: "2021-08"
+    summary: >
+      Sets expectations for MSD staff behaviour. Includes integrity,
+      respect, lawfulness. States "zero tolerance" for fraud. However,
+      applying discretion incorrectly (e.g., declining DA because the
+      person is on SLP) is not classified as fraud — it's an error in
+      judgement that the Review of Decision process is designed to correct.
+    confidence_note: "Internal policy. Not legally binding on applicants."
+
+  - id: msd-da-guidance
+    title: MSD Disability Allowance — operational guidance
+    url: "https://www.workandincome.govt.nz/products/a-z-benefits/disability-allowance.html"
+    summary: >
+      States: "You don't have to be on a benefit to qualify." Lists
+      eligible cost categories including GP visits, prescriptions,
+      unfunded medication, transport, power/heating for medical devices,
+      special dietary requirements, and clothing/footwear. Confirms
+      $75.52/wk maximum per person.
+    confidence_note: >
+      MSD's own published guidance. Directly contradicts case manager
+      reasoning that SLP precludes DA.
+
+# ─── COMMENTARY ─────────────────────────────────────────────────────────
+
+commentary:
+
+  - id: nzi-accountability-gap
+    title: "NZ Initiative — abolition of misconduct in public office"
+    summary: >
+      NZ abolished the common law offence of "misconduct in public
+      office." The NZ Initiative has noted this creates an accountability
+      gap for public servants who act unlawfully. Replacement mechanisms
+      (employment discipline, Ombudsman complaints) lack criminal teeth.
+    confidence_note: "Persuasive commentary, not law."
+
+  - id: privacy-commissioner-msd
+    title: "Privacy Commissioner — MSD investigatory powers"
+    summary: >
+      The Privacy Commissioner has found that MSD "systematically misused
+      investigatory powers" in past reviews. This is relevant context for
+      the power imbalance between applicants and case managers.
+    confidence_note: "Persuasive. Commissioner findings are not binding rulings."
+
+# ─── JUDGEMENTS ─────────────────────────────────────────────────────────
+# (To be populated as specific SSAA decisions and court rulings are found)
+
+judgements: []

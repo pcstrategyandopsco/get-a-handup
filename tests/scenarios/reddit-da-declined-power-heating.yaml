@@ -1,0 +1,222 @@
+# Test Scenario: Reddit "Declined Disability Allowance for power/heating"
+# Source: reddit.com/r/newzealand
+#
+# This person represents a common DA deflection pattern:
+# 1. On Supported Living Payment (has serious disability)
+# 2. Applied for DA specifically for power/gas/heating costs
+# 3. Declined because case manager "felt" they don't need it
+# 4. Not notified of decline — found out a month later when they called
+# 5. Told they can apply for Review of Decision (ROD)
+#
+# Reddit thread reveals critical information:
+# - DA covers costs "directly related to disability" — prescriptions,
+#   GP visits, unfunded medication, medical devices, therapies, AND
+#   a portion of power if doctor certifies the need
+# - Power costs CAN be covered if tied to medical devices (dehumidifier,
+#   CPAP, clothes dryer for physical disability, heat pump for condition)
+# - Must prove EXTRA cost above normal usage, not total cost
+# - GP must specifically write that the appliance use is medically required
+# - Chiro/acupuncture can be covered if GP writes supporting letter
+# - Non-funded medication: need GP letter explaining why funded alternatives
+#   don't work (medical reason, not just religious preference)
+# - TAS is an alternative pathway for power costs that don't qualify under DA
+# - s12 SSA 2018 requires written reasons for any decision
+# - Notification failure is itself grounds for complaint
+#
+# This scenario tests:
+# - DA surfaces despite being declined (the decline was wrong)
+# - Power/heating supplement surfaces separately
+# - TAS surfaces as fallback for costs DA doesn't cover
+# - Health-related costs pathway activates
+# - The tool helps the person prepare for ROD with evidence
+#
+# Assumptions:
+# - On SLP = serious disability, likely permanent
+# - Has ongoing disability costs (power, heating, medical)
+# - Single (tone of post), mid-30s
+# - Renting (common for SLP recipients)
+# - Not working (on SLP, no mention of employment)
+# - Has health-related costs including power/heating, GP, prescriptions
+# - Uses medical devices requiring extra power (dehumidifier, dryer)
+
+scenario:
+  name: "DA declined for power/heating — SLP recipient, notification failure"
+  description: >
+    Adult on Supported Living Payment with serious disability. Applied for
+    Disability Allowance for power/gas/heating costs. Declined without
+    notification — discovered a month later by phone. Case manager said
+    they "felt" the person doesn't need it because they get SLP. Has
+    medical devices requiring extra power (dehumidifier, dryer, heat pump).
+    Also has ongoing GP, prescription, and alternative therapy costs.
+    Needs to understand ROD process and what DA actually covers.
+
+intake_answers:
+  # PERSONAL
+  personal.age: 34
+  personal.residency: "NZ Citizen"
+  personal.years_in_nz: 34
+  personal.relationship: "Single"
+
+  # HOUSING
+  housing.type: "Renting"
+  housing.cost: 280
+  housing.region: "Auckland"
+  housing.social_housing: "No"
+  housing.arrears: "No"
+  housing.need_to_move: "No"
+
+  # INCOME — on SLP, no employment income
+  income.employed: "No"
+  income.benefit: "Yes"
+  income.benefit_type: "Supported Living Payment"
+  income.current_supplements:
+    - "None of these"
+  income.assets: "Under $8,100"
+
+  # HEALTH — serious disability, permanent, multiple cost types
+  health.condition: "Yes"
+  health.duration: "Permanent / lifelong"
+  health.costs: "Yes"
+  health.cost_types:
+    - "GP / specialist visits"
+    - "Prescriptions / medication"
+    - "Extra power / heating"
+    - "Transport to appointments"
+    - "Equipment or aids"
+  health.hours_able: "Unable to work"
+  health.residential_care: "No"
+
+  # CHILDREN
+  children.dependent: "No"
+  children.caring_for_other: "No"
+
+  # EDUCATION
+  education.studying: "No"
+
+  # EMPLOYMENT
+  employment.seeking_work: "No"
+  employment.training_interest: "No"
+  employment.seasonal: "No"
+  employment.self_employed: "No"
+
+  # HISTORY — DA was declined
+  history.past_denied: "Yes"
+  history.denied_what: "Disability Allowance"
+  history.written: "No — verbal only"
+  history.upload: "Skip for now"
+
+  # SITUATION
+  situation.emergency: "No"
+  situation.family_violence: "No"
+  situation.recently_released: "No"
+  situation.refugee: "No"
+  situation.carer: "No"
+
+expected_entitlements:
+  should_surface:
+    - id: disability-allowance
+      status: ENTITLED
+      reasoning: >
+        Core finding. Person has a permanent disability with ongoing costs
+        (GP, prescriptions, power, transport, equipment). DA eligibility
+        is under s85 SSA 2018; SLP is under s40. These are in separate
+        subparts of the Act and no provision excludes SLP recipients from
+        DA. MSD's own guidance says "You don't have to be on a benefit to
+        qualify." CAVEAT: This is based on statutory text — no specific
+        SSAA or court decision has directly ruled on SLP+DA concurrency.
+        The statutory interpretation is strong but formally untested.
+        Decline should be challenged via ROD (s391). Key evidence: GP
+        letter itemising each cost category, power bills showing extra
+        usage from medical devices, receipts for prescriptions and transport.
+
+    - id: accommodation-supplement
+      status: ENTITLED
+      reasoning: >
+        Renting in Auckland, on SLP, not in social housing.
+        Single with no employment income — well under thresholds.
+        Not currently receiving any supplements per intake.
+
+    - id: winter-energy-payment
+      status: ENTITLED
+      reasoning: >
+        On SLP (main benefit). WEP is automatic May-October.
+        $20.46/wk single. Particularly relevant given their
+        extra power costs from medical devices.
+
+    - id: temporary-additional-support
+      status: ENTITLED
+      reasoning: >
+        On SLP with no employment income, paying $280/wk rent.
+        SLP is $371.52/wk gross. Essential costs likely exceed
+        income. TAS is the fallback for costs DA doesn't cover,
+        as several Reddit commenters noted.
+
+    - id: community-services-card
+      status: ENTITLED
+      reasoning: >
+        On main benefit — automatic. Reduces GP visits to $19.50
+        and prescriptions to $5. Critical given ongoing health costs.
+
+    - id: health-related-costs
+      status: ENTITLED
+      reasoning: >
+        Has health condition with ongoing health-related costs.
+        Low income on SLP. This pathway covers costs that may
+        not fit neatly into DA categories.
+
+    - id: power-and-heating-supplement
+      status: ENTITLED
+      reasoning: >
+        Has condition requiring extra power/heating. The specific
+        benefit they were trying to access through DA. This should
+        surface as its own entitlement pathway.
+
+  should_not_surface:
+    - id: sole-parent-support
+      reasoning: "No children, not a sole parent"
+    - id: childcare-assistance
+      reasoning: "No children"
+    # NOTE: jobseeker-support surfaces as POSSIBLE (73%) because the engine
+    # has no benefit hierarchy model — it doesn't know SLP > JS. This is a
+    # known gap. In the UI, it falls into the contingency section (below 65%
+    # threshold... actually 73% is above). TODO: add benefit hierarchy rules
+    # so lower-tier benefits don't surface when already on a higher tier.
+
+notes:
+  - >
+    STATUTE: SLP is under s40 SSA 2018 (Subpart 4 — main benefits). DA
+    is under s85-87 (Subpart 9 — supplementary assistance). No provision
+    in the Act excludes SLP recipients from DA. The only explicit DA
+    exclusion is for Residential Care Subsidy recipients (s144).
+    INTERPRETATION: The case manager's reasoning ("you get SLP so you
+    don't need DA") has no statutory basis. SLP compensates for lost
+    earning capacity; DA covers ongoing disability costs. However, we
+    have not found a published SSAA or court decision directly ruling
+    on SLP+DA concurrency. The statutory text is clear but formally
+    untested on this specific point. MSD's own website confirms DA is
+    available regardless of benefit status.
+  - >
+    The notification failure is a separate issue. Under s12 SSA 2018,
+    MSD must give written reasons for decisions. Not being told about
+    the decline for a month, and only finding out by calling, is a
+    procedural failure that strengthens the ROD case.
+  - >
+    Reddit advice on power costs is accurate: must prove EXTRA cost
+    above normal usage. Method: measure power for a week without
+    medical devices, then with. The differential is the claimable amount.
+    GP must certify the devices are medically necessary.
+  - >
+    The "religious reasons" sub-thread is a red herring for this scenario
+    but illustrates another deflection pattern. The correct approach:
+    get GP to write that the funded medication is medically contraindicated
+    (not just religiously objectionable). Medical contraindication is
+    much harder for WINZ to argue against.
+  - >
+    Multiple Reddit commenters suggest TAS as an alternative to DA for
+    power costs. This is correct — if DA doesn't cover the full extra
+    power cost, TAS can pick up the remainder as an "essential cost."
+  - >
+    The tool's value here: surface ALL the entitlements this person is
+    missing (AS, WEP, TAS, CSC, health costs) while also confirming
+    that DA should be pursued via ROD. The person came asking about
+    one declined benefit but is likely missing 5-6 others.

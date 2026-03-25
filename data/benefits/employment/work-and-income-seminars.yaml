@@ -1,0 +1,37 @@
+id: work-and-income-seminars
+name: Work and Income Seminars
+category: employment
+frequency: as-needed
+taxable: false
+legal_basis: "Social Security Act 2018, Part 2"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/work-and-income-seminars.html"
+description: "Employment-related workshops and seminars covering job search strategies, workplace skills, and career planning"
+eligibility:
+  min_age: null
+  max_age: null
+  residency: [citizen, permanent_resident]
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: is_seeking_work
+      op: eq
+      value: true
+  conditions:
+    - "Must be actively seeking work"
+    - "Must register for seminars in advance"
+    - "Must attend all sessions of multi-part seminars"
+rates:
+  effective: "2026-04-01"
+  description: "varies - seminars provided at no cost, may include travel reimbursement"
+income_test:
+  applies: false
+friction:
+  documentation_required:
+    - "Seminar registration"
+  typical_processing: "immediate to 2 weeks for next available seminar"
+  known_issues:
+    - "Seminar schedules may not suit all participants"
+    - "Limited availability in some regions"
+  deflection_patterns:
+    - "Generic content may not address specific needs"
+    - "Mandatory attendance for some beneficiaries can reduce engagement"

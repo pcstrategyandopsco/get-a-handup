@@ -1,0 +1,45 @@
+id: health-related-costs
+name: Health-Related Costs
+category: health
+frequency: as-needed
+taxable: false
+legal_basis: "Social Security Act 2018"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/disability-allowance.html"
+description: "Help with costs directly related to a health condition or disability, including medical expenses, transport to appointments, and equipment"
+eligibility:
+  min_age: null
+  max_age: null
+  residency: [citizen, permanent_resident]
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: has_condition
+      op: eq
+      value: true
+    - fact: has_health_related_costs
+      op: eq
+      value: true
+    - fact: low_income
+      op: eq
+      value: true
+  conditions:
+    - "Must have a health condition or disability"
+    - "Must have ongoing or one-off health-related costs"
+    - "Income must be below threshold"
+rates:
+  effective: "2026-04-01"
+  description: "varies based on individual circumstances and costs incurred"
+income_test:
+  applies: true
+friction:
+  documentation_required:
+    - "Medical certificate or health professional confirmation"
+    - "Receipts or quotes for health-related costs"
+    - "Income verification"
+  typical_processing: "2-4 weeks for initial assessment"
+  known_issues:
+    - "Definition of 'health-related' costs can be inconsistently applied"
+    - "Transport costs may be challenged if public transport available"
+  deflection_patterns:
+    - "Staff may suggest waiting to accumulate more costs"
+    - "May suggest claiming through other means first"

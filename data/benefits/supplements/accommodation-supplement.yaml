@@ -1,0 +1,50 @@
+id: accommodation-supplement
+name: Accommodation Supplement
+category: supplement
+frequency: weekly
+taxable: false
+legal_basis: "Section 73, Social Security Act 2018"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/accommodation-supplement.html"
+description: "Weekly help with rent, board, or mortgage costs for people with housing expenses"
+eligibility:
+  min_age: 16
+  max_age: null
+  residency: [citizen, permanent_resident]
+  residence_years: 0
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: housing_type
+      op: in
+      value: [renting, boarding, mortgage]
+    - fact: is_social_housing
+      op: eq
+      value: false
+  conditions:
+    - "Must have regular housing costs (rent, board, or mortgage)"
+    - "Must not be living in social housing"
+    - "Income and assets must be below threshold"
+rates:
+  effective: "2026-04-01"
+  max_weekly: "$305"
+  notes: "Maximum rate for area 1, couple with children. Rates vary by area and household composition"
+income_test:
+  applies: true
+  description: "Income is assessed and reduces payment on a sliding scale"
+asset_test:
+  applies: true
+  single: 8100
+  couple_or_sole_parent: 16200
+  notes: "Cash assets above threshold reduce or eliminate payment"
+friction:
+  documentation_required:
+    - "Proof of housing costs (tenancy agreement, mortgage statement, or board receipt)"
+    - "Proof of income"
+    - "Bank statements for asset test"
+  typical_processing: "2-3 weeks"
+  known_issues:
+    - "Area boundaries can be confusing for applicants"
+    - "Frequent reassessments required when circumstances change"
+  deflection_patterns:
+    - "Complex area-based rate structure not well understood"
+    - "Asset test can disqualify people with modest savings"

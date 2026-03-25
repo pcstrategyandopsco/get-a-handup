@@ -1,0 +1,45 @@
+id: special-circumstance-assistance
+name: Special Circumstance Assistance
+category: other
+frequency: one-off
+taxable: false
+legal_basis: "Social Security Act 2018"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/special-needs-grant.html"
+description: "Discretionary assistance for unusual circumstances or emergencies not covered by other specific payments, assessed on a case-by-case basis"
+eligibility:
+  min_age: null
+  max_age: null
+  residency: [citizen, permanent_resident]
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: has_special_circumstances
+      op: eq
+      value: true
+  conditions:
+    - "Must have circumstances not covered by other assistance programs"
+    - "Need must be immediate and essential"
+    - "All other options must have been explored"
+    - "Highly discretionary decision by case manager"
+rates:
+  effective: "2026-04-01"
+  description: "varies entirely based on circumstances and need"
+income_test:
+  applies: true
+friction:
+  documentation_required:
+    - "Detailed explanation of circumstances"
+    - "Evidence of need"
+    - "Quotes or receipts if applicable"
+    - "Evidence other options have been exhausted"
+    - "Income and asset verification"
+  typical_processing: "1-4 weeks depending on complexity"
+  known_issues:
+    - "Highly discretionary with inconsistent application"
+    - "Requires strong advocacy skills to succeed"
+    - "Different case managers may reach different decisions"
+    - "Often requires multiple attempts or appeals"
+  deflection_patterns:
+    - "Staff may claim circumstances don't meet criteria without clear explanation"
+    - "May suggest other options that don't actually exist or aren't suitable"
+    - "Lengthy decision process can be used to discourage applications"

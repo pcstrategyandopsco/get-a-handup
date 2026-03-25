@@ -1,0 +1,42 @@
+id: flexi-wage
+name: Flexi-wage
+category: employment
+frequency: weekly
+taxable: false
+legal_basis: "Social Security Act 2018, Part 2"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/flexi-wage.html"
+description: "Wage subsidy paid to employers to hire disadvantaged jobseekers who face barriers to employment"
+eligibility:
+  min_age: null
+  max_age: null
+  residency: [citizen, permanent_resident]
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: is_seeking_work
+      op: eq
+      value: true
+    - fact: has_barriers_to_employment
+      op: eq
+      value: true
+  conditions:
+    - "Must be actively seeking work"
+    - "Must have barriers to employment (e.g., long-term unemployment, health conditions, previous incarceration)"
+    - "Employer must apply for subsidy"
+rates:
+  effective: "2026-04-01"
+  description: "varies - employer receives subsidy up to full minimum wage for up to 26 weeks"
+income_test:
+  applies: false
+friction:
+  documentation_required:
+    - "Employer application form"
+    - "Evidence of barriers to employment"
+    - "Employment agreement"
+  typical_processing: "2-3 weeks"
+  known_issues:
+    - "Employer awareness of programme is limited"
+    - "Application process can be complex for small employers"
+  deflection_patterns:
+    - "Employers may not know about the subsidy"
+    - "Strict eligibility criteria for jobseeker barriers"

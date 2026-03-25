@@ -1,0 +1,101 @@
+# Test Scenario: Transition analysis — single on Jobseeker, no kids
+# Expected: trap verdict — Accommodation Supplement loss dominates
+#
+# This person earns $100/wk part-time while on Jobseeker Support. When they
+# go full-time at minimum wage, they lose the benefit + AS (~$165/wk in zone 2)
+# and gain only the net of employment income. The housing cliff is brutal.
+
+scenario:
+  name: "Transition — JS single, no kids, renting"
+  description: >
+    Single person 30, on Jobseeker Support, earning $100/wk part-time (under
+    abatement threshold). Renting in Canterbury at $280/wk. Has no children.
+    No health condition. The transition calculator should show that going
+    full-time at minimum wage is a trap due to AS loss.
+
+intake_answers:
+  # TRIAGE
+  triage.reason: "Full assessment of everything I might be entitled to"
+
+  # PERSONAL
+  personal.age: 30
+  personal.residency: "NZ Citizen"
+  personal.years_in_nz: 30
+  personal.relationship: "Single"
+
+  # HOUSING
+  housing.type: "Renting"
+  housing.cost: 280
+  housing.region: "Canterbury / Christchurch"
+  housing.social_housing: "No"
+  housing.arrears: "No"
+  housing.need_to_move: "No"
+
+  # INCOME
+  income.employed: "Yes"
+  income.hours: 10
+  income.amount: 100
+  income.benefit: "Yes"
+  income.benefit_type: "Jobseeker Support"
+  income.current_supplements:
+    - "None of these"
+  income.assets: "Under $8,100"
+
+  # HEALTH
+  health.condition: "No"
+
+  # CHILDREN
+  children.dependent: "No"
+  children.caring_for_other: "No"
+
+  # EDUCATION
+  education.studying: "No"
+
+  # EMPLOYMENT
+  employment.seeking_work: "Yes"
+  employment.unemployment_duration: "1 – 3 months"
+  employment.training_interest: "No"
+  employment.seasonal: "No"
+  employment.self_employed: "No"
+
+  # HISTORY
+  history.past_denied: "No"
+
+  # SITUATION
+  situation.emergency: "No"
+  situation.family_violence: "No"
+  situation.recently_released: "No"
+  situation.refugee: "No"
+  situation.carer: "No"
+
+expected_entitlements:
+  should_surface:
+    - id: jobseeker-support
+      status: ENTITLED
+      reasoning: "Meets all criteria — on benefit, seeking work, age 30, citizen"
+    - id: accommodation-supplement
+      status: ENTITLED
+      reasoning: "Renting, single, Canterbury zone 2"
+
+  should_not_surface:
+    - id: sole-parent-support
+      reasoning: "No children"
+    - id: supported-living-payment
+      reasoning: "No health condition"
+
+# Transition analysis expectations
+transition_expected:
+  verdict: better_working
+  reasoning: >
+    Current: $337/wk JS + $100/wk earnings (under threshold) - $12 tax/ACC + $105 AS + $97 TAS + $32 WEP = ~$659/wk.
+    Full-time min wage off-benefit: $926 gross - $158 tax/ACC + $60 AB = ~$828/wk net.
+    Net gain: +$168/wk. Clearly better_working. The AS→AB cliff ($105→$60 = $45/wk loss) is real
+    but insufficient to offset the earnings gain at 40hrs min wage for a single person.
+
+notes:
+  - >
+    The key insight: this person would need to earn significantly above minimum wage
+    to clearly be better off working. The $105/wk AS cliff is the main trap mechanism.
+  - >
+    This scenario tests the transition engine's ability to correctly compute the
+    housing cliff and arrive at a "trap" verdict for a single person with no children.

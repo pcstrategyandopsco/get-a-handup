@@ -1,0 +1,292 @@
+# Test Scenario: Reddit "Renting while on WINZ with medical"
+# Source: reddit.com/r/newzealand — person wanting to leave home for first time
+#
+# This person reveals a cluster of issues:
+# 1. 29yo, never lived independently, in a cabin at mum's house
+# 2. Multiple health conditions, declining — "virtually impossible to work"
+# 3. Has a partner, BOTH becoming physically disabled
+# 4. Both on WINZ with medical certificates
+# 5. Cabin has steps that are becoming inaccessible (spinal injury, walking aid)
+# 6. Needs to move to accessible, independent housing
+# 7. Worried WINZ won't help because new place is "more expensive"
+# 8. Worried landlords won't accept two beneficiaries
+#
+# Reddit insights:
+# - "Just do it and tell WINZ after" — move first, update details (top comment)
+# - Should get AS increase, DA, TAS after moving to independent rental
+# - Social housing (Kainga Ora) suggested — accessibility needs put you higher on list
+# - Water costs can be included in AS calculation
+# - Power costs on DA if medical reason (e.g., medical devices)
+# - Budget advisor recommended as less stressful than WINZ directly
+# - OP clarified: classified as renter not boarder (pays rent + buys own food)
+# - OP already gets small AS
+#
+# Key gap: "virtually impossible to work" + physical disability + spinal injury
+# strongly suggests <15hr work capacity → SLP, not just JS-Medical.
+# Both partners may qualify for SLP independently.
+
+scenario:
+  name: "Couple on JS-Medical — first independent rental, accessibility needs"
+  description: >
+    29yo NZ citizen with multiple chronic conditions and declining health,
+    including spinal injury requiring walking aids. Work capacity virtually nil.
+    Has a partner who is also becoming physically disabled — both on WINZ with
+    medical certificates. Currently living in a small cabin at mother's property,
+    paying rent. Needs to move to accessible independent housing. Steps in/out
+    of cabin becoming dangerous. Worried WINZ won't support the move because
+    new rent is higher. The tool should surface SLP for both (not just JS),
+    housing assistance (bond, moving costs), accessibility support, and the
+    full supplement stack they're likely missing.
+
+intake_answers:
+  # PERSONAL
+  personal.age: 29
+  personal.residency: "NZ Citizen"
+  personal.years_in_nz: 29
+  personal.relationship: "In a relationship / de facto"
+  personal.partner_employed: "No"
+
+  # HOUSING
+  housing.type: "Renting"
+  housing.cost: 200
+  housing.region: "Other"
+  housing.social_housing: "No"
+  housing.arrears: "No"
+  housing.need_to_move: "Yes"
+
+  # INCOME
+  income.employed: "No"
+  income.hours: 0
+  income.amount: 0
+  income.benefit: "Yes"
+  income.benefit_type: "Jobseeker Support"
+  income.current_supplements:
+    - "None of these"
+  income.assets: "Under $8,100"
+
+  # HEALTH
+  health.condition: "Yes"
+  health.duration: "Permanent / lifelong"
+  health.costs: "Yes"
+  health.cost_types:
+    - "GP / specialist visits"
+    - "Prescriptions / medication"
+    - "Transport to appointments"
+    - "Equipment or aids"
+    - "Home modifications needed"
+  health.hours_able: "Less than 15 hrs"
+  health.residential_care: "No"
+
+  # CHILDREN
+  children.dependent: "No"
+  children.caring_for_other: "No"
+
+  # EMPLOYMENT
+  employment.seeking_work: "No"
+  employment.training_interest: "No"
+  employment.seasonal: "No"
+  employment.self_employed: "No"
+
+  # HISTORY
+  history.past_denied: "No"
+  history.upload: "Skip for now"
+
+  # SITUATION
+  situation.emergency: "No"
+  situation.family_violence: "No"
+  situation.recently_released: "No"
+  situation.refugee: "No"
+  situation.carer: "No"
+
+expected_entitlements:
+  should_surface:
+    - id: supported-living-payment
+      status: ENTITLED
+      reasoning: >
+        This is the KEY finding. "Virtually impossible to work" + spinal injury
+        + multiple chronic conditions + declining health = work capacity well
+        under 15 hrs. Meets all SLP criteria: age ≥18, has_condition,
+        work_capacity_under_15, NZ citizen, resident 2+ years. SLP pays
+        $371.52/wk vs JS $337.74/wk for single (couple rates higher). More
+        critically: SLP has no work test obligations and 30% abatement vs 70%.
+        Partner should also apply for SLP independently — both becoming
+        physically disabled. Reddit commenter specifically suggested SLP.
+
+    - id: accommodation-supplement
+      status: ENTITLED
+      reasoning: >
+        Renting, not in social housing. Currently getting small AS at mum's.
+        When they move to independent rental, AS will likely increase
+        significantly — new rent will be assessed fresh. Can include water
+        costs in AS calculation per Reddit advice.
+
+    - id: disability-allowance
+      status: ENTITLED
+      reasoning: >
+        Has permanent condition with extensive ongoing costs: GP visits,
+        prescriptions, transport, equipment/aids (walking aid mentioned),
+        home modifications. Both rules pass: has_condition=true and
+        has_ongoing_disability_costs=true. Max $75.52/wk non-taxable.
+        Both partners can claim DA separately. This is almost certainly
+        not being received — they say "none of these" for supplements.
+
+    - id: temporary-additional-support
+      status: POSSIBLE
+      reasoning: >
+        On benefit, no employment income, housing costs. Essential costs
+        likely exceed income — especially once in independent rental with
+        power/water bills on top of rent. TAS requires cost breakdown.
+
+    - id: winter-energy-payment
+      status: ENTITLED
+      reasoning: >
+        On a main benefit. Automatic May-October. Particularly relevant
+        as current rent includes power but new place won't.
+
+    - id: community-services-card
+      status: ENTITLED
+      reasoning: >
+        On a main benefit — automatic entitlement. Critical given
+        frequent GP/specialist visits for multiple conditions.
+
+    - id: bond-grant
+      status: ENTITLED
+      reasoning: >
+        Renting + needs_to_move=true + low_income=true. All 3 rules pass.
+        Moving to first independent rental — will need bond money.
+        Top Reddit commenter advised having bond money ready but WINZ
+        can provide this as a grant.
+
+    - id: house-modifications
+      status: ENTITLED
+      reasoning: >
+        Has condition + needs_home_modifications (selected in health costs).
+        Spinal injury, needs walking aid, steps are dangerous. New housing
+        may need grab rails, ramp access, wider doorways. This benefit
+        covers accessibility modifications.
+
+    - id: special-needs-grant
+      status: ENTITLED
+      reasoning: >
+        On benefit + low income + has essential need (moving, setting up
+        new household). Can cover furniture, whiteware, bedding for first
+        independent home. Never lived independently before — will need
+        everything.
+
+  should_not_surface:
+    - id: sole-parent-support
+      reasoning: "No children, has partner"
+    - id: childcare-assistance
+      reasoning: "No children"
+    - id: student-allowance
+      reasoning: "Not a student"
+    - id: orphans-benefit
+      reasoning: "No children in care"
+    - id: working-for-families
+      reasoning: "No dependent children"
+
+# Housing transition analysis
+housing_analysis:
+  current_situation:
+    description: "Small one-room cabin at mother's property"
+    rent: 200
+    includes: "Power, water, kitchen/bathroom access in main house"
+    problems:
+      - "Steps in/out of cabin becoming inaccessible due to physical disability"
+      - "Not enough room for walking aid (spinal injury)"
+      - "Shared kitchen/bathroom requires traversing steps each time"
+      - "Partner also becoming physically disabled — cabin unsuitable for two"
+      - "No security or stability ('things always broken, yelling')"
+    current_supplements: "Small AS only — likely missing DA, TAS, SNG"
+
+  proposed_move:
+    description: "Independent accessible rental for couple"
+    estimated_rent: 300
+    excludes: "Power, water (not included like current place)"
+    estimated_power: 40
+    estimated_water: 15
+    total_housing_cost: 355
+    benefits:
+      - "Accessible — no steps, room for mobility aids"
+      - "Independent kitchen/bathroom"
+      - "Suitable for two people with mobility needs"
+      - "Stability and safety"
+
+  winz_concern:
+    op_worry: "WINZ won't help because it's a 'more expensive situation'"
+    reality: >
+      WINZ cannot refuse AS increase just because new rent is higher.
+      AS is calculated on actual housing costs. Moving from an unsuitable
+      cabin to accessible housing is a legitimate housing need. The
+      current $200 rent artificially suppresses their AS entitlement.
+      After moving: AS recalculated on new rent, TAS can cover the
+      gap between income and essential costs, DA covers disability-
+      related costs. Total support should increase substantially.
+
+  financial_comparison:
+    current_weekly_income:
+      js_couple_base: 562.18
+      as_current: 70   # small AS on low rent
+      total_gross: 632.18
+      rent: 200
+      after_rent: 432.18
+      note: "Power/water included in rent. No DA, no TAS claimed."
+
+    after_moving:
+      js_couple_base: 562.18    # or SLP couple if switched
+      as_new: 165               # increased on higher rent
+      da_estimate: 75           # both could claim separately
+      tas_estimate: 50          # essential cost gap
+      wep: 20.46
+      total_gross: 872.64
+      rent: 300
+      power_water: 55
+      after_rent_utilities: 517.64
+      note: >
+        Even with higher rent + new utility bills, total after-housing
+        income increases by ~$85/wk because they're now claiming
+        supplements they were previously missing. If switched to SLP,
+        base rate increases further.
+
+    slp_scenario:
+      slp_couple_base: 619.20   # SLP couple rate
+      difference_from_js: 57.02  # per week
+      annual_gain: 2965.04
+      note: >
+        Both partners likely qualify for SLP individually. Combined
+        SLP couple rate is higher than JS couple rate. No work test
+        obligations. Better abatement if either ever works part-time.
+
+notes:
+  - >
+    This person has never lived independently at 29 — the transition is
+    daunting and WINZ bureaucracy adds fear. The top Reddit advice is
+    pragmatic: move first, tell WINZ after, provide tenancy agreement.
+    Don't ask permission — inform them of the change.
+  - >
+    The accessibility angle is critical and underappreciated. Spinal
+    injury + walking aid + inaccessible steps = potential eligibility
+    for social housing (Kainga Ora) at higher priority. Multiple
+    Reddit commenters suggested this path. Social housing isn't
+    modelled in the tool yet but is the strongest long-term option.
+  - >
+    Both partners being on medical certificates suggests both may
+    qualify for SLP independently. The tool can only assess the
+    primary user, but the briefing document should note that the
+    partner should seek their own assessment.
+  - >
+    The "no landlord will take two beneficiaries" concern from the
+    Reddit thread is real but not a legal barrier — discrimination
+    based on income source is not explicitly prohibited in the
+    Residential Tenancies Act, but many landlords/property managers
+    accept WINZ tenants routinely. Social housing bypasses this entirely.
+  - >
+    House modifications benefit is particularly relevant here. The
+    current cabin situation demonstrates the need — couldn't use
+    walking aid due to space constraints. A new rental may need
+    grab rails, ramp, or other modifications that WINZ can fund.
+  - >
+    Budget advisor recommendation from Reddit is sound — they can
+    help prepare the financial case for WINZ, document essential
+    costs for TAS, and reduce the stress of dealing with WINZ
+    directly. Many are free through community organisations.

@@ -1,0 +1,42 @@
+id: employment-transition-support
+name: Employment Transition Support
+category: employment
+frequency: one-off
+taxable: false
+legal_basis: "Social Security Act 2018, Section 186"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/employment-transition-support.html"
+description: "Support for people transitioning between jobs or careers including retraining, relocation assistance, and career guidance"
+eligibility:
+  min_age: null
+  max_age: null
+  residency: [citizen, permanent_resident]
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: is_seeking_work
+      op: eq
+      value: true
+    - fact: recently_lost_employment
+      op: eq
+      value: true
+  conditions:
+    - "Must be actively seeking work"
+    - "Must have recently lost employment or be transitioning careers"
+    - "Must demonstrate need for transition support"
+rates:
+  effective: "2026-04-01"
+  description: "varies - may cover retraining costs, relocation expenses, career counseling"
+income_test:
+  applies: true
+friction:
+  documentation_required:
+    - "Evidence of recent employment loss or career transition need"
+    - "Career plan or retraining proposal"
+    - "Quotes for relocation or training costs"
+  typical_processing: "2-3 weeks"
+  known_issues:
+    - "Limited awareness of this support"
+    - "Strict criteria for what constitutes valid transition need"
+  deflection_patterns:
+    - "People may not think to apply if not on a benefit"
+    - "Career transition vs unemployment distinction unclear"

@@ -1,0 +1,38 @@
+id: orphans-benefit
+name: Orphan's Benefit
+category: family
+frequency: fortnightly
+taxable: false
+legal_basis: "Section 31, Social Security Act 2018"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/orphans-benefit.html"
+description: "Financial support for caregivers of children whose parents have died or are unable to care for them"
+eligibility:
+  min_age: null
+  max_age: null
+  residency: [citizen, permanent_resident]
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: is_caring_for_orphan
+      op: eq
+      value: true
+  conditions:
+    - "Must be caring for a child whose parents have died or cannot provide care"
+    - "Child must be under 18 years (or under 19 if still at secondary school)"
+rates:
+  effective: "2026-04-01"
+  max_weekly: "$217-$284 fortnightly depending on child's age"
+income_test:
+  applies: false
+asset_test:
+  applies: false
+friction:
+  documentation_required:
+    - "Birth certificate of child"
+    - "Death certificate(s) of parent(s) or evidence parents cannot care for child"
+    - "Proof of caregiver identity and relationship to child"
+  typical_processing: "4-6 weeks"
+  known_issues:
+    - "Complex documentation requirements when parents are alive but unable to care"
+  deflection_patterns:
+    - "Suggesting family resolution instead of benefit support"

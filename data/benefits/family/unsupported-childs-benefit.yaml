@@ -1,0 +1,42 @@
+id: unsupported-childs-benefit
+name: Unsupported Child's Benefit
+category: family
+frequency: fortnightly
+taxable: false
+legal_basis: "Section 32, Social Security Act 2018"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/unsupported-childs-benefit.html"
+description: "Financial support for caregivers of children who cannot be supported by their parents due to family breakdown or other circumstances"
+eligibility:
+  min_age: null
+  max_age: null
+  residency: [citizen, permanent_resident]
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: is_caring_for_unsupported_child
+      op: eq
+      value: true
+  conditions:
+    - "Must be caring for a child whose parents cannot support them (e.g. family breakdown)"
+    - "Child must be under 18 years (or under 19 if still at secondary school)"
+    - "Caregiver must not be the child's parent"
+rates:
+  effective: "2026-04-01"
+  max_weekly: "$217-$284 fortnightly depending on child's age"
+income_test:
+  applies: false
+  note: "Not income tested for the child's payment component"
+asset_test:
+  applies: false
+friction:
+  documentation_required:
+    - "Birth certificate of child"
+    - "Statutory declaration explaining why parents cannot support child"
+    - "Proof of caregiver identity"
+  typical_processing: "4-6 weeks"
+  known_issues:
+    - "Requires detailed explanation of family circumstances"
+    - "May require evidence that parents cannot provide support"
+  deflection_patterns:
+    - "Encouraging family mediation before approval"
+    - "Questioning whether parents truly cannot support child"

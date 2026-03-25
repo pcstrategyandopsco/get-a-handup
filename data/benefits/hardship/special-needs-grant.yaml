@@ -1,0 +1,81 @@
+id: special-needs-grant
+name: Special Needs Grant
+category: hardship
+frequency: one-off
+taxable: false
+legal_basis: "Section 68 Social Security Act 2018"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/special-needs-grant.html"
+description: "One-off non-recoverable grant for essential needs such as food, clothing, bedding, and medical costs"
+eligibility:
+  min_age: 16
+  max_age: null
+  residency: [citizen, permanent_resident]
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: on_benefit
+      op: eq
+      value: true
+    - fact: low_income
+      op: eq
+      value: true
+    - fact: has_essential_need
+      op: eq
+      value: true
+  conditions:
+    - "Must be receiving a benefit or have low income"
+    - "Must have an essential need that cannot be met from own resources"
+    - "Must not have sufficient assets or other means to meet the need"
+rates:
+  effective: "2026-04-01"
+  max_weekly: "No fixed maximum (food grants typically up to $200)"
+income_test:
+  applies: true
+asset_test:
+  applies: true
+friction:
+  documentation_required:
+    - "Proof of essential need (e.g., quotes, medical certificates)"
+    - "Proof of income and assets"
+    - "Bank statements"
+  typical_processing: "Same day to 5 working days"
+  known_issues:
+    - "Known for being gatekept by case managers"
+    - "Inconsistent application of eligibility criteria"
+    - "High rate of initial declines"
+  deflection_patterns:
+    - "Being told to use credit cards or borrow from family"
+    - "Being told the need is not essential"
+    - "Being told to reduce other spending first"
+
+advocacy:
+  appointment_strategy: >
+    SNGs are one-off grants for essential needs — food, clothing, bedding, whiteware,
+    medical costs, school costs. There is no legal limit on how many you can receive.
+    Case managers may imply there's a limit or redirect you to food banks. Both are
+    deflection.
+
+  talking_points:
+    - "I need a Special Needs Grant for [specific need — be precise]"
+    - "I cannot meet this need from my current income or other resources"
+    - "I understand there is no statutory limit on the number of SNGs I can receive"
+
+  common_objections:
+    - objection: "You've already had a grant this month"
+      counter: "There is no statutory frequency limit for SNGs under s68 SSA 2018. Each application is assessed on its own merits."
+      cite: "s68 Social Security Act 2018"
+    - objection: "Can you get food from a food bank instead?"
+      counter: "A food bank referral is not a substitute for a statutory entitlement. I am applying for an SNG under s68."
+      cite: "s68 Social Security Act 2018"
+    - objection: "This isn't an essential need"
+      counter: "[Item] is essential because [reason — e.g., fridge to store food, bed to sleep on]. The Act covers essential items."
+    - objection: "Could you have budgeted for this?"
+      counter: "The Act doesn't require perfect budgeting as a precondition. My current income is $[X]/wk and my essential costs are $[Y]/wk."
+
+  escalation_triggers:
+    - trigger: "SNG for food declined"
+      action: "This is almost never lawfully denied. Request the decision in writing immediately. Ask to speak to a supervisor."
+    - trigger: "Offered smaller amount than needed"
+      action: "Ask how the amount was calculated and what was excluded. Provide your quote/evidence for the full amount."
+    - trigger: "Told to come back later"
+      action: "If the need is now, the assessment should be now. Ask for the application to be processed today under s68."

@@ -1,0 +1,45 @@
+id: self-employment-start-up
+name: Self-Employment Start-Up Support
+category: employment
+frequency: one-off
+taxable: false
+legal_basis: "Social Security Act 2018, Part 2"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/self-employment-start-up.html"
+description: "Support for beneficiaries starting a business including financial assistance, mentoring, and business planning help"
+eligibility:
+  min_age: null
+  max_age: null
+  residency: [citizen, permanent_resident]
+  requires_benefit: true
+  requires_application: true
+  rules:
+    - fact: on_benefit
+      op: eq
+      value: true
+    - fact: starting_self_employment
+      op: eq
+      value: true
+  conditions:
+    - "Must be receiving a benefit"
+    - "Must have a viable business plan"
+    - "Must be starting self-employment as primary income source"
+    - "Business must have potential to provide full-time income"
+rates:
+  effective: "2026-04-01"
+  description: "varies - up to $5,000 for start-up costs plus business mentoring support"
+income_test:
+  applies: false
+friction:
+  documentation_required:
+    - "Business plan"
+    - "Financial projections"
+    - "Evidence of business setup"
+    - "Quotes for equipment or materials"
+  typical_processing: "4-6 weeks"
+  known_issues:
+    - "Rigorous business plan assessment required"
+    - "Many applications declined due to viability concerns"
+  deflection_patterns:
+    - "Case managers may discourage applicants"
+    - "High bar for business plan approval"
+    - "Limited follow-up support after initial funding"

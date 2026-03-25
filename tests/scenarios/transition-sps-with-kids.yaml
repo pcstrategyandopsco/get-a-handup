@@ -1,0 +1,110 @@
+# Test Scenario: Transition analysis — sole parent on SPS with kids
+# Expected: better_working verdict at ~30hrs — IWTC + MFTC compensate
+#
+# Solo parent on Sole Parent Support with 2 children, renting in Auckland.
+# When they go full-time, they lose AS but gain IWTC ($72.46/wk) and MFTC
+# (income floor to $598/wk). The work incentives are designed for this case.
+
+scenario:
+  name: "Transition — SPS, 2 kids, renting Auckland"
+  description: >
+    Solo parent 32, on Sole Parent Support, not currently employed. Two children
+    aged 3 and 7. Renting in Auckland at $450/wk. The transition calculator should
+    show that going to 20+ hours at minimum wage is "better_working" due to
+    IWTC and MFTC kicking in.
+
+intake_answers:
+  # TRIAGE
+  triage.reason: "Full assessment of everything I might be entitled to"
+
+  # PERSONAL
+  personal.age: 32
+  personal.residency: "NZ Citizen"
+  personal.years_in_nz: 32
+  personal.relationship: "Single"
+
+  # HOUSING
+  housing.type: "Renting"
+  housing.cost: 450
+  housing.region: "Auckland"
+  housing.social_housing: "No"
+  housing.arrears: "No"
+  housing.need_to_move: "No"
+
+  # INCOME
+  income.employed: "No"
+  income.hours: 0
+  income.amount: 0
+  income.benefit: "Yes"
+  income.benefit_type: "Sole Parent Support"
+  income.current_supplements:
+    - "None of these"
+  income.assets: "Under $8,100"
+
+  # HEALTH
+  health.condition: "No"
+
+  # CHILDREN
+  children.dependent: "Yes"
+  children.count: 2
+  children.ages:
+    - "3 – 4 years"
+    - "5 – 13 years"
+  children.childcare: "Yes"
+  children.disability: "No"
+  children.caring_for_other: "No"
+
+  # EDUCATION
+  education.studying: "No"
+
+  # EMPLOYMENT
+  employment.seeking_work: "Yes"
+  employment.unemployment_duration: "4 – 12 months"
+  employment.training_interest: "No"
+  employment.seasonal: "No"
+  employment.self_employed: "No"
+
+  # HISTORY
+  history.past_denied: "No"
+
+  # SITUATION
+  situation.emergency: "No"
+  situation.family_violence: "No"
+  situation.recently_released: "No"
+  situation.refugee: "No"
+  situation.carer: "No"
+
+expected_entitlements:
+  should_surface:
+    - id: sole-parent-support
+      status: ENTITLED
+      reasoning: "Sole parent, 2 kids under 14, citizen, resident"
+    - id: accommodation-supplement
+      status: ENTITLED
+      reasoning: "Renting in Auckland (zone 1), sole parent"
+    - id: childcare-assistance
+      status: POSSIBLE
+      reasoning: "Has children in childcare, on benefit"
+
+  should_not_surface:
+    - id: supported-living-payment
+      reasoning: "No health condition"
+
+# Transition analysis expectations
+transition_expected:
+  verdict: better_working
+  reasoning: >
+    Current: $434/wk SPS + $305/wk AS (Auckland zone 1, sole parent 2+ kids) + $32 WEP = ~$772/wk.
+    Full-time min wage off-benefit: $926 gross - tax/ACC + IWTC $72 + AB $60 = ~$900/wk net.
+    Net gain: +$129/wk — better_working. IWTC ($72/wk) is the key compensating factor for
+    sole parents. Part-time on-benefit ($983/wk at 20hrs) is actually best due to 30c abatement.
+
+notes:
+  - >
+    This is the scenario where NZ's tax credit system works as intended.
+    IWTC alone ($72.46/wk) plus the lower SPS abatement rate (30c vs 70c)
+    make the transition to work clearly beneficial.
+  - >
+    The MFTC provides a guaranteed floor of $598/wk — if net income would
+    be lower, MFTC tops up the difference. This is the safety net for
+    low-wage sole parents that most people don't know exists.

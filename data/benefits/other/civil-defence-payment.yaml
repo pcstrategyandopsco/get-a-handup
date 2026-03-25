@@ -1,0 +1,38 @@
+id: civil-defence-payment
+name: Civil Defence Payment
+category: other
+frequency: as-needed
+taxable: false
+legal_basis: "s108 Social Security Act 2018"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/civil-defence-payment.html"
+description: "Emergency payment for people affected by civil defence emergencies to cover immediate needs such as accommodation, food, and essential items"
+eligibility:
+  min_age: null
+  max_age: null
+  residency: [citizen, permanent_resident]
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: affected_by_civil_defence_emergency
+      op: eq
+      value: true
+  conditions:
+    - "Must be directly affected by a declared civil defence emergency"
+    - "Must have immediate needs that cannot be met through other means"
+    - "Payment covers essential needs during emergency period"
+rates:
+  effective: "2026-04-01"
+  description: "varies based on emergency circumstances and individual needs"
+income_test:
+  applies: false
+friction:
+  documentation_required:
+    - "Confirmation of being affected by civil defence emergency"
+    - "Identification (if available)"
+    - "Bank account details or alternative payment arrangement"
+  typical_processing: "same day to 48 hours in emergency situations"
+  known_issues:
+    - "May require physical presence at service centre in emergency"
+    - "Payment amounts may not cover full costs of displacement"
+  deflection_patterns:
+    - "May suggest waiting for insurance or other assistance first"

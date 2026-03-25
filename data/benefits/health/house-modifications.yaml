@@ -1,0 +1,46 @@
+id: house-modifications
+name: House Modifications
+category: health
+frequency: one-off
+taxable: false
+legal_basis: "Social Security Act 2018"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/home-help.html"
+description: "One-off funding for home modifications needed due to disability, such as ramps, bathroom modifications, or handrails"
+eligibility:
+  min_age: null
+  max_age: null
+  residency: [citizen, permanent_resident]
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: has_condition
+      op: eq
+      value: true
+    - fact: needs_home_modifications
+      op: eq
+      value: true
+  conditions:
+    - "Must have a disability or health condition"
+    - "Modifications must be necessary for safety or accessibility"
+    - "Usually requires needs assessment from approved service"
+    - "May need landlord approval if renting"
+rates:
+  effective: "2026-04-01"
+  description: "varies based on modification requirements, typically up to statutory limits"
+income_test:
+  applies: true
+friction:
+  documentation_required:
+    - "Needs assessment report from approved assessor"
+    - "Quotes from registered builders/contractors"
+    - "Landlord consent if renting"
+    - "Income and asset verification"
+  typical_processing: "4-8 weeks after needs assessment"
+  known_issues:
+    - "Long wait times for needs assessment appointments"
+    - "May only cover basic modifications, not full accessibility upgrades"
+    - "Complexity increases if multiple agencies involved"
+  deflection_patterns:
+    - "May suggest waiting for public housing with existing modifications"
+    - "Staff may question whether modifications are 'necessary' vs 'nice to have'"
+    - "May suggest cheaper alternatives that don't meet actual needs"

@@ -1,0 +1,42 @@
+id: steps-to-freedom
+name: Steps to Freedom
+category: other
+frequency: one-off
+taxable: false
+legal_basis: "Social Security Act 2018"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/steps-to-freedom.html"
+description: "One-off support package for people recently released from prison to help with immediate needs including clothing, transport, and establishing accommodation"
+eligibility:
+  min_age: null
+  max_age: null
+  residency: [citizen, permanent_resident]
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: recently_released
+      op: eq
+      value: true
+  conditions:
+    - "Must be recently released from prison (typically within 13 weeks)"
+    - "Must have immediate needs for resettlement"
+    - "May include clothing, bedding, transport, and other essentials"
+    - "Often linked to supported accommodation arrangements"
+rates:
+  effective: "2026-04-01"
+  description: "varies based on individual needs, typically covering essential items for resettlement"
+income_test:
+  applies: false
+friction:
+  documentation_required:
+    - "Prison release papers"
+    - "Identification"
+    - "Bank account details or alternative payment method"
+    - "Accommodation details"
+  typical_processing: "1-3 days after release"
+  known_issues:
+    - "Limited awareness of entitlement among released prisoners"
+    - "May require support person to navigate application"
+    - "Payment amounts may be insufficient for actual needs"
+  deflection_patterns:
+    - "Staff may be unaware of this specific support"
+    - "May suggest standard benefit application instead"

@@ -1,0 +1,213 @@
+# Test Scenario: Reddit "How will I be taxed working on Jobseeker"
+# Source: reddit.com/r/newzealand — person on JS-Medical (<15hr obligations),
+# planning to work 13 hrs/wk on minimum wage, confused about tax codes
+#
+# Key Reddit insights:
+# 1. Person has <15hr medical obligations — this IS the SLP threshold
+# 2. Benefit uses M tax code; employment income gets secondary tax code (S)
+# 3. Multiple commenters say "it's not worth it" due to abatement + secondary tax
+# 4. Person says "I'm not eligible for SLP" — but they likely ARE
+# 5. The 70% abatement poverty trap makes working barely worthwhile on JS
+# 6. SLP has 30% abatement — dramatically different outcome
+#
+# This differs from reddit-slp-vs-jobseeker-medical.yaml:
+# That person is NOT working. This person IS working (13hrs, min wage)
+# and the scenario focuses on the tax/abatement interaction.
+
+scenario:
+  name: "JS-Medical recipient working part-time — tax and abatement trap"
+  description: >
+    28yo NZ citizen with a permanent disability, work capacity <15 hrs/wk,
+    on Jobseeker Support with medical certificate. Working 13 hrs/wk at
+    minimum wage ($23.15/hr = ~$301/wk). Single, renting. Confused about
+    tax codes and whether working is "worth it." The tool should surface
+    SLP as the correct benefit (30% abatement vs 70%) and show how much
+    more they'd keep on SLP while working.
+
+intake_answers:
+  # PERSONAL
+  personal.age: 28
+  personal.residency: "NZ Citizen"
+  personal.years_in_nz: 28
+  personal.relationship: "Single"
+
+  # HOUSING
+  housing.type: "Renting"
+  housing.cost: 250
+  housing.region: "Other"
+  housing.social_housing: "No"
+  housing.arrears: "No"
+  housing.need_to_move: "No"
+
+  # INCOME
+  income.employed: "Yes"
+  income.hours: 13
+  income.amount: 301
+  income.benefit: "Yes"
+  income.benefit_type: "Jobseeker Support"
+  income.current_supplements:
+    - "None of these"
+  income.assets: "Under $8,100"
+
+  # HEALTH
+  health.condition: "Yes"
+  health.duration: "Permanent / lifelong"
+  health.costs: "Yes"
+  health.cost_types:
+    - "GP / specialist visits"
+    - "Prescriptions / medication"
+    - "Transport to appointments"
+  health.hours_able: "Less than 15 hrs"
+  health.residential_care: "No"
+
+  # CHILDREN
+  children.dependent: "No"
+  children.caring_for_other: "No"
+
+  # EMPLOYMENT
+  employment.seeking_work: "Yes"
+  employment.training_interest: "No"
+  employment.seasonal: "No"
+  employment.self_employed: "No"
+
+  # HISTORY
+  history.past_denied: "No"
+  history.upload: "Skip for now"
+
+  # SITUATION
+  situation.emergency: "No"
+  situation.family_violence: "No"
+  situation.recently_released: "No"
+  situation.refugee: "No"
+  situation.carer: "No"
+
+expected_entitlements:
+  should_surface:
+    - id: supported-living-payment
+      status: ENTITLED
+      reasoning: >
+        This is the KEY finding. Person has permanent disability limiting work
+        capacity to <15 hrs/wk, age 28, NZ citizen, resident 28 years. Meets
+        all 5 SLP rules: age ≥18, has_condition, work_capacity_under_15,
+        residency citizen/PR, years_in_nz ≥2. Person says "I'm not eligible
+        for SLP" but they almost certainly are. The financial difference while
+        working is dramatic: SLP abatement 30c/$1 vs JS 70c/$1. At $301/wk
+        earnings, switching to SLP gains ~$77/wk net.
+
+    - id: jobseeker-support
+      status: ENTITLED
+      reasoning: >
+        Currently receiving this benefit. All criteria met. However, SLP is
+        the more appropriate benefit given <15hr work capacity.
+
+    - id: accommodation-supplement
+      status: ENTITLED
+      reasoning: >
+        Renting at $250/wk, single, on benefit. Meets all criteria.
+
+    - id: disability-allowance
+      status: ENTITLED
+      reasoning: >
+        Has permanent disability with ongoing costs (GP visits, medication,
+        transport). Both rules pass: has_condition=true and
+        has_ongoing_disability_costs=true. Max $75.52/wk non-taxable.
+
+    - id: winter-energy-payment
+      status: ENTITLED
+      reasoning: >
+        On a main benefit. WEP is automatic May-October. $20.46/wk single.
+
+    - id: community-services-card
+      status: ENTITLED
+      reasoning: >
+        On a main benefit — automatic entitlement. Discounted GP visits
+        and prescriptions, critical given ongoing health costs.
+
+    - id: temporary-additional-support
+      status: POSSIBLE
+      reasoning: >
+        On benefit with employment income, but housing costs ($250/wk) may
+        still exceed residual income after abatement. TAS requires essential
+        cost breakdown at appointment.
+
+  should_not_surface:
+    - id: sole-parent-support
+      reasoning: "No children, not a sole parent"
+    - id: childcare-assistance
+      reasoning: "No children"
+
+# Income analysis: the abatement trap in numbers
+# This is the core value of this scenario — showing why "it's not worth it"
+# on JS but IS worth it on SLP
+income_analysis:
+  employment:
+    hours_per_week: 13
+    hourly_rate: 23.15
+    gross_weekly: 301  # 13 × $23.15 = $300.95, rounded
+
+  on_jobseeker:
+    base_weekly_gross: 337.74
+    abatement_threshold: 160
+    abatement_rate: 0.70
+    abatement_amount: 98.70      # ($301 - $160) × 0.70
+    js_after_abatement: 239.04   # $337.74 - $98.70
+    benefit_paye_m_code: 35.86   # ~15% of $239.04
+    benefit_net: 203.18          # $239.04 - $35.86
+    employment_paye_s_code: 52.68  # ~17.5% secondary tax on $301
+    employment_net: 248.32       # $301 - $52.68
+    total_net_weekly: 451.50     # $203.18 + $248.32
+    compared_to_not_working: 290 # Approx JS net with no earnings
+    net_gain_from_working: 161.50
+    effective_hourly_rate: 12.42 # $161.50 / 13 hrs (vs $23.15 nominal)
+    effective_marginal_rate: 0.82  # 70% abatement + ~12% residual tax
+
+  on_slp:
+    base_weekly_gross: 371.52
+    abatement_threshold: 160
+    abatement_rate: 0.30
+    abatement_amount: 42.30      # ($301 - $160) × 0.30
+    slp_after_abatement: 329.22  # $371.52 - $42.30
+    benefit_paye_m_code: 49.38   # ~15% of $329.22
+    benefit_net: 279.84          # $329.22 - $49.38
+    employment_paye_s_code: 52.68
+    employment_net: 248.32
+    total_net_weekly: 528.16     # $279.84 + $248.32
+    net_gain_from_working: 238.16  # vs ~$290 not working
+    effective_hourly_rate: 18.32   # $238.16 / 13 hrs
+
+  switching_gain:
+    weekly_difference: 76.66     # $528.16 - $451.50
+    annual_difference: 3986.32   # $76.66 × 52
+    description: >
+      Switching from JS to SLP while working 13hrs/wk at minimum wage
+      gains ~$77/wk or ~$3,986/year. The effective hourly rate jumps
+      from $12.42 to $18.32 — the difference between "not worth it"
+      and viable part-time work.
+
+notes:
+  - >
+    Tax codes: benefit always takes M (primary) tax code, employment gets
+    secondary (S) code. This is correct per IRD rules — the larger income
+    source (benefit) takes M. Multiple Reddit commenters confirm this.
+    Secondary tax is NOT double tax — it's a higher withholding rate to
+    approximate the correct total tax across both income sources.
+  - >
+    The poster incorrectly believes they're not eligible for SLP. Their
+    <15hr medical obligations IS the SLP threshold under s40 SSA 2018.
+    This is a common misconception — people assume "disability" means
+    something more severe than their condition. The legal test is work
+    capacity, not diagnosis.
+  - >
+    Grey area #8 (abatement traps) is directly relevant. On JS, the
+    effective marginal rate above the $160 threshold is ~82% (70%
+    abatement + tax on the remainder). On SLP it's ~48% (30% abatement
+    + tax). This is the difference between poverty-trap economics and
+    a viable pathway to part-time work.
+  - >
+    The advocacy playbooks on both JS and SLP benefit definitions will
+    surface in the briefing document, giving the person specific talking
+    points for requesting reassessment to SLP.
+  - >
+    Combined gap estimate: SLP switch ($77/wk) + DA if not receiving
+    ($75.52/wk max) + AS if not receiving (varies) = potentially
+    $150-250/wk in additional support. Annual impact: $7,800-$13,000.

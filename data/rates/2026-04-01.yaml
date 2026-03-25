@@ -1,0 +1,176 @@
+# NZ Social Security rates effective 1 April 2026
+# Source: MSD rate tables (projected from 2024/2025 CPI adjustments)
+
+effective: "2026-04-01"
+
+main_benefits:
+  jobseeker_support:
+    single_18_19_at_home: 227.04
+    single_18_19_away: 253.81
+    single_20_24: 253.81
+    single_25_plus: 337.74
+    couple_no_children: 281.28  # each
+    sole_parent: 434.68
+  sole_parent_support:
+    sole_parent: 434.68
+  supported_living_payment:
+    single_18_plus: 371.52
+    couple: 309.60  # each
+    single_with_children: 434.68
+
+accommodation_supplement:
+  area_1:
+    single_no_children: 165
+    couple_no_children: 235
+    sole_parent_1_child: 235
+    sole_parent_2_plus: 305
+    couple_with_children: 305
+  area_2:
+    single_no_children: 105
+    couple_no_children: 155
+    sole_parent_1_child: 155
+    sole_parent_2_plus: 220
+    couple_with_children: 220
+  area_3:
+    single_no_children: 80
+    couple_no_children: 105
+    sole_parent_1_child: 105
+    sole_parent_2_plus: 160
+    couple_with_children: 160
+  area_4:
+    single_no_children: 70
+    couple_no_children: 80
+    sole_parent_1_child: 80
+    sole_parent_2_plus: 120
+    couple_with_children: 120
+
+disability_allowance:
+  max_weekly: 75.52
+
+child_disability_allowance:
+  fortnightly: 57.50
+
+winter_energy_payment:
+  single: 20.46
+  couple_or_children: 31.82
+  period: "1 May - 1 October"
+
+temporary_additional_support:
+  max_weekly_approx: 97.00
+
+orphans_benefit:
+  fortnightly_under_5: 217.24
+  fortnightly_5_9: 239.50
+  fortnightly_10_13: 258.28
+  fortnightly_14_plus: 283.78
+
+unsupported_childs_benefit:
+  fortnightly_under_5: 217.24
+  fortnightly_5_9: 239.50
+  fortnightly_10_13: 258.28
+  fortnightly_14_plus: 283.78
+
+working_for_families:
+  family_tax_credit:
+    eldest_child: 127.73  # weekly
+    subsequent_child: 104.26  # weekly
+  in_work_tax_credit:
+    up_to_3_children: 72.46  # weekly
+    4_plus_children_additional: 15.00  # per additional child/week
+  minimum_family_tax_credit:
+    weekly_threshold: 588.00
+  best_start:
+    weekly_under_1: 69.00
+    weekly_1_to_3: 52.00
+
+special_needs_grant:
+  food_max: 200
+  no_fixed_limit: true
+
+recoverable_assistance_programme:
+  no_fixed_max: true
+  typical_grants: "varies by need"
+
+advance_payment:
+  max_proportion: 0.5  # up to 50% of benefit
+
+funeral_grant:
+  max_amount: 2500.36
+
+emergency_housing:
+  assessed_per_situation: true
+
+bond_grant:
+  max_weeks_rent: 4
+
+# ── ABATEMENT RATES ──
+# Income abatement thresholds and rates per benefit type
+# Source: Schedule 4 Social Security Act 2018
+abatement:
+  jobseeker_support:
+    threshold_weekly: 160
+    rate: 0.70
+  supported_living_payment:
+    threshold_weekly: 160
+    rate: 0.30
+  sole_parent_support:
+    threshold_weekly: 160
+    rate: 0.30
+
+# ── TAX BRACKETS ──
+# NZ personal income tax rates effective 2025-26 tax year
+tax_brackets:
+  - threshold: 0
+    rate: 0.105
+  - threshold: 14000
+    rate: 0.175
+  - threshold: 48000
+    rate: 0.30
+  - threshold: 70000
+    rate: 0.33
+  - threshold: 180000
+    rate: 0.39
+acc_levy: 0.016
+
+# ── WORK INCENTIVES ──
+# Tax credits and support available when working off-benefit
+work_incentives:
+  in_work_tax_credit:
+    weekly: 72.46
+    min_hours_single: 20
+    min_hours_couple: 30
+    requires_children: true
+    requires_off_benefit: true
+  independent_earner_tax_credit:
+    annual: 520
+    income_min: 24000
+    income_max: 48000
+    requires_off_benefit: true
+  minimum_family_tax_credit:
+    annual_floor: 31096
+    requires_children: true
+    requires_off_benefit: true
+    min_hours_single: 20
+    min_hours_couple: 30
+  accommodation_benefit:
+    max_weekly: 60
+    note: "Off-benefit housing support — much lower than AS"
+
+# ── STUDYLINK ──
+# Student Allowance and Student Loan living costs rates
+# Source: StudyLink rates effective April 2026
+studylink:
+  student_allowance:
+    single_24_plus_away: 340.38
+    single_under_24_away: 302.98
+    single_at_home: 248.78
+    couple: 284.98
+  student_loan_living_costs:
+    weekly: 316.98
+  accommodation_benefit:
+    max_weekly: 60
+  course_related_costs:
+    max_annual: 1000
+  training_incentive_allowance:
+    annual_cap: 5550.80
+    weekly_equivalent: 106.75

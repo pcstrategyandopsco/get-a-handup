@@ -1,0 +1,45 @@
+id: supported-living-in-community
+name: Supported Living in Community
+category: residential
+frequency: weekly
+taxable: false
+legal_basis: "Social Security Act 2018"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/supported-living.html"
+description: "Weekly support for disabled people living in community settings with support services, enabling independent living with assistance"
+eligibility:
+  min_age: null
+  max_age: null
+  residency: [citizen, permanent_resident]
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: has_condition
+      op: eq
+      value: true
+    - fact: needs_community_support
+      op: eq
+      value: true
+  conditions:
+    - "Must have a disability requiring support"
+    - "Must be living in the community (not institutional care)"
+    - "Support needs assessed by approved service"
+    - "Must have approved support plan"
+rates:
+  effective: "2026-04-01"
+  description: "varies based on assessed support needs and hours required"
+income_test:
+  applies: true
+friction:
+  documentation_required:
+    - "Needs assessment and support plan"
+    - "Medical/disability documentation"
+    - "Support service provider details"
+    - "Income verification"
+  typical_processing: "3-5 weeks after assessment"
+  known_issues:
+    - "Support hours may be insufficient for actual needs"
+    - "Difficulty finding appropriate support workers"
+    - "Funding may not cover preferred support arrangements"
+  deflection_patterns:
+    - "May offer fewer support hours than assessed as needed"
+    - "Staff may suggest informal family support instead"

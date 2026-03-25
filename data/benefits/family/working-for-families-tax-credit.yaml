@@ -1,0 +1,44 @@
+id: working-for-families-tax-credit
+name: Working for Families Tax Credit
+category: family
+frequency: weekly
+taxable: false
+legal_basis: "Tax Administration Act 1994, Part M"
+source_url: "https://www.ird.govt.nz/working-for-families"
+description: "Tax credit package for families with dependent children, administered by Inland Revenue"
+eligibility:
+  min_age: null
+  max_age: null
+  residency: [citizen, permanent_resident]
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: has_children
+      op: eq
+      value: true
+    - fact: family_income
+      op: exists
+      value: null
+  conditions:
+    - "Must have dependent children under 18 (or 18-19 if still at school)"
+    - "Must be the principal caregiver"
+    - "Income tested based on family income"
+rates:
+  effective: "2026-04-01"
+  max_weekly: "Varies based on number of children and family income"
+income_test:
+  applies: true
+  note: "Abatement based on total family income"
+asset_test:
+  applies: false
+friction:
+  documentation_required:
+    - "IRD number"
+    - "Birth certificates of children"
+    - "Income details"
+  typical_processing: "2-4 weeks for initial application"
+  known_issues:
+    - "Administered by IRD, not MSD"
+    - "Requires annual income reconciliation"
+    - "Overpayments common if income changes during year"
+  deflection_patterns: []

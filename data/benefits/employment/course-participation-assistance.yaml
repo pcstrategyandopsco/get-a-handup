@@ -1,0 +1,42 @@
+id: course-participation-assistance
+name: Course Participation Assistance
+category: employment
+frequency: one-off
+taxable: false
+legal_basis: "Social Security Act 2018, Section 184"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/course-participation-assistance.html"
+description: "Covers course-related costs including fees, materials, books, and equipment for approved training programmes"
+eligibility:
+  min_age: null
+  max_age: null
+  residency: [citizen, permanent_resident]
+  requires_benefit: true
+  requires_application: true
+  rules:
+    - fact: on_benefit
+      op: eq
+      value: true
+    - fact: in_approved_training
+      op: eq
+      value: true
+  conditions:
+    - "Must be receiving a benefit"
+    - "Must be enrolled in or about to enroll in an approved training course"
+    - "Course must improve employment prospects"
+rates:
+  effective: "2026-04-01"
+  description: "varies - covers course fees, materials, textbooks, equipment up to approved limits"
+income_test:
+  applies: false
+friction:
+  documentation_required:
+    - "Course enrollment confirmation"
+    - "Fee schedule from training provider"
+    - "Receipts for materials and books"
+  typical_processing: "2-3 weeks"
+  known_issues:
+    - "Course must be pre-approved by Work and Income"
+    - "May not cover full course costs"
+  deflection_patterns:
+    - "Approval process can delay course start"
+    - "Not all courses are approved even if they improve employment prospects"

@@ -1,0 +1,43 @@
+id: seasonal-work-assistance
+name: Seasonal Work Assistance
+category: employment
+frequency: weekly
+taxable: true
+legal_basis: "Social Security Act 2018, Section 185"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/seasonal-work-assistance.html"
+description: "Financial support for seasonal workers during off-season periods when work is not available"
+eligibility:
+  min_age: null
+  max_age: null
+  residency: [citizen, permanent_resident]
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: is_seasonal_worker
+      op: eq
+      value: true
+    - fact: in_off_season
+      op: eq
+      value: true
+  conditions:
+    - "Must be a seasonal worker in recognized industry (horticulture, viticulture, agriculture)"
+    - "Must be in off-season period when work is not available"
+    - "Must have worked previous season"
+    - "Must be available for work when season resumes"
+rates:
+  effective: "2026-04-01"
+  description: "varies - standard benefit rate based on circumstances, reduced if other income"
+income_test:
+  applies: true
+friction:
+  documentation_required:
+    - "Employment records from previous season"
+    - "Evidence of seasonal employment pattern"
+    - "Confirmation from employer about season dates"
+  typical_processing: "1-2 weeks"
+  known_issues:
+    - "Workers may not know they qualify for support"
+    - "Income from previous season can affect eligibility"
+  deflection_patterns:
+    - "Short off-season periods may not qualify"
+    - "Workers reluctant to apply due to stigma"

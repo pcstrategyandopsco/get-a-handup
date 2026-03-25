@@ -1,0 +1,39 @@
+{
+  "name": "entitlement-navigator",
+  "version": "0.1.0",
+  "description": "NZ Social Security entitlement gap analyser — zero-knowledge architecture",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "tsx watch server/index.ts",
+    "dev:client": "vite client",
+    "build": "vite build client && tsc -p server/tsconfig.json",
+    "start": "node dist/server/index.js",
+    "data:build": "tsx data/build.ts",
+    "test:scenarios": "tsx tests/run-scenarios.ts",
+    "data:audit": "tsx data/tools/audit-completeness.ts; tsx data/tools/gap-report.ts; tsx data/tools/validate-thresholds.ts",
+    "build:static": "vite build client --base './' --outDir ../docs --emptyOutDir && cp docs/index.html docs/404.html"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.9.0",
+    "@orama/orama": "^3.0.0",
+    "ajv": "^8.18.0",
+    "hono": "^4.0.0",
+    "js-yaml": "^4.1.1",
+    "json-rules-engine": "^7.3.1",
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^4.4.168",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "concurrently": "^8.2.2",
+    "tsx": "^4.7.0",
+    "typescript": "^5.4.5",
+    "vite": "^5.3.1"
+  }
+}

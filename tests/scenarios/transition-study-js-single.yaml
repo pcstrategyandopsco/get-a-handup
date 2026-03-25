@@ -1,0 +1,106 @@
+# Test Scenario: Study transition — single on Jobseeker, considering study
+# Expected: study verdict "trap" — SA + AB much less than current benefit + supplements
+#
+# This models the Reddit WINZ→StudyLink cliff. Person on JS with AS and supplements
+# would lose ~$160/wk switching to Student Allowance + Accommodation Benefit.
+# Stay-on-benefit + TIA is the financially dominant option for short courses.
+
+scenario:
+  name: "Study transition — JS single 30, renting Canterbury"
+  description: >
+    Single person 30, on Jobseeker Support, earning $100/wk part-time. Renting in
+    Canterbury at $280/wk. No children, no health condition. Considering study.
+    The study transition calculator should show that switching to Student Allowance
+    is a trap (SA $340 + AB $60 - tax ≈ $377/wk vs current ~$540/wk on benefit).
+    Stay on benefit + TIA should be flagged as the better option.
+
+intake_answers:
+  # TRIAGE
+  triage.reason: "Full assessment of everything I might be entitled to"
+
+  # PERSONAL
+  personal.age: 30
+  personal.residency: "NZ Citizen"
+  personal.years_in_nz: 30
+  personal.relationship: "Single"
+
+  # HOUSING
+  housing.type: "Renting"
+  housing.cost: 280
+  housing.region: "Canterbury / Christchurch"
+  housing.social_housing: "No"
+  housing.arrears: "No"
+  housing.need_to_move: "No"
+
+  # INCOME
+  income.employed: "Yes"
+  income.hours: 10
+  income.amount: 100
+  income.benefit: "Yes"
+  income.benefit_type: "Jobseeker Support"
+  income.current_supplements:
+    - "None of these"
+  income.assets: "Under $8,100"
+
+  # HEALTH
+  health.condition: "No"
+
+  # CHILDREN
+  children.dependent: "No"
+  children.caring_for_other: "No"
+
+  # EDUCATION
+  education.studying: "No"
+
+  # EMPLOYMENT
+  employment.seeking_work: "Yes"
+  employment.unemployment_duration: "1 – 3 months"
+  employment.training_interest: "No"
+  employment.seasonal: "No"
+  employment.self_employed: "No"
+
+  # HISTORY
+  history.past_denied: "No"
+
+  # SITUATION
+  situation.emergency: "No"
+  situation.family_violence: "No"
+  situation.recently_released: "No"
+  situation.refugee: "No"
+  situation.carer: "No"
+
+expected_entitlements:
+  should_surface:
+    - id: jobseeker-support
+      status: ENTITLED
+      reasoning: "On benefit, seeking work, age 30, citizen"
+    - id: accommodation-supplement
+      status: ENTITLED
+      reasoning: "Renting, single, Canterbury zone 2"
+
+  should_not_surface:
+    - id: sole-parent-support
+      reasoning: "No children"
+    - id: supported-living-payment
+      reasoning: "No health condition"
+
+transition_expected:
+  verdict: better_working
+  study_verdict: trap
+  reasoning: >
+    Current: $337/wk JS + $100/wk earnings - $12 tax/ACC + $105 AS + $97 TAS + $32 WEP = ~$659/wk.
+    Work: FT min wage $828/wk net — better_working (+$168/wk).
+    Student Allowance: SA $340/wk - $45 tax/ACC + AB $60 = ~$354/wk — massive cliff (-$305/wk).
+    Stay on benefit + TIA: ~$659 + $107 = ~$766/wk — the best study option.
+    Student Loan: $317/wk but it's debt, not income.
+    Study verdict: trap (SA net is >$20/wk less than current).
+
+notes:
+  - >
+    This is the scenario from the Reddit post where someone on JS was told to switch
+    to StudyLink for a short course. The $535→$429/wk cliff (their numbers) makes
+    study financially punishing unless you stay on benefit and use TIA.
+  - >
+    TIA is capped at $5,550.80/yr and requires NZQF 1-7 course approval from case
+    manager. For courses above NZQF 7 (postgrad), TIA is not available — must switch
+    to Student Allowance or take Student Loan.

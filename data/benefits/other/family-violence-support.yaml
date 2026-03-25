@@ -1,0 +1,44 @@
+id: family-violence-support
+name: Family Violence Support
+category: other
+frequency: one-off
+taxable: false
+legal_basis: "Social Security Act 2018"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/family-violence.html"
+description: "Emergency support for victims of family violence, including emergency housing, grants for immediate needs, and fast-tracked benefit processing"
+eligibility:
+  min_age: null
+  max_age: null
+  residency: [citizen, permanent_resident]
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: experiencing_family_violence
+      op: eq
+      value: true
+  conditions:
+    - "Must be experiencing or fleeing family violence"
+    - "Support can include emergency housing, clothing, household items"
+    - "Can include support for children affected by violence"
+    - "Fast-tracked processing for benefit applications"
+rates:
+  effective: "2026-04-01"
+  description: "varies based on immediate needs and circumstances, includes emergency housing and grants"
+income_test:
+  applies: false
+friction:
+  documentation_required:
+    - "Police report, protection order, or support agency confirmation (but not always required)"
+    - "Identification"
+    - "Bank account details or alternative payment method"
+    - "Details of dependent children"
+  typical_processing: "same day to 48 hours for emergency needs"
+  known_issues:
+    - "Fear of partner finding out can prevent applications"
+    - "May require disclosure of sensitive information"
+    - "Emergency housing availability limited in some areas"
+    - "Support workers may not be trauma-informed"
+  deflection_patterns:
+    - "May require formal documentation that victims cannot safely obtain"
+    - "Staff may not recognize coercive control or non-physical violence"
+    - "Privacy concerns if partner has connections to WINZ"

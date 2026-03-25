@@ -1,0 +1,182 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "benefit.schema.json",
+  "title": "NZ Benefit Definition",
+  "type": "object",
+  "required": ["id", "name", "category", "frequency", "taxable", "description", "eligibility"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]+$"
+    },
+    "name": { "type": "string" },
+    "category": {
+      "type": "string",
+      "enum": ["main", "supplement", "hardship", "housing", "family", "employment", "health", "residential", "other"]
+    },
+    "frequency": {
+      "type": "string",
+      "enum": ["weekly", "fortnightly", "one-off", "annual", "automatic", "as-needed"]
+    },
+    "taxable": { "type": "boolean" },
+    "legal_basis": { "type": "string" },
+    "source_url": { "type": "string", "format": "uri" },
+    "description": { "type": "string" },
+
+    "eligibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "min_age": { "type": ["integer", "null"] },
+        "max_age": { "type": ["integer", "null"] },
+        "residency": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["citizen", "permanent_resident", "refugee", "protected_person", "resident_visa"]
+          }
+        },
+        "residence_years": { "type": ["number", "null"] },
+        "requires_benefit": { "type": "boolean" },
+        "benefit_types": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "requires_application": { "type": "boolean" },
+        "rules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["fact", "op"],
+            "additionalProperties": false,
+            "properties": {
+              "fact": { "type": "string" },
+              "op": {
+                "type": "string",
+                "enum": ["eq", "neq", "in", "not_in", "gt", "gte", "lt", "lte", "exists", "not_exists"]
+              },
+              "value": {}
+            }
+          }
+        },
+        "conditions": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+
+    "rates": {
+      "type": "object",
+      "properties": {
+        "effective": { "type": "string" },
+        "fixed_amount": { "type": "string" },
+        "max_weekly": { "type": "string" },
+        "max_fortnightly": { "type": "string" },
+        "max_annual": { "type": "string" },
+        "max_one_off": { "type": "string" },
+        "description": { "type": "string" },
+        "tables": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "rows"],
+            "properties": {
+              "name": { "type": "string" },
+              "by": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "rows": {
+                "type": "array",
+                "items": { "type": "object" }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "income_test": {
+      "type": "object",
+      "properties": {
+        "applies": { "type": "boolean" },
+        "description": { "type": "string" },
+        "thresholds": {
+          "type": "array",
+          "items": { "type": "object" }
+        }
+      }
+    },
+
+    "asset_test": {
+      "type": "object",
+      "properties": {
+        "applies": { "type": "boolean" },
+        "single": { "type": "number" },
+        "couple_or_sole_parent": { "type": "number" },
+        "description": { "type": "string" }
+      }
+    },
+
+    "friction": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "documentation_required": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "typical_processing": { "type": "string" },
+        "known_issues": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "deflection_patterns": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+
+    "advocacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "appointment_strategy": { "type": "string" },
+        "statutory_basis": { "type": "string" },
+        "talking_points": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "common_objections": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["objection", "counter"],
+            "additionalProperties": false,
+            "properties": {
+              "objection": { "type": "string" },
+              "counter": { "type": "string" },
+              "cite": { "type": "string" },
+              "statutory_strength": { "type": "string" }
+            }
+          }
+        },
+        "escalation_triggers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["trigger", "action"],
+            "additionalProperties": false,
+            "properties": {
+              "trigger": { "type": "string" },
+              "action": { "type": "string" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,176 @@
+# Test Scenario: Reddit "WINZ Benefit Advice" post
+# Source: reddit.com/r/newzealand — user on Jobseeker with medical cert, earning $25/hr x 20hrs
+#
+# This person is a classic case of someone who:
+# 1. Knows about their main benefit but not about supplementary entitlements
+# 2. Is confused about income abatement and tax interactions
+# 3. May be missing Accommodation Supplement, Disability Allowance, TAS, and WEP
+# 4. Doesn't realise they can get a Community Services Card
+#
+# The Reddit thread reveals the real friction: multiple commenters say
+# "it's not worth working" due to the 70c/$1 abatement + tax. The system
+# design actively discourages part-time work for people with health conditions.
+
+scenario:
+  name: "Jobseeker with medical cert — part-time worker"
+  description: >
+    Adult 25+ on Jobseeker Support with a medical certificate, working 20 hrs/wk
+    at $25/hr. Renting in a mid-cost area. Has a health condition causing ongoing
+    costs. Single, no children. Not receiving any supplements beyond the base benefit.
+    This is a gap scenario — they're almost certainly missing several entitlements.
+
+intake_answers:
+  # PERSONAL
+  personal.age: 30
+  personal.residency: "NZ Citizen"
+  personal.years_in_nz: 30
+  personal.relationship: "Single"
+
+  # HOUSING
+  housing.type: "Renting"
+  housing.cost: 280
+  housing.region: "Canterbury / Christchurch"
+  housing.social_housing: "No"
+  housing.arrears: "No"
+  housing.need_to_move: "No"
+
+  # INCOME
+  income.employed: "Yes"
+  income.hours: 20
+  income.amount: 500
+  income.benefit: "Yes"
+  income.benefit_type: "Jobseeker Support"
+  income.current_supplements:
+    - "None of these"
+  income.assets: "Under $8,100"
+
+  # HEALTH
+  health.condition: "Yes"
+  health.duration: "More than 2 years"
+  health.costs: "Yes"
+  health.cost_types:
+    - "GP / specialist visits"
+    - "Prescriptions / medication"
+    - "Transport to appointments"
+  health.hours_able: "15 – 30 hrs"
+  health.residential_care: "No"
+
+  # CHILDREN
+  children.dependent: "No"
+  children.caring_for_other: "No"
+
+  # EMPLOYMENT
+  employment.seeking_work: "No"
+  employment.training_interest: "No"
+  employment.seasonal: "No"
+  employment.self_employed: "No"
+
+  # HISTORY
+  history.past_denied: "No"
+  history.upload: "Skip for now"
+
+  # SITUATION
+  situation.emergency: "No"
+  situation.family_violence: "No"
+  situation.recently_released: "No"
+  situation.refugee: "No"
+  situation.carer: "No"
+
+expected_entitlements:
+  should_surface:
+    - id: accommodation-supplement
+      status: ENTITLED
+      reasoning: >
+        Renting at $280/wk in Canterbury (Zone 2), single no children.
+        Max AS for this profile is ~$105/wk. Income is $500/wk from work
+        plus abated benefit — well within the threshold for AS.
+        This person is almost certainly not receiving this.
+
+    - id: disability-allowance
+      status: POSSIBLE
+      reasoning: >
+        Has a health condition >2 years with ongoing GP, prescription, and
+        transport costs. Meets all criteria for DA assessment. Max $75.52/wk.
+        This is the most commonly missed supplement for people on JS-Medical.
+        Requires GP letter itemising costs.
+
+    - id: winter-energy-payment
+      status: ENTITLED
+      reasoning: >
+        On a main benefit. WEP is automatic May-October. $20.46/wk single.
+        Should already be receiving this — but the Reddit post mentions
+        ~$360 after tax, which is close to base JS-25+ ($337.74 gross ~$290 net)
+        plus AS. WEP may or may not be included. Worth confirming.
+
+    - id: temporary-additional-support
+      status: POSSIBLE
+      reasoning: >
+        Housing cost ratio: $280/$500 = 56% of income on rent.
+        Has health costs on top. TAS is designed exactly for this scenario.
+        Requires detailed essential cost breakdown at appointment.
+
+    - id: community-services-card
+      status: ENTITLED
+      reasoning: >
+        On a main benefit — should be automatic. Gives discounted GP visits
+        and prescriptions. If they're paying full price for GP visits mentioned
+        in health costs, this card would reduce those costs.
+
+    - id: supported-living-payment
+      status: POSSIBLE
+      reasoning: >
+        Has a health condition >2 years and meets age/residency criteria.
+        Work capacity is 15-30 hrs (above the <15hr threshold for SLP),
+        so the key SLP rule fails. But it's still worth raising at an
+        appointment — if the condition worsens, SLP becomes the correct
+        benefit. Surfaces as POSSIBLE because 4/5 rules pass.
+
+  should_not_surface:
+    - id: sole-parent-support
+      reasoning: "No children"
+    - id: childcare-assistance
+      reasoning: "No children"
+
+# Real-world income calculation (from the Reddit thread)
+# This is what the tool should eventually help people understand:
+income_analysis:
+  gross_weekly_employment: 500      # $25 x 20hrs
+  js_base_gross: 337.74             # JS 25+ single rate
+  abatement_free: 160               # First $160 earned = no abatement
+  abatement_amount: 238             # ($500 - $160) x $0.70 = $238
+  js_after_abatement: 99.74         # $337.74 - $238 = $99.74
+  combined_gross: 599.74            # $500 + $99.74
+  # Tax on $500 employment income:
+  employment_paye: 87.50            # 17.5% rate
+  employment_acc: 8.00              # ~1.6%
+  employment_kiwisaver: 15.00       # 3%
+  employment_net: 389.50
+  # Net JS after tax:
+  js_net: 84.79                     # $99.74 x ~0.85 (M tax code)
+  total_weekly_net: 474.29          # $389.50 + $84.79
+  # Compare to not working:
+  js_only_net: 290.00               # ~$337.74 after PAYE at M rate
+  net_gain_from_working: 184.29     # $474.29 - $290.00
+  effective_hourly_rate: 9.21       # $184.29 / 20hrs = $9.21/hr effective
+  # Key insight from Reddit thread:
+  # "After $160, you keep about 5% of what you earn" — this is roughly correct
+  # when you factor 70% abatement + ~17.5% tax on the remaining 30%
+  # Effective marginal rate above $160: ~82%
+
+notes:
+  - >
+    The Reddit commenters correctly identify the poverty trap: above $160/wk
+    earned, the effective marginal rate is ~82% (70% abatement + tax on remainder).
+    The person effectively earns $9.21/hr for their 20 hours of work.
+  - >
+    What the Reddit thread DOESN'T mention: this person is likely missing
+    Accommodation Supplement ($80-$105/wk), Disability Allowance (up to $75.52/wk),
+    and possibly TAS. These could add $155-$277/wk to their income.
+  - >
+    The gap between "what the law says" and "what people actually receive" is
+    exactly what this tool is designed to surface. The Reddit poster knows about
+    their base benefit and abatement rules, but not about supplementary entitlements.
+  - >
+    Community Services Card would reduce the GP visit costs they're paying,
+    which in turn affects Disability Allowance calculation (lower costs = lower DA,
+    but net position is still better).

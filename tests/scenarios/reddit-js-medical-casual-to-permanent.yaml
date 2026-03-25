@@ -1,0 +1,174 @@
+# Test Scenario: Reddit "WINZ Advice — JS Medical, casual to permanent role"
+# Source: reddit.com/r/newzealand
+#
+# This person represents a common transition anxiety:
+# 1. On Jobseeker Support with medical certificate for 5 years
+# 2. Working casual, option to go permanent 25hrs @ $25.30/hr
+# 3. Worried about losing benefit safety net on sick days
+# 4. Wants to know if DA and Accommodation Supplement survive the transition
+# 5. Worried about what happens if they work over 25 hours
+#
+# Reddit thread reveals:
+# - 25 x $25.30 = $632.50/wk gross — well under AS/DA income thresholds
+# - Can stay on benefit at reduced rate (~$30/wk after abatement)
+# - S tax code applies to employment earnings while on benefit
+# - AS and DA both survive at this income level
+# - TAS may also apply depending on costs
+# - The real risk: JS-Medical abatement is 70c/$1 above $160 threshold
+#   making the effective marginal tax rate ~82%
+# - If SLP were granted instead, abatement would be 30c/$1 — much better
+#
+# Key insight from comments: "you don't have to decide to cancel your
+# benefit immediately so you'll still have that option available"
+#
+# Assumptions for scenario:
+# - Single, no children (not stated but implied by tone)
+# - Age ~30s (on JS-Medical 5 years, working age)
+# - Has a health condition (medical certificate for 5 years = long-term)
+# - Currently working casual (some hours, variable income)
+# - Renting (asking about Accommodation Supplement)
+# - Already receiving DA (asking if they'd keep it)
+# - Auckland region (conservative assumption for AS zone)
+
+scenario:
+  name: "JS-Medical recipient — casual to permanent 25hr role"
+  description: >
+    Adult on Jobseeker Support with medical certificate for 5 years.
+    Currently working casual, considering permanent 25hr/wk position
+    at $25.30/hr ($632.50/wk gross). Has a long-term health condition.
+    Renting in Auckland. Worried about losing benefit safety net and
+    whether DA and Accommodation Supplement survive the income increase.
+
+intake_answers:
+  # PERSONAL
+  personal.age: 33
+  personal.residency: "NZ Citizen"
+  personal.years_in_nz: 33
+  personal.relationship: "Single"
+
+  # HOUSING
+  housing.type: "Renting"
+  housing.cost: 300
+  housing.region: "Auckland"
+  housing.social_housing: "No"
+  housing.arrears: "No"
+  housing.need_to_move: "No"
+
+  # INCOME — currently working casual, ~15hrs at variable rate
+  # Using the potential permanent role income for forward-looking assessment
+  income.employed: "Yes"
+  income.hours: 25
+  income.amount: 632
+  income.benefit: "Yes"
+  income.benefit_type: "Jobseeker Support"
+  income.current_supplements:
+    - "Disability Allowance"
+    - "Accommodation Supplement"
+  income.assets: "Under $8,100"
+
+  # HEALTH — on medical cert for 5 years = long-term condition
+  health.condition: "Yes"
+  health.duration: "More than 2 years"
+  health.costs: "Yes"
+  health.cost_types:
+    - "GP / specialist visits"
+    - "Prescriptions / medication"
+  health.hours_able: "Less than 15 hrs"
+  health.residential_care: "No"
+
+  # CHILDREN
+  children.dependent: "No"
+  children.caring_for_other: "No"
+
+  # EDUCATION
+  education.studying: "No"
+
+  # EMPLOYMENT
+  employment.seeking_work: "No"
+  employment.training_interest: "No"
+  employment.seasonal: "No"
+  employment.self_employed: "No"
+
+  # HISTORY
+  history.past_denied: "No"
+  history.upload: "Skip for now"
+
+  # SITUATION
+  situation.emergency: "No"
+  situation.family_violence: "No"
+  situation.recently_released: "No"
+  situation.refugee: "No"
+  situation.carer: "No"
+
+expected_entitlements:
+  should_surface:
+    - id: supported-living-payment
+      status: ENTITLED
+      reasoning: >
+        On JS-Medical for 5 years with condition limiting work to <15hrs.
+        Meets all SLP criteria under s40 SSA 2018. SLP would be transformative:
+        30c/$1 abatement vs 70c/$1 on JS. At $632.50/wk earnings above $160
+        threshold, JS abates by $330.75 (70% of $472.50) while SLP would
+        abate by only $141.75 (30% of $472.50). That's ~$189/wk difference
+        in take-home. This is THE key finding.
+
+    - id: accommodation-supplement
+      status: ENTITLED
+      reasoning: >
+        Already receiving. At $632.50/wk income, still well under the
+        income threshold where AS cuts out entirely. Will continue to
+        receive AS though amount may reduce with income testing.
+
+    - id: disability-allowance
+      status: ENTITLED
+      reasoning: >
+        Already receiving. DA income thresholds are generous.
+        $632.50/wk is below the single person DA income limit.
+        Will continue receiving DA regardless of employment change.
+
+    - id: winter-energy-payment
+      status: ENTITLED
+      reasoning: >
+        On a main benefit. WEP is automatic May-October.
+
+    - id: temporary-additional-support
+      status: POSSIBLE
+      reasoning: >
+        On benefit with employment income. If essential costs exceed
+        income after benefit abatement, TAS may help bridge the gap.
+
+    - id: community-services-card
+      status: ENTITLED
+      reasoning: >
+        On a main benefit — automatic entitlement. Critical for
+        reducing GP and prescription costs given ongoing health condition.
+
+  should_not_surface:
+    - id: sole-parent-support
+      reasoning: "No children, not a sole parent"
+    - id: childcare-assistance
+      reasoning: "No children"
+    - id: student-allowance
+      reasoning: "Not studying"
+
+notes:
+  - >
+    The Reddit thread's most valuable advice: "you don't have to decide
+    to cancel your benefit immediately." The person can trial the permanent
+    role while staying on benefit at a reduced rate. If health prevents
+    sustained employment, the safety net remains.
+  - >
+    The tool should surface SLP as the critical finding. At 25hrs/$25.30,
+    the JS-Medical 70c/$1 abatement is devastating. SLP's 30c/$1 would
+    make this employment financially worthwhile. The person has been on
+    JS-Medical for 5 YEARS with a condition limiting work capacity —
+    they almost certainly qualify for SLP but likely were never told.
+  - >
+    One commenter notes AS and DA "DO have income limits" — technically
+    true but misleading at this income level. The tool should reassure
+    that both continue at $632.50/wk gross income.
+  - >
+    The abatement trap is the hidden story: at $632.50/wk on JS-Medical,
+    gross benefit reduces to ~$30/wk. The person keeps almost nothing
+    of the benefit. On SLP at the same income, they'd keep ~$230/wk of
+    benefit. The ~$200/wk difference is life-changing.

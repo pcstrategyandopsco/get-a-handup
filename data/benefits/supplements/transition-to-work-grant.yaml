@@ -1,0 +1,51 @@
+id: transition-to-work-grant
+name: Transition to Work Grant
+category: supplement
+frequency: one-off
+taxable: false
+legal_basis: "Section 179, Social Security Act 2018"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/transition-to-work-grant.html"
+description: "One-off payment to help with costs of starting work, such as work clothes, tools, or transport"
+eligibility:
+  min_age: 16
+  max_age: null
+  residency: [citizen, permanent_resident]
+  residence_years: 0
+  requires_benefit: true
+  requires_application: true
+  rules:
+    - fact: on_benefit
+      op: eq
+      value: true
+    - fact: starting_employment
+      op: eq
+      value: true
+  conditions:
+    - "Must be currently receiving a main benefit"
+    - "Must be starting new employment"
+    - "Must have genuine work-related costs"
+    - "Employment must be expected to last at least 3 months"
+rates:
+  effective: "2026-04-01"
+  max_weekly: "$500"
+  notes: "One-off payment up to approximately $500, depending on assessed needs"
+income_test:
+  applies: false
+  description: "Already receiving a benefit, so income has been assessed"
+asset_test:
+  applies: false
+friction:
+  documentation_required:
+    - "Job offer or employment contract"
+    - "Evidence of work-related costs (quotes, receipts)"
+    - "Details of what grant will be used for"
+  typical_processing: "1-2 weeks"
+  known_issues:
+    - "Must be approved before purchasing items"
+    - "Limited to specific work-related costs"
+    - "Maximum amount may not cover all transition costs"
+    - "Not widely promoted"
+  deflection_patterns:
+    - "Told to use own savings or borrow money"
+    - "Narrow interpretation of what qualifies as work-related cost"
+    - "Employment duration requirement can exclude casual work"

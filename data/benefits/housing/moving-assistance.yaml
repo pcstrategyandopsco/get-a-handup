@@ -1,0 +1,47 @@
+id: moving-assistance
+name: Moving Assistance
+category: housing
+frequency: one-off
+taxable: false
+legal_basis: "Section 68 Social Security Act 2018"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/moving-assistance.html"
+description: "Help with costs of moving to new accommodation"
+eligibility:
+  min_age: 16
+  max_age: null
+  residency: [citizen, permanent_resident]
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: needs_to_relocate
+      op: eq
+      value: true
+    - fact: low_income
+      op: eq
+      value: true
+  conditions:
+    - "Must need to relocate to new accommodation"
+    - "Must have low income and limited resources"
+    - "Move must be necessary (e.g., for safety, health, employment)"
+rates:
+  effective: "2026-04-01"
+  max_weekly: "Varies based on moving distance and costs (typically up to $500)"
+income_test:
+  applies: true
+asset_test:
+  applies: true
+friction:
+  documentation_required:
+    - "Evidence of need to move"
+    - "Quotes for moving costs"
+    - "New tenancy agreement"
+    - "Proof of income"
+  typical_processing: "5-10 working days"
+  known_issues:
+    - "Often only covers partial moving costs"
+    - "Limited to specific circumstances"
+    - "May require extensive justification"
+  deflection_patterns:
+    - "Being told to use own resources or borrow"
+    - "Being told to arrange free moving help"
+    - "Being offered smaller amount than actual costs"

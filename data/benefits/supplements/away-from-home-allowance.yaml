@@ -1,0 +1,49 @@
+id: away-from-home-allowance
+name: Away From Home Allowance
+category: supplement
+frequency: as-needed
+taxable: false
+legal_basis: "Social Security Act 2018"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/away-from-home-allowance.html"
+description: "Help with costs of living away from home when required for approved work or training"
+eligibility:
+  min_age: 16
+  max_age: null
+  residency: [citizen, permanent_resident]
+  residence_years: 0
+  requires_benefit: true
+  requires_application: true
+  rules:
+    - fact: on_benefit
+      op: eq
+      value: true
+    - fact: lives_away_for_work
+      op: eq
+      value: true
+  conditions:
+    - "Must be receiving a main benefit"
+    - "Must need to live away from home for approved work or training"
+    - "Living away must be temporary and necessary"
+    - "Must not be able to commute from home"
+rates:
+  effective: "2026-04-01"
+  max_weekly: "Varies based on accommodation costs"
+  notes: "Payment covers actual reasonable costs of living away from home"
+income_test:
+  applies: false
+  description: "Already receiving a benefit, so income has been assessed"
+asset_test:
+  applies: false
+friction:
+  documentation_required:
+    - "Proof of work or training placement"
+    - "Evidence that commuting is not feasible"
+    - "Accommodation costs (receipts, rental agreement)"
+  typical_processing: "2-3 weeks"
+  known_issues:
+    - "Must be pre-approved before moving"
+    - "Assessment of whether commuting is feasible can be subjective"
+    - "Time-limited assistance"
+  deflection_patterns:
+    - "Told to find work or training closer to home"
+    - "Strict interpretation of 'not able to commute'"

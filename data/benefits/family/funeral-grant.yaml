@@ -1,0 +1,44 @@
+id: funeral-grant
+name: Funeral Grant
+category: family
+frequency: one-off
+taxable: false
+legal_basis: "Section 67, Social Security Act 2018"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/funeral-grant.html"
+description: "One-off payment to help with funeral costs for a dependent person"
+eligibility:
+  min_age: null
+  max_age: null
+  residency: [citizen, permanent_resident]
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: has_funeral_costs
+      op: eq
+      value: true
+  conditions:
+    - "Deceased must have been a dependent or the applicant's partner"
+    - "Must be responsible for funeral costs"
+    - "Income and asset tested"
+rates:
+  effective: "2026-04-01"
+  max_weekly: "Up to $2,500 one-off payment"
+income_test:
+  applies: true
+  note: "Applicant's income is assessed"
+asset_test:
+  applies: true
+  note: "Deceased's estate and applicant's assets are considered"
+friction:
+  documentation_required:
+    - "Death certificate"
+    - "Funeral invoice or quote"
+    - "Proof of relationship to deceased"
+    - "Income and asset information"
+  typical_processing: "2-3 weeks"
+  known_issues:
+    - "Must apply before funeral if possible"
+    - "Grant may be reduced if estate or other funds available"
+  deflection_patterns:
+    - "Suggesting family should cover costs"
+    - "Suggesting using deceased's estate"

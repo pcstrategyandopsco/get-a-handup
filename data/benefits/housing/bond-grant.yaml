@@ -1,0 +1,50 @@
+id: bond-grant
+name: Bond Grant
+category: housing
+frequency: one-off
+taxable: false
+legal_basis: "Section 68 Social Security Act 2018"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/bond-grant.html"
+description: "One-off help with rental bond, up to 4 weeks rent"
+eligibility:
+  min_age: 16
+  max_age: null
+  residency: [citizen, permanent_resident]
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: housing_type
+      op: eq
+      value: renting
+    - fact: needs_bond_assistance
+      op: eq
+      value: true
+    - fact: low_income
+      op: eq
+      value: true
+  conditions:
+    - "Must be renting or about to rent a property"
+    - "Must need assistance with bond payment"
+    - "Must have low income and limited assets"
+rates:
+  effective: "2026-04-01"
+  max_weekly: "Up to 4 weeks rent"
+income_test:
+  applies: true
+asset_test:
+  applies: true
+friction:
+  documentation_required:
+    - "Tenancy agreement"
+    - "Proof of rent amount"
+    - "Proof of income and assets"
+    - "Landlord details"
+  typical_processing: "5-10 working days"
+  known_issues:
+    - "Must be paid directly to landlord, causing delays"
+    - "May not cover full bond if rent is high"
+    - "Often declined if previous bond grants not repaid"
+  deflection_patterns:
+    - "Being told to negotiate lower bond with landlord"
+    - "Being told to find cheaper accommodation"
+    - "Being offered recoverable assistance instead"

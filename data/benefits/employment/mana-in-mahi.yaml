@@ -1,0 +1,46 @@
+id: mana-in-mahi
+name: Mana in Mahi
+category: employment
+frequency: weekly
+taxable: false
+legal_basis: "Social Security Act 2018, Part 2"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/mana-in-mahi.html"
+description: "Supports people into industry training and apprenticeships with employer subsidies and training cost coverage"
+eligibility:
+  min_age: null
+  max_age: 40
+  residency: [citizen, permanent_resident]
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: is_seeking_work
+      op: eq
+      value: true
+    - fact: age
+      op: lte
+      value: 40
+    - fact: interested_in_apprenticeship
+      op: eq
+      value: true
+  conditions:
+    - "Must be actively seeking work"
+    - "Must be aged 40 or under"
+    - "Must be interested in pursuing an apprenticeship or industry training"
+    - "Employer must offer registered apprenticeship or training programme"
+rates:
+  effective: "2026-04-01"
+  description: "varies - employer subsidy up to $500/week plus training costs covered"
+income_test:
+  applies: false
+friction:
+  documentation_required:
+    - "Employer application"
+    - "Training programme registration details"
+    - "Employment agreement"
+  typical_processing: "3-4 weeks"
+  known_issues:
+    - "Limited to specific industries with registered training programmes"
+    - "Age cap excludes many career changers"
+  deflection_patterns:
+    - "Employers may prefer experienced workers over subsidised apprentices"
+    - "Jobseekers over 40 are excluded"

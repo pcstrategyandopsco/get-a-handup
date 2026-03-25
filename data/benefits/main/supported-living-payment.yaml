@@ -1,0 +1,102 @@
+id: supported-living-payment
+name: Supported Living Payment
+category: main
+frequency: weekly
+taxable: true
+legal_basis: "section 40 Social Security Act 2018"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/supported-living-payment.html"
+description: "Weekly payment for people with health condition or disability restricting work capacity to less than 15 hours per week, or those caring full-time for someone else"
+
+eligibility:
+  min_age: 18
+  max_age: null
+  residency: [citizen, permanent_resident]
+  residence_years: 2
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: age
+      op: gte
+      value: 18
+    - fact: has_condition
+      op: eq
+      value: true
+    - fact: work_capacity_under_15
+      op: eq
+      value: true
+    - fact: residency_status
+      op: in
+      value: [citizen, permanent_resident]
+    - fact: years_in_nz
+      op: gte
+      value: 2
+  conditions:
+    - "Must be 18 years or older"
+    - "Must have a health condition or disability that restricts work capacity to less than 15 hours per week, OR"
+    - "Must be providing full-time care for another person"
+    - "Must be a New Zealand citizen or permanent resident"
+    - "Must have been resident in New Zealand for at least 2 years"
+
+rates:
+  effective: "2026-04-01"
+  max_weekly: "$371.52"
+  description: "Base rate for single person. Higher rates for couples and those with children"
+
+income_test:
+  applies: true
+  description: "Income from work and other sources is tested. Abatement applies to income over certain thresholds"
+  thresholds:
+    - weekly: 160
+      abatement_rate: 0.30
+
+asset_test:
+  applies: true
+  single: 8100
+  couple_or_sole_parent: 16200
+
+friction:
+  documentation_required:
+    - "Proof of identity"
+    - "Medical certificate from registered health practitioner"
+    - "Work capacity assessment"
+    - "Bank account details"
+    - "Care assessment if applying as full-time carer"
+  typical_processing: "2-4 weeks"
+  known_issues:
+    - "Medical assessment process can be lengthy"
+    - "Work capacity assessment may require multiple medical appointments"
+    - "Evidence requirements for full-time carer status can be substantial"
+  deflection_patterns: []
+
+advocacy:
+  appointment_strategy: >
+    SLP is mandatory under s40 if your work capacity is under 15 hours per week.
+    The key is the medical evidence — your GP or specialist must confirm the
+    restriction. If MSD's designated doctor disagrees with your doctor, your
+    doctor's opinion carries significant weight. SLP has better abatement rates
+    than Jobseeker (30c vs 70c per dollar earned), so the financial difference
+    is substantial.
+
+  talking_points:
+    - "My doctor has confirmed my work capacity is under 15 hours per week due to [condition]"
+    - "Under s40 SSA 2018, SLP is the correct benefit when work capacity is restricted to under 15 hours"
+    - "I understand the abatement rate for SLP is 30c per dollar vs 70c for Jobseeker — this affects my income significantly"
+    - "If a designated doctor assessment is required, I want my own doctor's evidence given full weight"
+
+  common_objections:
+    - objection: "You should be on Jobseeker Support - Health Condition"
+      counter: "JS-Health is for temporary conditions or capacity of 15-30 hours. My condition restricts me to under 15 hours as confirmed by my doctor. Section 40 requires SLP in this case."
+      cite: "s40 Social Security Act 2018"
+    - objection: "Our designated doctor says you can work more than 15 hours"
+      counter: "My treating doctor who knows my condition has assessed me at under 15 hours. I request that their evidence is given appropriate weight. I would like to understand the basis for the designated doctor's different assessment."
+    - objection: "Your condition may improve"
+      counter: "The Act does not require the condition to be permanent for SLP — only that current work capacity is under 15 hours. SLP can be reviewed if circumstances change."
+      cite: "s40 Social Security Act 2018"
+
+  escalation_triggers:
+    - trigger: "Placed on Jobseeker instead of SLP despite medical evidence"
+      action: "File a Review of Decision immediately. The financial difference (abatement rates, base rate) is significant. Request written reasons for the benefit determination."
+    - trigger: "Designated doctor assessment contradicts treating doctor"
+      action: "Request copies of both assessments. Your treating doctor can provide a detailed rebuttal. Consider requesting a second designated doctor opinion."
+    - trigger: "Told to try working more hours first"
+      action: "The Act assesses current capacity, not potential capacity. Your doctor's assessment of current capacity is the relevant evidence."

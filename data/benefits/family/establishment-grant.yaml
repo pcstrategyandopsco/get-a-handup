@@ -1,0 +1,47 @@
+id: establishment-grant
+name: Establishment Grant
+category: family
+frequency: one-off
+taxable: false
+legal_basis: "Social Security Act 2018"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/establishment-grant.html"
+description: "One-off payment to help people setting up a home for the first time or after a relationship breakdown"
+eligibility:
+  min_age: null
+  max_age: null
+  residency: [citizen, permanent_resident]
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: needs_establishment_support
+      op: eq
+      value: true
+    - fact: low_income
+      op: eq
+      value: true
+  conditions:
+    - "Setting up home for first time or after relationship breakdown"
+    - "Low income or on benefit"
+    - "Cannot afford essential household items"
+rates:
+  effective: "2026-04-01"
+  max_weekly: "Variable one-off payment based on circumstances"
+income_test:
+  applies: true
+  note: "Must demonstrate financial hardship"
+asset_test:
+  applies: true
+  note: "Limited assets"
+friction:
+  documentation_required:
+    - "Proof of new tenancy or housing situation"
+    - "Evidence of relationship breakdown (if applicable)"
+    - "Quotes for essential items needed"
+    - "Income and asset information"
+  typical_processing: "2-4 weeks"
+  known_issues:
+    - "Discretionary decision by case manager"
+    - "May be declined if other support available"
+  deflection_patterns:
+    - "Suggesting borrowing from family or friends"
+    - "Offering budgeting advice instead of payment"

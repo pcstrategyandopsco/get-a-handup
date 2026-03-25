@@ -1,0 +1,42 @@
+id: straight-to-work
+name: Straight to Work
+category: employment
+frequency: as-needed
+taxable: false
+legal_basis: "Social Security Act 2018, Part 2"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/straight-to-work.html"
+description: "Fast-track employment programme for work-ready jobseekers providing intensive job matching and support"
+eligibility:
+  min_age: null
+  max_age: null
+  residency: [citizen, permanent_resident]
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: is_seeking_work
+      op: eq
+      value: true
+    - fact: work_ready
+      op: eq
+      value: true
+  conditions:
+    - "Must be actively seeking work"
+    - "Must be assessed as work-ready (no significant barriers to employment)"
+    - "Must be willing to accept suitable job offers"
+    - "Must be available to start work immediately"
+rates:
+  effective: "2026-04-01"
+  description: "varies - intensive job matching and support services provided at no cost"
+income_test:
+  applies: false
+friction:
+  documentation_required:
+    - "Work readiness assessment"
+    - "Current CV and work history"
+  typical_processing: "1 week"
+  known_issues:
+    - "Work-ready assessment can exclude those who need support most"
+    - "Pressure to accept any job rather than suitable employment"
+  deflection_patterns:
+    - "Narrow definition of 'work-ready' excludes many"
+    - "Fast-track approach may not provide adequate support"

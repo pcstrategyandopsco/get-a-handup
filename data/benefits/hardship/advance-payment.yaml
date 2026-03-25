@@ -1,0 +1,79 @@
+id: advance-payment
+name: Advance Payment of Benefit
+category: hardship
+frequency: one-off
+taxable: false
+legal_basis: "Section 82 Social Security Act 2018"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/advance-payment-of-benefit.html"
+description: "Advance on future benefit payments for urgent needs. Maximum of 50% of annual benefit entitlement, recovered from future payments"
+eligibility:
+  min_age: 16
+  max_age: null
+  residency: [citizen, permanent_resident]
+  requires_benefit: true
+  requires_application: true
+  rules:
+    - fact: on_benefit
+      op: eq
+      value: true
+    - fact: has_urgent_need
+      op: eq
+      value: true
+  conditions:
+    - "Must be currently receiving a benefit"
+    - "Must have an urgent need that cannot wait"
+    - "Must be able to manage on reduced payments during recovery period"
+rates:
+  effective: "2026-04-01"
+  max_weekly: "Maximum 50% of annual benefit entitlement"
+income_test:
+  applies: false
+asset_test:
+  applies: false
+friction:
+  documentation_required:
+    - "Evidence of urgent need"
+    - "Confirmation of current benefit"
+  typical_processing: "1-3 working days"
+  known_issues:
+    - "Recovery deductions can cause severe hardship"
+    - "May affect eligibility for other assistance during recovery period"
+    - "Can trap people in cycle of advances and repayments"
+  deflection_patterns:
+    - "Being told the need is not urgent enough"
+    - "Being offered a smaller advance than requested"
+    - "Being told to apply for other hardship assistance instead"
+
+advocacy:
+  appointment_strategy: >
+    Advance payments are loans against your future benefit — up to 50% of
+    your annual entitlement. The critical negotiation point is the recovery
+    rate (how much is deducted each week). A high recovery rate can push
+    you into deeper hardship. Always negotiate the lowest recovery rate
+    possible, and ask about non-recoverable alternatives (SNG) first.
+
+  talking_points:
+    - "I have an urgent need for $[X] that cannot wait — here is the evidence"
+    - "Before taking an advance, are there any non-recoverable grants (SNG) that could cover this need?"
+    - "If an advance is the only option, I need the recovery rate set at a level I can manage — $[X]/week maximum"
+    - "I understand the maximum advance is 50% of my annual benefit entitlement"
+
+  common_objections:
+    - objection: "The standard recovery rate is $[X] per week"
+      counter: "I need a lower recovery rate because my essential costs are $[X]/wk against income of $[Y]/wk. A higher deduction would cause further hardship. Please assess an appropriate rate."
+      cite: "s82 Social Security Act 2018"
+    - objection: "You already have an advance being recovered"
+      counter: "I understand, but I have a new urgent need. Can the existing recovery be paused or reduced while this advance is also recovered?"
+    - objection: "Have you tried other options first?"
+      counter: "I have explored [list options tried]. This is urgent — [explain urgency]. An advance is the remaining option."
+    - objection: "This need isn't urgent enough for an advance"
+      counter: "This need is urgent because [explain — e.g., medical, preventing eviction, children's essential needs]. Please assess it under s82."
+      cite: "s82 Social Security Act 2018"
+
+  escalation_triggers:
+    - trigger: "Recovery rate set too high"
+      action: "Request a review of the recovery rate. Provide your cost breakdown showing the deduction creates hardship. You can request a lower rate at any time."
+    - trigger: "Advance declined for urgent need"
+      action: "Request written reasons. Ask if an SNG could cover the need instead. If truly urgent, escalate to supervisor."
+    - trigger: "Trapped in advance/repayment cycle"
+      action: "Request a financial assessment of all your assistance. You may be entitled to TAS or other support to break the cycle. Ask about hardship provisions for recovery suspension."

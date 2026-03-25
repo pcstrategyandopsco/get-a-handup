@@ -1,0 +1,47 @@
+id: relocation-assistance
+name: Relocation Assistance
+category: housing
+frequency: one-off
+taxable: false
+legal_basis: "Section 68 Social Security Act 2018"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/relocation-assistance.html"
+description: "Help relocating for employment opportunities"
+eligibility:
+  min_age: 16
+  max_age: null
+  residency: [citizen, permanent_resident]
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: relocating_for_employment
+      op: eq
+      value: true
+    - fact: low_income
+      op: eq
+      value: true
+  conditions:
+    - "Must be relocating for confirmed employment"
+    - "Must have low income and limited resources"
+    - "Employment must be ongoing (not temporary)"
+rates:
+  effective: "2026-04-01"
+  max_weekly: "Varies based on distance and costs (can include moving, bond, rent in advance)"
+income_test:
+  applies: true
+asset_test:
+  applies: true
+friction:
+  documentation_required:
+    - "Job offer or employment contract"
+    - "Evidence of relocation costs"
+    - "New tenancy agreement"
+    - "Proof of income"
+  typical_processing: "10-15 working days"
+  known_issues:
+    - "Employment must be confirmed before assistance granted"
+    - "May not cover all relocation costs"
+    - "Long processing time can delay job start"
+  deflection_patterns:
+    - "Being told to use own resources first"
+    - "Being told to start job before assistance granted"
+    - "Being offered smaller amount than needed"

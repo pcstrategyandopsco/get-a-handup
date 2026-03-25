@@ -1,0 +1,45 @@
+id: residential-care-loan
+name: Residential Care Loan
+category: residential
+frequency: as-needed
+taxable: false
+legal_basis: "s143 Social Security Act 2018"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/residential-care-loan.html"
+description: "Interest-free loan secured against property to help pay for residential care costs, recovered from estate after death"
+eligibility:
+  min_age: null
+  max_age: null
+  residency: [citizen, permanent_resident]
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: in_residential_care
+      op: eq
+      value: true
+    - fact: has_property
+      op: eq
+      value: true
+  conditions:
+    - "Must be receiving residential care subsidy"
+    - "Must own property that can be used as security"
+    - "Loan is recovered from estate after death"
+    - "Property cannot be sold or transferred while loan outstanding"
+rates:
+  effective: "2026-04-01"
+  description: "varies based on residential care costs and property value"
+income_test:
+  applies: false
+friction:
+  documentation_required:
+    - "Property title and valuation"
+    - "Residential care subsidy approval"
+    - "Legal documentation for loan security"
+    - "Next of kin notifications"
+  typical_processing: "6-8 weeks for legal processing"
+  known_issues:
+    - "Can prevent family from inheriting or accessing family home"
+    - "Complex legal implications for estates"
+    - "May create tension with family members expecting inheritance"
+  deflection_patterns:
+    - "Staff may emphasize estate recovery to discourage uptake"
+    - "May suggest selling property instead"

@@ -1,0 +1,41 @@
+id: best-start-payment
+name: Best Start Payment
+category: family
+frequency: weekly
+taxable: false
+legal_basis: "Tax Administration Act 1994, Part M"
+source_url: "https://www.ird.govt.nz/working-for-families/best-start"
+description: "Payment for families with children under 3 years old, part of Working for Families package"
+eligibility:
+  min_age: null
+  max_age: null
+  residency: [citizen, permanent_resident]
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: has_child_under_3
+      op: eq
+      value: true
+  conditions:
+    - "Child must be under 3 years old"
+    - "Must be the principal caregiver"
+    - "Not income tested for children under 1 year"
+    - "Income tested for children aged 1-3 years"
+rates:
+  effective: "2026-04-01"
+  max_weekly: "$69 per week for child under 1 year; $52 per week for child aged 1-3 years"
+income_test:
+  applies: true
+  note: "No income test for first year; income tested from age 1-3"
+asset_test:
+  applies: false
+friction:
+  documentation_required:
+    - "Birth certificate"
+    - "IRD number"
+    - "Income details (for children aged 1-3)"
+  typical_processing: "2-4 weeks"
+  known_issues:
+    - "Administered by IRD"
+    - "Must apply within 12 weeks of birth for backdated payment"
+  deflection_patterns: []

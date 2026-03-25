@@ -1,0 +1,81 @@
+id: emergency-housing-special-needs-grant
+name: Emergency Housing Special Needs Grant
+category: housing
+frequency: weekly
+taxable: false
+legal_basis: "Section 68 Social Security Act 2018"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/emergency-housing.html"
+description: "Covers emergency and transitional housing costs such as motels. Weekly grants that must be reapplied for"
+eligibility:
+  min_age: 16
+  max_age: null
+  residency: [citizen, permanent_resident]
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: is_homeless
+      op: eq
+      value: true
+    - fact: at_risk_of_homelessness
+      op: eq
+      value: true
+  conditions:
+    - "Must be homeless or at immediate risk of homelessness"
+    - "Must have no other accommodation options available"
+    - "Must reapply weekly for continued support"
+rates:
+  effective: "2026-04-01"
+  max_weekly: "Covers emergency housing provider costs (typically $200-$400 per week)"
+income_test:
+  applies: true
+asset_test:
+  applies: true
+friction:
+  documentation_required:
+    - "Proof of homelessness or imminent eviction"
+    - "Evidence no other accommodation available"
+    - "Proof of income"
+    - "Weekly reapplication forms"
+  typical_processing: "Same day to 2 working days (urgent)"
+  known_issues:
+    - "Must reapply weekly, creating ongoing stress"
+    - "Limited to approved emergency housing providers"
+    - "Can accumulate significant costs over time"
+    - "Very poor quality accommodation for high cost"
+  deflection_patterns:
+    - "Being told to stay with family or friends"
+    - "Being told to access other housing options first"
+    - "Being granted shorter periods than needed"
+
+advocacy:
+  appointment_strategy: >
+    Emergency Housing SNG cannot be declined simply because you have family
+    or friends who could theoretically house you. You cannot be forced to stay
+    in unsafe or overcrowded accommodation. This is a weekly grant — you must
+    reapply each week, which is stressful but is your right. Come with evidence
+    of your housing situation and any safety concerns.
+
+  talking_points:
+    - "I am homeless / at immediate risk of homelessness and need emergency housing"
+    - "I have no safe or suitable accommodation available to me"
+    - "I understand I need to reapply weekly and I will do so"
+    - "I need to be placed in approved emergency housing now"
+
+  common_objections:
+    - objection: "Can you stay with family or friends?"
+      counter: "I cannot stay with family/friends because [overcrowded / unsafe / no offer available / relationship breakdown]. The Act does not require me to impose on others as a precondition."
+      cite: "s68 Social Security Act 2018"
+    - objection: "You need to find your own accommodation first"
+      counter: "I am homeless NOW. Emergency housing is for people who cannot access accommodation. I need placement today."
+    - objection: "We can only grant 1 week at a time"
+      counter: "I understand the weekly reapplication process. But I need the grant approved today so I have somewhere to sleep tonight."
+    - objection: "There are no emergency housing places available"
+      counter: "What alternatives are you offering? MSD has a duty to assist. If no places are available, what is the plan for tonight?"
+
+  escalation_triggers:
+    - trigger: "Told to leave and come back tomorrow"
+      action: "If you are homeless tonight, insist on same-day resolution. Ask to speak to a supervisor. If the office closes, call the after-hours line."
+    - trigger: "Placed in unsafe accommodation"
+      action: "Report safety concerns immediately. You have the right to safe accommodation. Document the issues and request alternative placement."
+    - trigger: "Weekly reapplication denied"
+      action: "If your circumstances haven't changed, the basis for denial is unclear. Request written reasons and file an urgent review."

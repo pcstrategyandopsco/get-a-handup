@@ -1,0 +1,44 @@
+id: childcare-assistance
+name: Childcare Assistance
+category: family
+frequency: weekly
+taxable: false
+legal_basis: "Section 44, Social Security Act 2018"
+source_url: "https://www.workandincome.govt.nz/products/a-z-benefits/childcare-assistance.html"
+description: "Subsidy to help with early childhood education costs for families with children"
+eligibility:
+  min_age: null
+  max_age: null
+  residency: [citizen, permanent_resident]
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: has_children
+      op: eq
+      value: true
+    - fact: child_in_ece
+      op: eq
+      value: true
+  conditions:
+    - "Must have children enrolled in approved early childhood education"
+    - "Must be working, training, or looking for work"
+    - "Income tested"
+rates:
+  effective: "2026-04-01"
+  max_weekly: "Subsidy amount per child per week varies based on income and hours"
+income_test:
+  applies: true
+  note: "Subsidy reduces as family income increases"
+asset_test:
+  applies: false
+friction:
+  documentation_required:
+    - "Proof of childcare enrollment"
+    - "Income details"
+    - "Evidence of work, training, or job-seeking activities"
+  typical_processing: "3-4 weeks"
+  known_issues:
+    - "Must be paid directly to childcare provider"
+    - "Complex calculation based on hours and income"
+  deflection_patterns:
+    - "Suggesting informal childcare arrangements instead"

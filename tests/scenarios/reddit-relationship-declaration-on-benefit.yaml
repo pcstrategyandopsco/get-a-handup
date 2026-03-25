@@ -1,0 +1,254 @@
+# Test Scenario: Reddit "Relationships when on the benefit"
+# Source: reddit.com/r/newzealand — confusion about declaring relationships to WINZ
+#
+# This person reveals multiple gaps:
+#
+# 1. RELATIONSHIP DECLARATION GAP:
+#    MSD defines "relationship in the nature of marriage" very broadly — sexual
+#    engagement alone can count. But the tool's intake only has a simple choice:
+#    Single / In a relationship / de facto / Married / Separated / Widowed.
+#    There's no way to express "dating someone but not cohabiting, no financial
+#    interdependence." This matters because:
+#    - If they answer "Single" (correct per Reddit advice) → full entitlements
+#    - If MSD classifies them as "in a relationship" with partner earning
+#      $67,500/yr ($1,298/wk) → could lose benefit entirely
+#    The Reddit consensus: don't declare until living together. But the tool
+#    can't surface this advice or model the risk.
+#
+# 2. WRONG BENEFIT TYPE:
+#    Person says "disability prevents full-time work" and "full-time was deeply
+#    destructive even with accommodations." They've worked part-time consistently.
+#    They're on plain Jobseeker but should arguably be on JS-Medical (medical
+#    deferral from full-time work obligations) or SLP if capacity is <15hrs.
+#
+# 3. MISSING SUPPLEMENTS:
+#    Trans person with disability — almost certainly has ongoing health costs
+#    (HRT, specialist visits, GP visits, prescriptions) that would qualify
+#    for Disability Allowance. Likely also missing Accommodation Supplement
+#    and Temporary Additional Support given "majority of income goes to food
+#    and rent with little else to spare."
+#
+# 4. PARTNER INCOME TESTING NOT MODELLED:
+#    No benefit rules currently use has_partner or household_income as facts.
+#    In reality, MSD applies partner income testing that can dramatically
+#    reduce or eliminate benefit. This is a known gap in the rules engine.
+#
+# Reddit thread key quotes:
+# - "Don't say anything until you start living together" (162 upvotes)
+# - "Keep all finances completely separate"
+# - "Don't put it on socials, no photos"
+# - "I'm ace, and they declared me and my ex as a couple, even though we
+#    didn't have sex, didn't live together, and didn't share expenses"
+# - "MSD are very heavy handed in what they consider a 'relationship'"
+# - "Electoral roll addresses get automatically picked up by WINZ"
+
+scenario:
+  name: "Disabled person on Jobseeker — relationship declaration risk"
+  description: >
+    26yo trans man, NZ citizen, on Jobseeker Support. Has a permanent disability
+    that prevents full-time work — part-time only. Actively seeking work for 2+
+    years. Renting in Canterbury, most income goes to food and rent. Has ongoing
+    health costs (GP, prescriptions — likely including HRT and specialist visits).
+    Not currently in official relationship but has a person who will "eventually
+    become my romantic partner" — currently broke, will soon earn $67,500/yr.
+    They don't live together and partner doesn't contribute financially.
+    Modelled as Single (correct for WINZ purposes per Reddit consensus).
+
+intake_answers:
+  # PERSONAL
+  personal.age: 26
+  personal.residency: "NZ Citizen"
+  personal.years_in_nz: 26
+  personal.relationship: "Single"
+
+  # HOUSING
+  housing.type: "Renting"
+  housing.cost: 250
+  housing.region: "Canterbury / Christchurch"
+  housing.social_housing: "No"
+  housing.arrears: "No"
+  housing.need_to_move: "No"
+
+  # INCOME
+  income.employed: "No"
+  income.hours: 0
+  income.amount: 0
+  income.benefit: "Yes"
+  income.benefit_type: "Jobseeker Support"
+  income.current_supplements:
+    - "None of these"
+  income.assets: "Under $8,100"
+
+  # HEALTH
+  health.condition: "Yes"
+  health.duration: "Permanent / lifelong"
+  health.costs: "Yes"
+  health.cost_types:
+    - "GP / specialist visits"
+    - "Prescriptions / medication"
+    - "Transport to appointments"
+  health.hours_able: "15 – 30 hrs"
+  health.residential_care: "No"
+
+  # CHILDREN
+  children.dependent: "No"
+  children.caring_for_other: "No"
+
+  # EDUCATION
+  education.studying: "No"
+
+  # EMPLOYMENT
+  employment.seeking_work: "Yes"
+  employment.unemployment_duration: "More than 12 months"
+  employment.training_interest: "No"
+  employment.seasonal: "No"
+  employment.self_employed: "No"
+
+  # HISTORY
+  history.past_denied: "No"
+  history.upload: "Skip for now"
+
+  # SITUATION
+  situation.emergency: "No"
+  situation.family_violence: "No"
+  situation.recently_released: "No"
+  situation.refugee: "No"
+  situation.carer: "No"
+
+expected_entitlements:
+  should_surface:
+    - id: jobseeker-support
+      status: ENTITLED
+      reasoning: >
+        18+, NZ citizen, resident 2+ years, seeking work. Currently on JS
+        already, but the tool should confirm entitlement. Note: should arguably
+        be on JS-Medical given permanent disability limiting work capacity.
+
+    - id: accommodation-supplement
+      status: ENTITLED
+      reasoning: >
+        Renting at $250/wk in Canterbury (Zone 2), single, on benefit.
+        Max AS for Zone 2 is ~$250/wk. Says "majority of income goes to
+        food and rent" — AS would directly address the housing cost burden.
+
+    - id: disability-allowance
+      status: ENTITLED
+      reasoning: >
+        Has permanent condition with ongoing GP/specialist visits,
+        prescriptions (likely including HRT for gender-affirming care),
+        and transport costs. Classic DA candidate. This is almost certainly
+        not being received — they say they get "none of these" supplements.
+        DA can cover: prescriptions, GP co-pays, specialist visits,
+        transport to medical appointments, and other ongoing health costs.
+
+    - id: community-services-card
+      status: ENTITLED
+      reasoning: >
+        On a main benefit — automatic entitlement. Reduces GP visits
+        and prescription costs. Critical given ongoing health costs.
+
+    - id: winter-energy-payment
+      status: ENTITLED
+      reasoning: >
+        On a main benefit. Automatic May-October payment.
+
+    - id: temporary-additional-support
+      status: POSSIBLE
+      reasoning: >
+        On benefit, costs likely exceed income. "Majority of income goes to
+        food and rent with little else to spare" — this is exactly what TAS
+        is designed for. Requires essential cost breakdown at appointment.
+
+  should_not_surface:
+    - id: sole-parent-support
+      reasoning: "No children, not a sole parent"
+    - id: working-for-families
+      reasoning: "No dependent children"
+    - id: childcare-assistance
+      reasoning: "No children"
+    - id: student-allowance
+      reasoning: "Not a student"
+    - id: student-loan-living-costs
+      reasoning: "Not a student"
+
+# What happens if MSD classifies them as "in a relationship"
+# This comparison illustrates why the relationship question matters so much
+relationship_impact_analysis:
+  as_single:
+    js_base_rate: "$337.74/wk"
+    plus_supplements: "AS (~$165/wk) + DA (~$75/wk) + TAS + WEP = potentially $500+/wk total"
+    outcome: "Full entitlements, can survive"
+
+  if_declared_in_relationship_partner_earning_67500:
+    partner_weekly_gross: "$1,298/wk"
+    js_couple_rate: "$562.18/wk (combined)"
+    partner_income_abatement: "At $1,298/wk, benefit reduced to $0 after abatement"
+    outcome: "Benefit cancelled entirely. Partner not actually supporting them."
+    real_world_impact: >
+      Person loses ALL income support despite partner not contributing
+      financially. The assumption that romantic partnership = financial
+      support is the core injustice the Reddit thread identifies.
+
+# Gaps this scenario reveals in the tool
+identified_gaps:
+  relationship_question:
+    current: "Simple choice: Single / In a relationship / Married / etc."
+    needed: >
+      The tool needs to distinguish between:
+      1. Single (no romantic partner)
+      2. Dating / casual (not cohabiting, no financial interdependence)
+      3. De facto / cohabiting (shared household, MSD counts this)
+      4. Married / civil union
+      The current question conflates 2 and 3, which have radically
+      different benefit implications. At minimum, the tool should warn
+      users about the consequences of relationship declaration and the
+      distinction between "relationship" and "relationship in the nature
+      of marriage" under s3 Social Security Act 2018.
+
+  partner_income_rules:
+    current: "No benefit rules use has_partner or household_income facts"
+    needed: >
+      Partner income testing should be modelled for main benefits.
+      When on_benefit=true and has_partner=true and partner_income is
+      high, the tool should flag risk of benefit reduction/cancellation.
+      Currently the tool cannot warn about this — a critical blind spot.
+
+  js_medical_vs_plain_js:
+    current: "Tool surfaces JS as ENTITLED but can't distinguish JS vs JS-Medical"
+    needed: >
+      Person has permanent disability but selected "15-30 hrs" work capacity.
+      They should be on JS-Medical (medical deferral from full-time work
+      obligations) but the tool can't currently recommend this variant.
+      JS-Medical means: no job search requirements, reviewed every 13 weeks
+      with medical cert. Without it, they face work test sanctions despite
+      their disability.
+
+notes:
+  - >
+    The relationship declaration issue is arguably the highest-stakes gap in
+    the NZ welfare system. A person can go from ~$500/wk in support to $0
+    overnight based on MSD's determination of "relationship in the nature
+    of marriage" — even when the partner isn't contributing financially.
+  - >
+    The Reddit consensus (162+ upvotes) is: "Don't say anything until you
+    start living together." This is pragmatic survival advice. MSD's own
+    guidelines (s3 SSA 2018) define the factors as: living together, financial
+    interdependence, commitment, children together, public reputation. But in
+    practice, commenters report MSD classifying relationships based on social
+    media, electoral roll addresses, and even a single use of the word
+    "girlfriend."
+  - >
+    This person is almost certainly missing DA ($75/wk), AS ($165/wk), and
+    possibly TAS — potentially $200-300/wk in additional support. Combined
+    with the risk of losing everything if they declare a relationship, this
+    represents a ~$700/wk swing in outcomes.
+  - >
+    Trans health costs are a specific DA blind spot. HRT prescriptions,
+    endocrinologist visits, and mental health support are all DA-eligible
+    costs. Case managers may not proactively inform trans clients of this.
+  - >
+    The "seeking work for multiple years" detail suggests this person has
+    barriers to employment (possibly discrimination-related) that should
+    trigger referral to employment programmes like Flexi-wage or Mana in
+    Mahi — but they answered "No" to training interest, so the tool won't
+    surface those.

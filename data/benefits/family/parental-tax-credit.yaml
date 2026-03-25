@@ -1,0 +1,44 @@
+id: parental-tax-credit
+name: Parental Tax Credit
+category: family
+frequency: weekly
+taxable: false
+legal_basis: "Tax Administration Act 1994, Part M"
+source_url: "https://www.ird.govt.nz/working-for-families/parental-tax-credit"
+description: "Payment for the first 8 weeks after a baby is born, for families not receiving paid parental leave"
+eligibility:
+  min_age: null
+  max_age: null
+  residency: [citizen, permanent_resident]
+  requires_benefit: false
+  requires_application: true
+  rules:
+    - fact: has_newborn
+      op: eq
+      value: true
+    - fact: not_receiving_paid_parental_leave
+      op: eq
+      value: true
+  conditions:
+    - "Baby must be under 8 weeks old"
+    - "Cannot be receiving paid parental leave"
+    - "Must be principal caregiver"
+rates:
+  effective: "2026-04-01"
+  max_weekly: "$253 per week for up to 8 weeks"
+income_test:
+  applies: false
+  note: "Not income tested"
+asset_test:
+  applies: false
+friction:
+  documentation_required:
+    - "Birth certificate"
+    - "IRD number"
+    - "Declaration not receiving paid parental leave"
+  typical_processing: "2-4 weeks"
+  known_issues:
+    - "Administered by IRD"
+    - "Must apply within first 8 weeks"
+    - "Cannot receive if getting paid parental leave from employer or MSD"
+  deflection_patterns: []

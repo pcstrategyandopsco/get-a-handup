@@ -1,0 +1,269 @@
+# Test Scenario: Reddit "Benefit got cut for a week due to not turning up for appointment"
+# Source: reddit.com/r/newzealand — 180 upvotes, 82 comments
+#
+# This person is NOT taking advantage of the system. Assessment:
+#
+# TAKING ADVANTAGE? NO.
+# - Actively seeking work, has been looking "for so long"
+# - Doesn't "do anything bad or waste money on stupid stuff"
+# - Genuinely wants a job
+# - Missed appointment because MSD failed to notify — no text, email, or letter
+# - Sanction left them unable to pay rent or buy food for a week
+# - Case manager refused back-pay without investigating the notification failure
+# - Follow-up post: benefit FURTHER reduced ($160 instead of $380) after complaint denied
+#
+# This is the opposite of taking advantage. This is a person doing everything
+# right being punished by a system failure, then punished again when they try
+# to fix it. The "traffic light" compliance system (orange → red) can cascade:
+# one missed notification → sanction → complaint → denied → further reduction.
+#
+# What this scenario reveals:
+#
+# 1. SANCTIONS GREY AREA:
+#    MSD has an obligation to notify beneficiaries of appointments (s102 SSA 2018).
+#    If notification fails, the sanction should not apply. But case managers apply
+#    sanctions first and let the beneficiary prove non-receipt — reversing the
+#    burden of proof. The "very straight forward" case manager refused to
+#    investigate whether notification was actually sent/received.
+#
+# 2. IMMEDIATE CRISIS RESPONSE:
+#    When benefit is cut, the person can't eat or pay rent. The tool should
+#    surface emergency options: food grants (SNG), rent arrears assistance.
+#    These exist but the person didn't know to ask.
+#
+# 3. APPEAL RIGHTS:
+#    Reddit commenters know the system better than the beneficiary:
+#    - Review of Decision (ROD) — formal s12 SSA 2018 review
+#    - Complaint to MSD (faster, less formal)
+#    - Contact MP's office (bypasses local office)
+#    - Request copy of the notification MSD claims they sent
+#    - WINZ advocate through Citizens Advice Bureau or Community Law
+#    The person knew none of these options.
+#
+# 4. MISSING SUPPLEMENTS:
+#    Person receives ~$380/wk which suggests base JS only. No mention of
+#    any supplements. On JS and seeking work for a long time — likely
+#    qualifies for employment support, hardship grants, possibly AS.
+#
+# Reddit thread key quotes:
+# - "Review of decision, part of their obligation to you is to inform you
+#    of your obligations" (156 upvotes)
+# - "The order from the top (government) is to save as much money as possible
+#    by fucking over vulnerable people" (123 upvotes)
+# - "With people living week to week on the benefit, the last thing you need
+#    is a case manager who doesn't care" (72 upvotes)
+# - "I have reason to believe they do this on purpose"
+# - Follow-up from OP: "They reviewed my complaint and denied it, I usually
+#    receive $380, I received $160, what the fuck is going on?"
+
+scenario:
+  name: "Benefit sanction for missed appointment — notification failure"
+  description: >
+    Young person on Jobseeker Support, actively seeking work for extended period.
+    Benefit cut from ~$380/wk to $55 for missing an appointment they were never
+    notified about. New case manager refused back-pay. Subsequent complaint denied
+    and benefit further reduced to $160. Cannot afford rent or food. This is a
+    compliance sanctions scenario — the person did nothing wrong but the system
+    punished them anyway. Tests whether the tool surfaces emergency grants,
+    appeal rights, and missing supplements.
+
+intake_answers:
+  # PERSONAL
+  personal.age: 23
+  personal.residency: "NZ Citizen"
+  personal.years_in_nz: 23
+  personal.relationship: "Single"
+
+  # HOUSING
+  housing.type: "Renting"
+  housing.cost: 250
+  housing.region: "Other"
+  housing.social_housing: "No"
+  housing.arrears: "Yes"
+  housing.need_to_move: "No"
+
+  # INCOME
+  income.employed: "No"
+  income.hours: 0
+  income.amount: 0
+  income.benefit: "Yes"
+  income.benefit_type: "Jobseeker Support"
+  income.current_supplements:
+    - "None of these"
+  income.assets: "Under $8,100"
+
+  # HEALTH
+  health.condition: "No"
+
+  # CHILDREN
+  children.dependent: "No"
+  children.caring_for_other: "No"
+
+  # EDUCATION
+  education.studying: "No"
+
+  # EMPLOYMENT
+  employment.seeking_work: "Yes"
+  employment.unemployment_duration: "More than 12 months"
+  employment.training_interest: "No"
+  employment.seasonal: "No"
+  employment.self_employed: "No"
+
+  # HISTORY
+  history.past_denied: "No"
+  history.upload: "Skip for now"
+
+  # SITUATION
+  situation.emergency: "Yes"
+  situation.family_violence: "No"
+  situation.recently_released: "No"
+  situation.refugee: "No"
+  situation.carer: "No"
+
+expected_entitlements:
+  should_surface:
+    - id: jobseeker-support
+      status: ENTITLED
+      reasoning: >
+        18+, NZ citizen, resident 2+ years, actively seeking work.
+        Already on JS — tool confirms entitlement. The sanction reducing
+        payment is a compliance issue, not an eligibility issue.
+
+    - id: special-needs-grant
+      status: ENTITLED
+      reasoning: >
+        On benefit, low income, essential need (emergency — can't buy food).
+        This is the IMMEDIATE response the person needs. A food grant is
+        almost never denied. The person didn't know to ask for one.
+        Reddit commenters mentioned food grants but the person clearly
+        didn't know this was an option.
+
+    - id: recoverable-assistance-programme
+      status: ENTITLED
+      reasoning: >
+        On benefit, low income, essential need. RAP can cover rent arrears
+        (recoverable — repaid from future benefit). The person said they
+        couldn't give rent this week. A landlord arrears letter enables this.
+
+    - id: accommodation-supplement
+      status: ENTITLED
+      reasoning: >
+        Renting, not in social housing. Person receives ~$380/wk which is
+        close to base JS rate ($337.74) — suggests they may already have
+        a small AS, or may be missing it entirely. Either way, should be
+        confirmed at full amount for their zone.
+
+    - id: community-services-card
+      status: ENTITLED
+      reasoning: >
+        On a main benefit — automatic. Low income, no employment income.
+
+    - id: winter-energy-payment
+      status: ENTITLED
+      reasoning: >
+        On a main benefit. Automatic May-October.
+
+    - id: flexi-wage
+      status: ENTITLED
+      reasoning: >
+        Seeking work, barriers to employment (12+ months unemployed).
+        Flexi-wage subsidises employers to hire long-term unemployed.
+        Person says they genuinely want a job — this removes a barrier.
+
+  should_not_surface:
+    - id: sole-parent-support
+      reasoning: "No children"
+    - id: supported-living-payment
+      reasoning: "No health condition reported"
+    - id: disability-allowance
+      reasoning: "No health condition reported"
+    - id: student-allowance
+      reasoning: "Not a student"
+
+# Is this person taking advantage of the system?
+taking_advantage_assessment:
+  verdict: "NO — categorically not"
+  evidence_of_compliance:
+    - "Actively seeking work for an extended period"
+    - "Doesn't waste money — lives frugally by their own account"
+    - "Genuinely wants employment"
+    - "Was willing to attend the appointment — simply never received notification"
+    - "Proactively contacted case manager when payment was wrong"
+    - "Filed a complaint through proper channels"
+  evidence_of_system_failure:
+    - "MSD failed to send notification (no text, email, or letter received)"
+    - "New case manager refused to investigate notification failure"
+    - "Sanction applied without verifying notification was received"
+    - "Complaint denied without addressing the notification issue"
+    - "Benefit further reduced after complaint ($380 → $160) — punished for complaining?"
+    - "Person left unable to afford food or rent — the safety net failed"
+  pattern: >
+    This is a common MSD pattern documented across Reddit: notifications
+    fail silently (MyMSD letters appear before email/text), sanctions are
+    applied automatically, and the burden falls on the beneficiary to prove
+    non-receipt. The "traffic light" compliance system (green → orange → red)
+    can cascade: one missed notification → sanction → reduced payment →
+    can't afford essentials → emergency. The person is trapped by a system
+    designed to penalise non-compliance but which doesn't reliably notify
+    people of what they need to comply with.
+
+# What the tool should eventually surface for this situation
+sanctions_response:
+  immediate:
+    - "Apply for a Special Needs Grant for food — this is almost never denied"
+    - "If rent is behind, get a letter from landlord showing arrears and apply for rent arrears assistance"
+    - "You can also get a food parcel from Salvation Army without the degrading WINZ process"
+  appeal:
+    - action: "Request copy of the notification MSD claims they sent"
+      legal_basis: "Official Information Act 1982 — they must provide this"
+      why: "If they can't produce evidence of notification, the sanction has no basis"
+    - action: "File a formal complaint via MSD website"
+      legal_basis: "MSD complaints process"
+      why: "Online complaint triggers call from manager — faster than ROD"
+    - action: "File a Review of Decision (ROD)"
+      legal_basis: "s12 Social Security Act 2018"
+      why: "Formal review. MSD obligation to notify is part of their duty — if they failed, sanction must be reversed"
+    - action: "Contact your MP's office"
+      legal_basis: "Ministerial inquiry process"
+      why: "MP contacts branch manager directly. Reddit reports this produces fastest results"
+    - action: "Get a WINZ advocate from Citizens Advice Bureau or Community Law"
+      legal_basis: "Right to representation"
+      why: "Advocates know the system and case managers are less likely to dismiss claims with an advocate present"
+  key_legal_point: >
+    Under s102 Social Security Act 2018, MSD must notify beneficiaries of
+    their obligations. A sanction for non-compliance with an obligation the
+    person was never notified of is procedurally unfair and should be reversed
+    on review. The case manager's refusal to investigate the notification
+    failure is itself a failure of process.
+
+notes:
+  - >
+    The $380/wk figure suggests base JS ($337.74) plus possibly a small
+    Accommodation Supplement. If the person is paying $250/wk rent on
+    $380/wk total income, they're spending 66% of income on rent alone.
+    TAS should be assessed. The "little else to spare" comment confirms
+    this person is in genuine hardship, not gaming the system.
+  - >
+    The follow-up is alarming: after filing a complaint, benefit was
+    reduced further ($380 → $160). This suggests the "traffic light"
+    system escalated them to red (further sanctions) rather than
+    investigating the original notification failure. Being punished
+    for exercising your right to complain is a serious procedural concern.
+  - >
+    Reddit's top advice (156 upvotes): "Review of decision — part of their
+    obligation to you is to inform you of your obligations, which, if
+    they'd done, you would have known about their appointment, so they
+    owe you your backpay." This is legally correct but the person didn't
+    know this until strangers on Reddit told them.
+  - >
+    This scenario is a perfect example of why the tool matters: the gap
+    isn't eligibility knowledge — the person knows they're on JS. The gap
+    is crisis response (food grants exist), appeal rights (ROD exists),
+    and advocacy (free advocates exist). The tool's briefing document
+    should include a "if your benefit is reduced" section with these steps.
+  - >
+    Multiple commenters share similar stories: benefits cut for missing
+    appointments they weren't notified about, benefits cut for "refusing
+    work" when they simply expressed a shift preference, benefits cancelled
+    after being 90-day'd from a job. The compliance system is punitive
+    by design, and the notification infrastructure is unreliable.
