@@ -1,6 +1,6 @@
 import type { IntakeAnswers, EntitlementResult, RateData, IncomeScenario, TransitionAnalysis, StudyVerdict, StudyProjection, StudyROIVerdict } from '../lib/types'
 
-const MIN_WAGE_2026 = 23.15
+export const MIN_WAGE_2026 = 23.15
 const LIVING_WAGE_2026 = 27.80
 const MEDIAN_WAGE_2026 = 35.00
 const ABOVE_MEDIAN_2026 = 45.50
@@ -25,7 +25,7 @@ function computeWeeklyTax(weeklyGross: number, brackets: Array<{ threshold: numb
 
 // ── Benefit amount lookup ──
 
-function getBenefitBaseWeekly(
+export function getBenefitBaseWeekly(
   facts: Record<string, unknown>,
   rates: RateData
 ): number {
@@ -54,7 +54,7 @@ function getBenefitBaseWeekly(
   return js.single_18_19_away ?? 253.81
 }
 
-function getAbatementParams(
+export function getAbatementParams(
   facts: Record<string, unknown>,
   rates: RateData
 ): { threshold: number; rate: number } {
@@ -82,7 +82,7 @@ function computeAbatement(weeklyEarnings: number, params: { threshold: number; r
 
 // ── Supplement estimation ──
 
-function getASWeekly(facts: Record<string, unknown>, rates: RateData): number {
+export function getASWeekly(facts: Record<string, unknown>, rates: RateData): number {
   const zone = `area_${facts.accom_zone ?? 3}`
   const as = rates.accommodation_supplement?.[zone]
   if (!as) return 0
@@ -98,7 +98,7 @@ function getASWeekly(facts: Record<string, unknown>, rates: RateData): number {
   return as.single_no_children ?? 0
 }
 
-function getSupplementsWeekly(
+export function getSupplementsWeekly(
   results: EntitlementResult[],
   facts: Record<string, unknown>,
   rates: RateData,
@@ -137,7 +137,7 @@ function parseAmount(str?: string): number {
 
 // ── Work incentives ──
 
-function computeWorkIncentives(
+export function computeWorkIncentives(
   weeklyGross: number,
   weeklyHours: number,
   onBenefit: boolean,
@@ -190,7 +190,7 @@ function computeWorkIncentives(
 
 // ── Scenario builder ──
 
-function buildScenario(
+export function buildScenario(
   label: string,
   weeklyHours: number,
   hourlyRate: number,
@@ -250,14 +250,17 @@ function buildScenario(
 
 function lookupSARate(facts: Record<string, unknown>, rates: RateData): number {
   const sl = rates.studylink
-  if (!sl) return 340.38
+  if (!sl) return 368.96
   const sa = sl.student_allowance
   const age = Number(facts.age ?? 25)
   const hasPartner = facts.has_partner === true
+  const hasChildren = facts.has_children === true
+  const atHome = facts.housing_type === 'with_parents'
 
-  if (hasPartner) return sa.couple ?? 284.98
-  if (age >= 24) return sa.single_24_plus_away ?? 340.38
-  return sa.single_under_24_away ?? 302.98
+  if (hasPartner) return sa.couple_each ?? sa.couple ?? 323.33
+  if (hasChildren) return sa.single_with_children ?? 519.81
+  if (age >= 24) return atHome ? (sa.single_24_plus_at_home ?? 314.21) : (sa.single_24_plus_away ?? 368.96)
+  return atHome ? (sa.single_under_24_at_home ?? 277.72) : (sa.single_under_24_away ?? 323.33)
 }
 
 function buildStudyScenarios(
@@ -324,7 +327,7 @@ function buildStudyScenarios(
   }
 
   // ── Scenario 3: Student Loan living costs (DEBT) ──
-  const slLiving = sl?.student_loan_living_costs?.weekly ?? 316.98
+  const slLiving = sl?.student_loan_living_costs?.weekly ?? 323.43
   // Student loan is not taxable but it's debt — no supplements, no AB without SA
   const slScenario: IncomeScenario = {
     label: 'Student Loan only (DEBT)',
@@ -338,15 +341,22 @@ function buildStudyScenarios(
     net_weekly: slLiving,
     net_annual: slLiving * 52,
     effective_tax_rate: 0,
+    is_debt: true,
   }
 
   // ── Gains / losses ──
   const gains: string[] = [
     'No work obligations while studying',
-    `Course-related costs loan ($${(sl?.course_related_costs?.max_annual ?? 1000).toLocaleString()}/yr)`,
+    'Student Loan interest-free while in NZ',
   ]
 
-  const losses: string[] = []
+  const losses: string[] = [
+    'Fees-free covers final year only — earlier years must be Student Loan (repayable debt)',
+    'Gap period: benefit stops before SA starts (may be weeks with no income)',
+  ]
+  if (age < 24) {
+    losses.push('SA means-tested against parental income (zero above $137k/yr)')
+  }
   const asWeekly = getASWeekly(facts, rates)
   if (asWeekly > abMax) {
     losses.push(`Housing support drops AS→AB (-$${Math.round(asWeekly - abMax)}/wk)`)

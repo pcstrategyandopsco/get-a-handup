@@ -369,6 +369,70 @@ for (const file of files) {
     }
   }
 
+  // ── Crisis guidance checks ──
+  const crisisExpected = doc.crisis_expected
+  if (crisisExpected) {
+    console.log(`\n  CRISIS GUIDANCE CHECKS:\n`)
+
+    const isCrisis = answers['situation.emergency'] === 'Yes'
+      || (answers['housing.arrears'] === 'Yes' && answers['income.benefit'] === 'Yes')
+
+    const EMERGENCY_CATEGORIES = new Set(['hardship'])
+    const EMERGENCY_FREQUENCIES = new Set(['one-off', 'as-needed'])
+    const hasEmergencyResults = results.some((r: any) => {
+      const b = (benefits as Benefit[]).find(b => b.id === r.id)
+      return b && (EMERGENCY_CATEGORIES.has(b.category) || EMERGENCY_FREQUENCIES.has(b.frequency))
+    })
+
+    // Check isCrisis detection
+    if (crisisExpected.is_crisis !== undefined) {
+      if (isCrisis === crisisExpected.is_crisis) {
+        console.log(`  ✓ crisis detected: ${isCrisis} (expected ${crisisExpected.is_crisis})`)
+        passed++
+      } else {
+        console.log(`  ✗ crisis detected: ${isCrisis} (expected ${crisisExpected.is_crisis})`)
+        failed++
+      }
+    }
+
+    // Check crisis tab visibility (replaces emergency_expanded)
+    if (crisisExpected.crisis_tab !== undefined) {
+      const crisisTabEnabled = isCrisis && hasEmergencyResults
+      if (crisisTabEnabled === crisisExpected.crisis_tab) {
+        console.log(`  ✓ crisis tab: ${crisisTabEnabled} (expected ${crisisExpected.crisis_tab})`)
+        passed++
+      } else {
+        console.log(`  ✗ crisis tab: ${crisisTabEnabled} (expected ${crisisExpected.crisis_tab})`)
+        console.log(`    isCrisis=${isCrisis}, hasEmergencyResults=${hasEmergencyResults}`)
+        failed++
+      }
+    }
+
+    // Check reinstatement steps visibility (when on benefit)
+    if (crisisExpected.reinstatement_steps !== undefined) {
+      const onBenefit = answers['income.benefit'] === 'Yes'
+      if (onBenefit === crisisExpected.reinstatement_steps) {
+        console.log(`  ✓ reinstatement steps: ${onBenefit} (expected ${crisisExpected.reinstatement_steps})`)
+        passed++
+      } else {
+        console.log(`  ✗ reinstatement steps: ${onBenefit} (expected ${crisisExpected.reinstatement_steps})`)
+        failed++
+      }
+    }
+
+    // Check arrears warning visibility
+    if (crisisExpected.arrears_warning !== undefined) {
+      const hasArrears = answers['housing.arrears'] === 'Yes'
+      if (hasArrears === crisisExpected.arrears_warning) {
+        console.log(`  ✓ arrears warning: ${hasArrears} (expected ${crisisExpected.arrears_warning})`)
+        passed++
+      } else {
+        console.log(`  ✗ arrears warning: ${hasArrears} (expected ${crisisExpected.arrears_warning})`)
+        failed++
+      }
+    }
+  }
+
   // ── Transition checks ──
   const transitionExpected = doc.transition_expected
   if (transitionExpected) {

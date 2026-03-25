@@ -24,13 +24,16 @@ eligibility:
     - "Not available for Masters or PhD study — only up to Honours level"
     - "Income must be below threshold"
     - "Cannot receive Student Allowance alongside a main WINZ benefit"
-    - "Parental income tested if under 24 and no dependent children"
+    - "Parental income tested if under 24: SA reduced above $69,935 joint parental income, zero above $137,188"
     - "Partner income tested if in a relationship"
     - "Apply through StudyLink, not Work and Income"
+    - "Benefit stops when Student Allowance starts — expect a gap period with no income"
+    - "Must pass more than half of courses to retain eligibility"
+    - "120-week limit for most tertiary study (200 weeks for long programmes)"
 rates:
   effective: "2026-04-01"
-  max_weekly: "$340.38"
-  notes: "Rate varies by age, living situation, and whether single/partnered. Amount shown is single 24+ living away from home."
+  max_weekly: "$368.96"
+  notes: "Net after M tax, single 24+ living away from home. Source: MAP April 2025."
 income_test:
   applies: true
   description: "Personal income above $268.13/wk reduces allowance. Parental income tested if under 24."
@@ -49,6 +52,8 @@ friction:
     - "Parental income test excludes many students whose parents do not actually support them"
     - "Cannot be received alongside any main benefit — must choose one pathway"
     - "Study breaks: allowance stops during breaks unless enrolled in summer school"
+    - "Gap between benefit ending and SA starting can leave students with no income for weeks"
+    - "WINZ case managers may discourage transition to StudyLink — apply directly through StudyLink well before course starts"
   deflection_patterns:
     - "Students told to take Student Loan instead without being informed of allowance eligibility"
     - "StudyLink application process separate from WINZ — falls through the cracks"

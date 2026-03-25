@@ -134,6 +134,7 @@ export type IncomeScenario = {
   net_weekly: number
   net_annual: number
   effective_tax_rate: number
+  is_debt?: boolean
 }
 
 export type StudyVerdict = 'better_studying' | 'marginal' | 'trap' | null

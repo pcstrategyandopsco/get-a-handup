@@ -7,6 +7,7 @@ export type IntakeState = {
   history: string[]
   currentId: string | null
   isComplete: boolean
+  isEditing: boolean        // true when user jumped back from completed intake
 }
 
 export type UseIntakeReturn = {
@@ -17,7 +18,10 @@ export type UseIntakeReturn = {
   back: () => void
   loadScenario: (answers: IntakeAnswers) => void
   continueFullAssessment: () => void
+  jumpToSection: (sectionIndex: number) => void
+  finishEditing: () => void
   isComplete: boolean
+  isEditing: boolean
   progress: number          // 0-100
   currentSection: string
   currentSectionIndex: number
@@ -34,7 +38,8 @@ export function useIntake(): UseIntakeReturn {
     answers: {},
     history: [],
     currentId: FIRST_QUESTION_ID,
-    isComplete: false
+    isComplete: false,
+    isEditing: false
   })
 
   const answer = useCallback((value: unknown) => {
@@ -51,7 +56,8 @@ export function useIntake(): UseIntakeReturn {
         answers: newAnswers,
         history: [...prev.history, prev.currentId],
         currentId: nextId,
-        isComplete: nextId === null
+        isComplete: nextId === null,
+        isEditing: prev.isEditing
       }
     })
   }, [])
@@ -71,7 +77,8 @@ export function useIntake(): UseIntakeReturn {
       answers: scenarioAnswers,
       history,
       currentId,
-      isComplete: currentId === null
+      isComplete: currentId === null,
+      isEditing: false
     })
   }, [])
 
@@ -91,7 +98,52 @@ export function useIntake(): UseIntakeReturn {
         answers: newAnswers,
         history,
         currentId,
-        isComplete: currentId === null
+        isComplete: currentId === null,
+        isEditing: false
+      }
+    })
+  }, [])
+
+  const jumpToSection = useCallback((sectionIndex: number) => {
+    setState(prev => {
+      // Find the first question in history that belongs to the target section
+      const targetIdx = prev.history.findIndex(id => {
+        const q = questionsById[id]
+        return q && q.sectionIndex === sectionIndex
+      })
+      if (targetIdx === -1) return prev
+
+      const targetId = prev.history[targetIdx]
+      const newHistory = prev.history.slice(0, targetIdx)
+
+      return {
+        answers: prev.answers,
+        history: newHistory,
+        currentId: targetId,
+        isComplete: false,
+        isEditing: true
+      }
+    })
+  }, [])
+
+  // Replay all existing answers forward from current position to restore completion
+  const finishEditing = useCallback(() => {
+    setState(prev => {
+      if (!prev.isEditing) return prev
+      const history = [...prev.history]
+      let currentId = prev.currentId
+      while (currentId && prev.answers[currentId] !== undefined) {
+        history.push(currentId)
+        const q = questionsById[currentId]
+        if (!q) break
+        currentId = q.next(prev.answers[currentId], prev.answers)
+      }
+      return {
+        answers: prev.answers,
+        history,
+        currentId,
+        isComplete: currentId === null,
+        isEditing: false
       }
     })
   }, [])
@@ -110,7 +162,8 @@ export function useIntake(): UseIntakeReturn {
         answers: newAnswers,
         history: newHistory,
         currentId: prevId,
-        isComplete: false
+        isComplete: false,
+        isEditing: prev.isEditing
       }
     })
   }, [])
@@ -144,7 +197,10 @@ export function useIntake(): UseIntakeReturn {
     back,
     loadScenario,
     continueFullAssessment,
+    jumpToSection,
+    finishEditing,
     isComplete: state.isComplete,
+    isEditing: state.isEditing,
     progress,
     currentSection,
     currentSectionIndex,

@@ -180,6 +180,12 @@ expected_entitlements:
     - id: student-allowance
       reasoning: "Not a student"
 
+crisis_expected:
+  is_crisis: true
+  crisis_tab: true
+  reinstatement_steps: true   # on benefit — shows s12, s102, s391 guidance
+  arrears_warning: true       # housing.arrears is "Yes" — shows RAP guidance
+
 # Is this person taking advantage of the system?
 taking_advantage_assessment:
   verdict: "NO — categorically not"

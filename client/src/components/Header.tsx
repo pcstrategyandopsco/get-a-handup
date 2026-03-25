@@ -17,6 +17,14 @@ export function Header({ onLoadScenario, onSaveProgress }: HeaderProps) {
         <span>NZ Social Security Act 2018</span>
       </div>
       <div className="header-right">
+        <a
+          className="header-load-btn"
+          href="/docs/how-it-works.html"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          How it works
+        </a>
         <button
           className="header-load-btn"
           onClick={onSaveProgress}

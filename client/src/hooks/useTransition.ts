@@ -1,10 +1,8 @@
 import { useState, useEffect } from 'react'
 import { computeTransition } from '../engine/transition'
 import { buildFacts } from '../engine/rules'
-import type { IntakeAnswers, EntitlementResult, TransitionAnalysis, RateData } from '../lib/types'
-
-// Static import — Vite bundles this from data/dist/rates.json
-import ratesJson from '../../../data/dist/rates.json'
+import type { IntakeAnswers, EntitlementResult, TransitionAnalysis } from '../lib/types'
+import { getRates } from '../lib/rates'
 
 export type UseTransitionReturn = {
   analysis: TransitionAnalysis | null
@@ -34,9 +32,7 @@ export function useTransition(
 
     setIsComputing(true)
 
-    // rates.json is keyed by effective date
-    const ratesRaw = (ratesJson as Record<string, unknown>)['2026-04-01'] ?? ratesJson
-    const rates = ratesRaw as unknown as RateData
+    const rates = getRates()
     const facts = buildFacts(answers)
     const result = computeTransition(answers, facts, results, rates)
     setAnalysis(result)

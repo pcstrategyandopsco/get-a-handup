@@ -158,15 +158,22 @@ work_incentives:
 
 # ── STUDYLINK ──
 # Student Allowance and Student Loan living costs rates
-# Source: StudyLink rates effective April 2026
+# Source: MSD MAP April 2025 (net after M tax)
 studylink:
   student_allowance:
-    single_24_plus_away: 340.38
-    single_under_24_away: 302.98
-    single_at_home: 248.78
-    couple: 284.98
+    single_24_plus_away: 368.96
+    single_24_plus_at_home: 314.21
+    single_under_24_away: 323.33
+    single_under_24_at_home: 277.72
+    couple_each: 323.33
+    single_with_children: 519.81
+    parental_income_abatement_start: 69935.32
+    parental_income_cutoff_at_home: 127701.81
+    parental_income_cutoff_away: 137187.86
+    notes: "Net rates after M tax. Parental income tested if under 24. Source: MAP April 2025."
   student_loan_living_costs:
-    weekly: 316.98
+    weekly: 323.43
+    notes: "Weekly maximum as at 1 April 2025. Source: MAP."
   accommodation_benefit:
     max_weekly: 60
   course_related_costs:
@@ -174,3 +181,8 @@ studylink:
   training_incentive_allowance:
     annual_cap: 5550.80
     weekly_equivalent: 106.75
+  fees_free:
+    max_total: 12000
+    max_efts: 1.0
+    covers: "final_year"
+    notes: "Final year only (from 1 Jan 2025). Student pays upfront, IRD reimburses after course completion and passing. Once per lifetime."

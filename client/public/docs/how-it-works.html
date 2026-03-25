@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How It Works — Entitlement Navigator</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ── DESIGN TOKENS ── */
+:root {
+  --bg: #0d1117;
+  --bg2: #111822;
+  --panel: #0a1628;
+  --border: #1a2f4a;
+  --border2: #243d5c;
+  --text: #cdd9e8;
+  --text-dim: #7a95ad;
+  --text-bright: #e8f2ff;
+  --gold: #e8b84b;
+  --gold-dim: rgba(232, 184, 75, 0.12);
+  --gold-border: rgba(232, 184, 75, 0.35);
+  --teal: #4fc3d4;
+  --teal-dim: rgba(79, 195, 212, 0.10);
+  --teal-border: rgba(79, 195, 212, 0.30);
+  --green: #98c379;
+  --red: #e06c75;
+  --grey: #7a95ad;
+  --font: 'Outfit', sans-serif;
+}
+
+/* ── RESET ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { height: 100%; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100%;
+  overflow-x: hidden;
+  line-height: 1.5;
+}
+
+/* ── SCENE CONTAINER ── */
+.scene-container {
+  position: relative;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px 24px 100px;
+  min-height: 100vh;
+}
+
+.scene {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  right: 24px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  pointer-events: none;
+  visibility: hidden;
+}
+.scene.active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  visibility: visible;
+}
+
+/* ── ANIMATION KEYFRAMES ── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes barGrow {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+@keyframes drawLine {
+  from { stroke-dashoffset: 60; }
+  to { stroke-dashoffset: 0; }
+}
+@keyframes checkPop {
+  0% { transform: scale(0); opacity: 0; }
+  60% { transform: scale(1.3); }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes fillBar {
+  from { width: 0; }
+}
+@keyframes countUp {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Animated elements start hidden */
+.scene .anim {
+  opacity: 0;
+}
+.scene.active .anim.visible {
+  animation: fadeIn 0.6s ease forwards;
+}
+.scene.active .anim.slide-left.visible {
+  animation: slideInLeft 0.6s ease forwards;
+}
+.scene.active .anim.slide-right.visible {
+  animation: slideInRight 0.6s ease forwards;
+}
+
+/* ── HERO (Scene 0) ── */
+.hero { text-align: center; padding-top: 2vh; }
+.hero h1 {
+  font-size: 2.6rem;
+  font-weight: 800;
+  color: var(--text-bright);
+  letter-spacing: -0.5px;
+}
+.problem-block {
+  max-width: 640px;
+  margin: 28px auto 0;
+  text-align: left;
+}
+.problem-stat {
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: var(--text);
+  line-height: 1.6;
+}
+.appn-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0 12px;
+  font-size: 0.88rem;
+}
+.appn-table th {
+  font-weight: 500;
+  color: var(--text-dim);
+  text-align: left;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.appn-table td {
+  padding: 7px 10px;
+  border-bottom: 1px solid rgba(26, 47, 74, 0.4);
+  color: var(--text);
+  font-weight: 400;
+}
+.appn-num {
+  text-align: right !important;
+  font-variant-numeric: tabular-nums;
+  font-weight: 400;
+}
+.appn-gap {
+  color: var(--red) !important;
+  font-weight: 600 !important;
+}
+.appn-summary {
+  cursor: pointer;
+  user-select: none;
+}
+.appn-summary td {
+  font-weight: 600;
+  color: var(--text-bright);
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.appn-summary:hover td { background: rgba(26, 47, 74, 0.3); }
+.appn-chevron {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 5px solid var(--text-dim);
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  margin-right: 8px;
+  transition: transform 0.2s ease;
+  vertical-align: middle;
+}
+.appn-summary.open .appn-chevron {
+  transform: rotate(90deg);
+}
+.appn-detail {
+  display: none;
+}
+.appn-detail.show {
+  display: table-row;
+}
+.appn-detail td {
+  padding-left: 28px;
+  font-weight: 300;
+  color: var(--text-dim);
+  font-size: 0.82rem;
+}
+.appn-detail td.appn-gap { color: var(--red) !important; font-weight: 400 !important; }
+.appn-total td {
+  border-top: 1px solid var(--border2);
+  border-bottom: none;
+  font-weight: 600;
+  color: var(--text-bright);
+}
+.problem-punchline {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-bright);
+  margin-top: 24px;
+  padding: 16px 0;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  letter-spacing: -0.2px;
+}
+.problem-caveat {
+  font-size: 1.05rem;
+  font-weight: 400;
+  color: var(--text);
+  text-align: center;
+  margin-top: 8px;
+  line-height: 1.6;
+}
+.appn-cite {
+  font-size: 0.75rem;
+  font-weight: 300;
+  color: var(--text-dim);
+  margin-top: 8px;
+}
+.appn-cite a {
+  color: var(--text-dim);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.appn-cite a:hover { color: var(--text); }
+.problem-detail {
+  font-size: 0.95rem;
+  font-weight: 300;
+  color: var(--text-dim);
+  margin-top: 12px;
+  line-height: 1.65;
+}
+.solution-block {
+  max-width: 640px;
+  margin: 36px auto 0;
+  text-align: left;
+  padding-top: 28px;
+  border-top: 1px solid var(--border);
+}
+.solution-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+.solution-text {
+  font-size: 0.95rem;
+  font-weight: 300;
+  color: var(--text);
+  line-height: 1.65;
+}
+.solution-text span {
+  color: var(--teal);
+  font-weight: 500;
+}
+.solution-zero {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--text-dim);
+  margin-top: 14px;
+  padding: 10px 14px;
+  border-left: 2px solid var(--border2);
+}
+.hero-transition {
+  margin-top: 40px;
+  margin-bottom: 60px;
+  text-align: center;
+}
+.show-how-btn {
+  display: inline-block;
+  padding: 14px 36px;
+  background: none;
+  border: 1px solid var(--gold-border);
+  color: var(--gold);
+  font-family: var(--font);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  letter-spacing: 0.5px;
+}
+.show-how-btn:hover {
+  background: var(--gold);
+  color: var(--bg);
+}
+
+/* ── CAPTION ── */
+.caption {
+  margin-top: 40px;
+  font-size: 0.95rem;
+  font-weight: 300;
+  color: var(--text-dim);
+  text-align: center;
+  padding: 0 20px;
+}
+
+/* ── SECTION TITLE ── */
+.scene-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text-bright);
+  margin-bottom: 32px;
+}
+
+/* ── CARDS ── */
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 14px 18px;
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+}
+
+/* ── SCENE 1: Questions → Facts ── */
+.facts-grid {
+  display: grid;
+  grid-template-columns: 1fr 40px 1fr;
+  gap: 8px;
+  align-items: start;
+}
+.question-col, .fact-col { display: flex; flex-direction: column; gap: 10px; }
+.arrow-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  padding-top: 20px;
+}
+.arrow-col svg { color: var(--gold); }
+
+.q-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 12px 16px;
+}
+.q-card .q-label { font-size: 0.8rem; color: var(--text-dim); font-weight: 400; }
+.q-card .q-answer { font-size: 1rem; color: var(--text-bright); font-weight: 600; margin-top: 4px; }
+
+.f-card {
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  padding: 10px 14px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+  color: var(--teal);
+}
+.f-card .f-key { color: var(--text-dim); }
+
+.cascade-note {
+  grid-column: 3;
+  font-size: 0.75rem;
+  color: var(--gold);
+  font-weight: 400;
+  padding-left: 4px;
+  opacity: 0.8;
+}
+
+/* ── SCENE 2: Rule Evaluation ── */
+.benefit-header {
+  background: var(--panel);
+  border: 2px solid var(--gold-border);
+  padding: 18px 24px;
+  text-align: center;
+  margin-bottom: 24px;
+}
+.benefit-header h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--gold);
+}
+.benefit-header .legal {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  font-weight: 300;
+  margin-top: 4px;
+}
+
+.rule-list { display: flex; flex-direction: column; gap: 10px; }
+.rule-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.rule-card .rule-expr {
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+.rule-card .rule-result {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  opacity: 0;
+}
+.rule-card .rule-result.show {
+  animation: checkPop 0.4s ease forwards;
+}
+.rule-card .rule-result.pass { color: var(--green); }
+
+.tally {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--text-dim);
+}
+.tally strong { color: var(--green); }
+
+/* ── SCENE 3: Confidence ── */
+.flow-paths {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+.flow-step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+}
+.flow-step.highlighted {
+  border-color: var(--gold-border);
+  background: var(--gold-dim);
+}
+.flow-question {
+  font-weight: 500;
+  color: var(--text-bright);
+  min-width: 110px;
+}
+.flow-arrow { color: var(--text-dim); font-size: 1.2rem; }
+.flow-answer { font-weight: 600; }
+.flow-answer.gold { color: var(--gold); }
+.flow-answer.teal { color: var(--teal); }
+.flow-answer.grey { color: var(--grey); }
+.flow-answer.red { color: var(--red); }
+
+.confidence-bar-wrap {
+  margin-top: 28px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.confidence-label {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+}
+.confidence-bar {
+  height: 28px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  position: relative;
+}
+.confidence-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold-border), var(--gold));
+  width: 0;
+  transition: width 1.5s ease;
+}
+.confidence-fill.animate { width: 85%; }
+.confidence-pct {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--bg);
+  opacity: 0;
+  transition: opacity 0.5s ease 1.2s;
+}
+.confidence-pct.show { opacity: 1; }
+
+/* ── SCENE 4: Funnel ── */
+.funnel { display: flex; flex-direction: column; gap: 14px; max-width: 600px; margin: 0 auto; }
+.funnel-row { display: flex; align-items: center; gap: 16px; }
+.funnel-bar {
+  height: 36px;
+  background: linear-gradient(90deg, var(--border2), var(--border));
+  transform-origin: left;
+  display: flex;
+  align-items: center;
+  padding-left: 14px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--text-bright);
+}
+.funnel-bar.animate { animation: barGrow 0.8s ease forwards; }
+.funnel-label {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  font-weight: 400;
+  min-width: 160px;
+  text-align: right;
+}
+.tier-badges {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+  justify-content: center;
+}
+.tier-badge {
+  padding: 6px 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: 1px solid;
+}
+.tier-badge.gold { color: var(--gold); border-color: var(--gold-border); background: var(--gold-dim); }
+.tier-badge.teal { color: var(--teal); border-color: var(--teal-border); background: var(--teal-dim); }
+.tier-badge.grey { color: var(--grey); border-color: rgba(122,149,173,0.3); background: rgba(122,149,173,0.08); }
+.tier-badge.emergency {
+  color: var(--text-dim);
+  border-color: var(--border);
+  background: var(--panel);
+  font-weight: 400;
+  font-size: 0.8rem;
+}
+
+/* ── SCENE 5: Outcome ── */
+.tier-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.tier-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 24px 20px;
+  text-align: center;
+}
+.tier-card .tier-label {
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+.tier-card .tier-amount {
+  font-size: 2rem;
+  font-weight: 800;
+}
+.tier-card .tier-freq {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  font-weight: 300;
+}
+.tier-card.current .tier-amount { color: var(--text); }
+.tier-card.conservative { border-color: var(--gold-border); }
+.tier-card.conservative .tier-amount { color: var(--gold); }
+.tier-card.full { border-color: var(--teal-border); }
+.tier-card.full .tier-amount { color: var(--teal); }
+
+.diff-callout {
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--teal);
+  margin-bottom: 32px;
+}
+.diff-callout span { font-weight: 300; color: var(--text-dim); font-size: 1rem; }
+
+.cta-wrap { text-align: center; margin-top: 20px; }
+.cta-btn {
+  display: inline-block;
+  padding: 14px 36px;
+  background: var(--gold);
+  color: var(--bg);
+  font-family: var(--font);
+  font-size: 1rem;
+  font-weight: 700;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.cta-btn:hover { opacity: 0.85; }
+.cta-secondary {
+  display: block;
+  margin-top: 16px;
+  font-size: 0.85rem;
+  font-weight: 300;
+  color: var(--text-dim);
+}
+
+/* ── CONTROLS BAR ── */
+.controls {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  z-index: 100;
+  transition: transform 0.4s ease, opacity 0.4s ease;
+}
+.controls.hidden {
+  transform: translateY(100%);
+  opacity: 0;
+  pointer-events: none;
+}
+.controls button {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  font-family: var(--font);
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 6px 18px;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+}
+.controls button:hover {
+  color: var(--text-bright);
+  border-color: var(--border2);
+}
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: var(--gold);
+  z-index: 101;
+  transition: width 0.3s ease;
+  width: 0;
+}
+.scene-dots {
+  display: flex;
+  gap: 6px;
+}
+.scene-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border);
+  transition: background 0.3s;
+  cursor: pointer;
+  border: none;
+}
+.scene-dot.active { background: var(--gold); }
+.scene-dot.past { background: var(--text-dim); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .hero h1 { font-size: 2rem; }
+  .hero { padding-top: 4vh; }
+  .problem-block, .solution-block { padding-left: 4px; padding-right: 4px; }
+  .appn-table { font-size: 0.8rem; }
+  .appn-table th, .appn-table td { padding: 5px 6px; }
+  .facts-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .arrow-col { display: none; }
+  .fact-col { margin-top: 8px; }
+  .tier-cards { grid-template-columns: 1fr; gap: 10px; }
+  .funnel-label { min-width: 100px; font-size: 0.75rem; }
+  .scene { left: 16px; right: 16px; }
+  .scene-container { padding: 40px 16px 100px; }
+  .scene { top: 40px; }
+}
+
+/* ── REDUCED MOTION ── */
+@media (prefers-reduced-motion: reduce) {
+  .scene {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+    visibility: visible;
+    margin-bottom: 80px;
+    transition: none;
+  }
+  .scene .anim {
+    opacity: 1 !important;
+    animation: none !important;
+  }
+  .rule-card .rule-result { opacity: 1 !important; animation: none !important; }
+  .confidence-fill { width: 85% !important; transition: none !important; }
+  .confidence-pct { opacity: 1 !important; transition: none !important; }
+  .funnel-bar { animation: none !important; }
+  .show-how-btn { display: none; }
+  .appn-detail { display: table-row; }
+  .appn-chevron { display: none; }
+  .controls { display: none; }
+  .progress-bar { display: none; }
+  .scene-container { min-height: auto; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress" role="presentation"></div>
+
+<div class="scene-container">
+
+  <!-- Scene 0: Hero — Problem + Solution -->
+  <section class="scene active" id="scene-0" aria-label="Introduction">
+    <div class="hero">
+      <h1 class="anim">The problem</h1>
+      <div class="problem-block anim" data-delay="600">
+        <p class="problem-detail">In FY2024, Parliament voted money for benefits. MSD didn't pay it all out.</p>
+        <table class="appn-table">
+          <thead>
+            <tr>
+              <th class="appn-name">Category</th>
+              <th class="appn-num">Voted</th>
+              <th class="appn-num">Paid</th>
+              <th class="appn-num appn-gap">Unspent</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="appn-summary" data-toggle="grp-benefits">
+              <td><span class="appn-chevron"></span>Main benefits</td>
+              <td class="appn-num">$8,758.7m</td>
+              <td class="appn-num">$8,689.5m</td>
+              <td class="appn-num appn-gap">$69.2m</td>
+            </tr>
+            <tr class="appn-detail grp-benefits">
+              <td>Jobseeker Support &amp; Emergency Benefit</td>
+              <td class="appn-num">$4,102.6m</td>
+              <td class="appn-num">$4,062.2m</td>
+              <td class="appn-num appn-gap">$40.4m</td>
+            </tr>
+            <tr class="appn-detail grp-benefits">
+              <td>Supported Living Payment</td>
+              <td class="appn-num">$2,546.1m</td>
+              <td class="appn-num">$2,530.3m</td>
+              <td class="appn-num appn-gap">$15.8m</td>
+            </tr>
+            <tr class="appn-detail grp-benefits">
+              <td>Sole Parent Support</td>
+              <td class="appn-num">$2,110.0m</td>
+              <td class="appn-num">$2,097.0m</td>
+              <td class="appn-num appn-gap">$13.0m</td>
+            </tr>
+
+            <tr class="appn-summary" data-toggle="grp-supplements">
+              <td><span class="appn-chevron"></span>Supplements &amp; hardship</td>
+              <td class="appn-num">$4,730.9m</td>
+              <td class="appn-num">$4,543.8m</td>
+              <td class="appn-num appn-gap">$187.1m</td>
+            </tr>
+            <tr class="appn-detail grp-supplements">
+              <td>Accommodation Assistance</td>
+              <td class="appn-num">$2,480.3m</td>
+              <td class="appn-num">$2,410.7m</td>
+              <td class="appn-num appn-gap">$69.7m</td>
+            </tr>
+            <tr class="appn-detail grp-supplements">
+              <td>Hardship Assistance</td>
+              <td class="appn-num">$710.6m</td>
+              <td class="appn-num">$667.4m</td>
+              <td class="appn-num appn-gap">$43.2m</td>
+            </tr>
+            <tr class="appn-detail grp-supplements">
+              <td>Recoverable Assistance (advances)</td>
+              <td class="appn-num">$334.5m</td>
+              <td class="appn-num">$300.9m</td>
+              <td class="appn-num appn-gap">$33.7m</td>
+            </tr>
+            <tr class="appn-detail grp-supplements">
+              <td>Childcare Assistance</td>
+              <td class="appn-num">$181.8m</td>
+              <td class="appn-num">$164.7m</td>
+              <td class="appn-num appn-gap">$17.0m</td>
+            </tr>
+            <tr class="appn-detail grp-supplements">
+              <td>Winter Energy Payment</td>
+              <td class="appn-num">$553.5m</td>
+              <td class="appn-num">$536.5m</td>
+              <td class="appn-num appn-gap">$17.0m</td>
+            </tr>
+            <tr class="appn-detail grp-supplements">
+              <td>Disability Assistance</td>
+              <td class="appn-num">$470.2m</td>
+              <td class="appn-num">$463.6m</td>
+              <td class="appn-num appn-gap">$6.5m</td>
+            </tr>
+
+            <tr class="appn-summary" data-toggle="grp-housing">
+              <td><span class="appn-chevron"></span>Housing</td>
+              <td class="appn-num">$252.4m</td>
+              <td class="appn-num">$223.4m</td>
+              <td class="appn-num appn-gap">$29.0m</td>
+            </tr>
+            <tr class="appn-detail grp-housing">
+              <td>Housing Support Assistance</td>
+              <td class="appn-num">$127.6m</td>
+              <td class="appn-num">$111.6m</td>
+              <td class="appn-num appn-gap">$16.0m</td>
+            </tr>
+            <tr class="appn-detail grp-housing">
+              <td>Recoverable Housing Support</td>
+              <td class="appn-num">$121.8m</td>
+              <td class="appn-num">$110.0m</td>
+              <td class="appn-num appn-gap">$11.8m</td>
+            </tr>
+            <tr class="appn-detail grp-housing">
+              <td>Emergency Housing</td>
+              <td class="appn-num">$3.0m</td>
+              <td class="appn-num">$1.8m</td>
+              <td class="appn-num appn-gap">$1.2m</td>
+            </tr>
+
+            <tr class="appn-summary" data-toggle="grp-education">
+              <td><span class="appn-chevron"></span>Education</td>
+              <td class="appn-num">$569.7m</td>
+              <td class="appn-num">$539.8m</td>
+              <td class="appn-num appn-gap">$29.9m</td>
+            </tr>
+            <tr class="appn-detail grp-education">
+              <td>Student Allowances</td>
+              <td class="appn-num">$550.2m</td>
+              <td class="appn-num">$525.9m</td>
+              <td class="appn-num appn-gap">$24.3m</td>
+            </tr>
+            <tr class="appn-detail grp-education">
+              <td>Training Incentive Allowance</td>
+              <td class="appn-num">$19.5m</td>
+              <td class="appn-num">$13.9m</td>
+              <td class="appn-num appn-gap">$5.5m</td>
+            </tr>
+
+            <tr class="appn-total">
+              <td>Total (excl. NZ Super &amp; Vet Pension)</td>
+              <td class="appn-num"></td>
+              <td class="appn-num"></td>
+              <td class="appn-num appn-gap">$341.5m</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="appn-cite">Source: <a href="https://www.msd.govt.nz/documents/about-msd-and-our-work/publications-resources/corporate/annual-report/2024/msd-annual-report-2024.pdf" target="_blank" rel="noopener">MSD Annual Report 2024</a>, p.205-208 &mdash; Statement of Budgeted and Actual Expenses against Appropriations, year ended 30 June 2024. Raw data: <a href="https://www.treasury.govt.nz/publications/data/budget-2025-data-estimates-appropriations-2025-26" target="_blank" rel="noopener">Treasury Budget 2025 Estimates</a>, Vote Social Development expenditure workbook.</p>
+        <p class="problem-punchline">People didn't claim it because they didn't know it existed.</p>
+        <p class="problem-caveat">Some is forecasting variance. But hardship grants and housing support are demand-driven &mdash; the money was there because Parliament expected people to need it.</p>
+      </div>
+      <div class="solution-block anim" data-delay="2400">
+        <h2 class="solution-title">What this tool does</h2>
+        <p class="solution-text">It reads the law so you don't have to. <span>54 questions</span> derive <span>~107 facts</span> about your situation. Those facts are tested against <span>75 machine-readable benefit rules</span>. In under 5 minutes, you get a list of everything the law says you may be entitled to &mdash; with legal citations, dollar amounts, and what to say at your appointment.</p>
+        <p class="solution-zero">All evaluation happens in your browser. Nothing is stored. Your privacy is protected, we don't need to know, we just need you to know.</p>
+      </div>
+      <div class="hero-transition anim" data-delay="4800">
+        <button class="show-how-btn" id="btn-show-how">Show me how</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Scene 1: Questions → Facts -->
+  <section class="scene" id="scene-1" aria-label="Questions become facts">
+    <h2 class="scene-title anim">Questions become facts</h2>
+    <div class="facts-grid">
+      <div class="question-col">
+        <div class="q-card anim slide-left" data-delay="200">
+          <div class="q-label">How old are you?</div>
+          <div class="q-answer">25</div>
+        </div>
+        <div class="q-card anim slide-left" data-delay="600">
+          <div class="q-label">Residency status?</div>
+          <div class="q-answer">NZ Citizen</div>
+        </div>
+        <div class="q-card anim slide-left" data-delay="1000">
+          <div class="q-label">Health condition?</div>
+          <div class="q-answer">Yes</div>
+        </div>
+      </div>
+      <div class="arrow-col">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="fact-col">
+        <div class="f-card anim slide-right" data-delay="400">
+          <span class="f-key">age:</span> 25
+        </div>
+        <div class="f-card anim slide-right" data-delay="800">
+          <span class="f-key">residency_status:</span> 'citizen'
+        </div>
+        <div class="f-card anim slide-right" data-delay="1200">
+          <span class="f-key">has_condition:</span> true
+        </div>
+        <div class="f-card anim slide-right" data-delay="1600">
+          <span class="f-key">work_capacity_under_15:</span> true
+        </div>
+        <div class="cascade-note anim" data-delay="1800">one answer, two facts</div>
+      </div>
+    </div>
+    <p class="caption anim" data-delay="2400">54 branching questions derive ~107 facts. Some cascade.</p>
+  </section>
+
+  <!-- Scene 2: Rule Evaluation -->
+  <section class="scene" id="scene-2" aria-label="Rule evaluation">
+    <h2 class="scene-title anim">Every benefit is data-driven</h2>
+    <div class="benefit-header anim" data-delay="200">
+      <h3>Jobseeker Support</h3>
+      <div class="legal">s88 Social Security Act 2018</div>
+    </div>
+    <div class="rule-list">
+      <div class="rule-card anim" data-delay="600">
+        <span class="rule-expr">age &ge; 18</span>
+        <span class="rule-result pass" data-rule-delay="1200">&#10003; PASS</span>
+      </div>
+      <div class="rule-card anim" data-delay="1000">
+        <span class="rule-expr">residency_status &isin; [citizen, permanent_resident]</span>
+        <span class="rule-result pass" data-rule-delay="1800">&#10003; PASS</span>
+      </div>
+      <div class="rule-card anim" data-delay="1400">
+        <span class="rule-expr">years_in_nz &ge; 2</span>
+        <span class="rule-result pass" data-rule-delay="2400">&#10003; PASS</span>
+      </div>
+      <div class="rule-card anim" data-delay="1800">
+        <span class="rule-expr">is_seeking_work = true</span>
+        <span class="rule-result pass" data-rule-delay="3000">&#10003; PASS</span>
+      </div>
+    </div>
+    <div class="tally anim" data-delay="3400">
+      <strong>4/4 passed</strong>, 0 failed
+    </div>
+    <p class="caption anim" data-delay="3800">All logic is data-driven. 10 operators. No if/else.</p>
+  </section>
+
+  <!-- Scene 3: Confidence Calculation -->
+  <section class="scene" id="scene-3" aria-label="Confidence calculation">
+    <h2 class="scene-title anim">Pass ratio determines status</h2>
+    <div class="flow-paths">
+      <div class="flow-step highlighted anim" data-delay="400">
+        <span class="flow-question">All pass?</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-answer">YES</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-answer gold">ENTITLED &nbsp;70-95%</span>
+      </div>
+      <div class="flow-step anim" data-delay="1000">
+        <span class="flow-question">Most pass?</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-answer">YES</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-answer teal">POSSIBLE &nbsp;50-80%</span>
+      </div>
+      <div class="flow-step anim" data-delay="1600">
+        <span class="flow-question">Too few evaluated?</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-answer">YES</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-answer grey">INSUFFICIENT &nbsp;30-50%</span>
+      </div>
+      <div class="flow-step anim" data-delay="2200">
+        <span class="flow-question">Clearly fails?</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-answer red">FILTERED OUT</span>
+      </div>
+    </div>
+    <div class="confidence-bar-wrap anim" data-delay="3000">
+      <div class="confidence-label">
+        <span>Jobseeker Support</span>
+        <span>ENTITLED</span>
+      </div>
+      <div class="confidence-bar">
+        <div class="confidence-fill" id="conf-fill"></div>
+        <span class="confidence-pct" id="conf-pct">85%</span>
+      </div>
+    </div>
+    <p class="caption anim" data-delay="4000">Hard filters remove age/residency mismatches entirely.</p>
+  </section>
+
+  <!-- Scene 4: The Funnel -->
+  <section class="scene" id="scene-4" aria-label="The funnel">
+    <h2 class="scene-title anim">75 benefits enter. Only relevant ones surface.</h2>
+    <div class="funnel">
+      <div class="funnel-row anim" data-delay="300">
+        <span class="funnel-label">All benefits</span>
+        <div class="funnel-bar" style="width:100%" data-funnel>75</div>
+      </div>
+      <div class="funnel-row anim" data-delay="800">
+        <span class="funnel-label">Rule evaluation</span>
+        <div class="funnel-bar" style="width:57%" data-funnel>43</div>
+      </div>
+      <div class="funnel-row anim" data-delay="1300">
+        <span class="funnel-label">Age/residency filters</span>
+        <div class="funnel-bar" style="width:28%" data-funnel>21</div>
+      </div>
+      <div class="funnel-row anim" data-delay="1800">
+        <span class="funnel-label">Confidence threshold</span>
+        <div class="funnel-bar" style="width:16%" data-funnel>12</div>
+      </div>
+    </div>
+    <div class="tier-badges anim" data-delay="2800">
+      <span class="tier-badge gold">3 ENTITLED</span>
+      <span class="tier-badge teal">6 POSSIBLE</span>
+      <span class="tier-badge grey">3 INSUFFICIENT</span>
+      <span class="tier-badge emergency">+ emergency grants</span>
+    </div>
+    <p class="caption anim" data-delay="3600">Emergency grants shown separately. Not included in totals.</p>
+  </section>
+
+  <!-- Scene 5: The Outcome -->
+  <section class="scene" id="scene-5" aria-label="The outcome">
+    <h2 class="scene-title anim">The gap the law says you can close</h2>
+    <div class="tier-cards">
+      <div class="tier-card current anim" data-delay="400">
+        <div class="tier-label">Current</div>
+        <div class="tier-amount">$340</div>
+        <div class="tier-freq">/week</div>
+      </div>
+      <div class="tier-card conservative anim" data-delay="800">
+        <div class="tier-label">Conservative</div>
+        <div class="tier-amount">$585</div>
+        <div class="tier-freq">/week</div>
+      </div>
+      <div class="tier-card full anim" data-delay="1200">
+        <div class="tier-label">Full potential</div>
+        <div class="tier-amount">$720</div>
+        <div class="tier-freq">/week</div>
+      </div>
+    </div>
+    <div class="diff-callout anim" data-delay="1800">
+      +$380/wk <span>the law says you may be entitled to</span>
+    </div>
+    <div class="cta-wrap anim" data-delay="2400">
+      <a href="./" class="cta-btn">Start your assessment</a>
+      <span class="cta-secondary">All evaluation happens in your browser. Nothing is stored.</span>
+    </div>
+  </section>
+
+</div>
+
+<!-- Controls -->
+<div class="controls hidden" id="controls-bar" role="toolbar" aria-label="Animation controls">
+  <button id="btn-replay" aria-label="Replay animation">Replay</button>
+  <div class="scene-dots" id="dots"></div>
+  <button id="btn-pause" aria-label="Pause animation">Pause</button>
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  // Collapsible table rows
+  document.querySelectorAll('.appn-summary').forEach(function(row) {
+    row.addEventListener('click', function() {
+      var grp = row.getAttribute('data-toggle');
+      var isOpen = row.classList.toggle('open');
+      document.querySelectorAll('.appn-detail.' + grp).forEach(function(detail) {
+        detail.classList.toggle('show', isOpen);
+      });
+    });
+  });
+
+  // Reduced motion — no JS animation needed
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.querySelectorAll('.scene').forEach(function(s) { s.classList.add('active'); });
+    document.querySelectorAll('.anim').forEach(function(el) { el.classList.add('visible'); });
+    document.querySelectorAll('.rule-result').forEach(function(el) { el.classList.add('show'); });
+    var fill = document.getElementById('conf-fill');
+    if (fill) fill.classList.add('animate');
+    var pct = document.getElementById('conf-pct');
+    if (pct) pct.classList.add('show');
+    return;
+  }
+
+  var SCENES = [
+    { id: 'scene-0', duration: 0 },
+    { id: 'scene-1', duration: 8000 },
+    { id: 'scene-2', duration: 10000 },
+    { id: 'scene-3', duration: 10000 },
+    { id: 'scene-4', duration: 7000 },
+    { id: 'scene-5', duration: 8000 }
+  ];
+
+  var current = 0;
+  var paused = false;
+  var timers = [];
+  var progressEl = document.getElementById('progress');
+  var pauseBtn = document.getElementById('btn-pause');
+  var replayBtn = document.getElementById('btn-replay');
+  var dotsEl = document.getElementById('dots');
+  var sceneStartTime = 0;
+  var progressTimer = null;
+
+  // Build dots
+  SCENES.forEach(function(_, i) {
+    var dot = document.createElement('button');
+    dot.className = 'scene-dot';
+    dot.setAttribute('aria-label', 'Go to scene ' + (i + 1));
+    dot.addEventListener('click', function() { goToScene(i); });
+    dotsEl.appendChild(dot);
+  });
+
+  function clearTimers() {
+    timers.forEach(function(t) { clearTimeout(t); });
+    timers = [];
+    if (progressTimer) { cancelAnimationFrame(progressTimer); progressTimer = null; }
+  }
+
+  function updateDots() {
+    var dots = dotsEl.querySelectorAll('.scene-dot');
+    dots.forEach(function(d, i) {
+      d.classList.toggle('active', i === current);
+      d.classList.toggle('past', i < current);
+    });
+  }
+
+  function updateProgress() {
+    if (paused || current === 0) return;
+    var elapsed = Date.now() - sceneStartTime;
+    var totalElapsed = 0;
+    // Skip scene 0 (user-gated, no fixed duration) in progress calc
+    for (var i = 1; i < current; i++) totalElapsed += SCENES[i].duration;
+    totalElapsed += elapsed;
+    var totalDuration = SCENES.reduce(function(s, sc, i) { return i === 0 ? s : s + sc.duration; }, 0);
+    var pct = Math.min(100, (totalElapsed / totalDuration) * 100);
+    progressEl.style.width = pct + '%';
+    progressTimer = requestAnimationFrame(updateProgress);
+  }
+
+  function animateScene(index) {
+    var scene = document.getElementById(SCENES[index].id);
+    if (!scene) return;
+
+    // Activate animated elements with staggered delays
+    var anims = scene.querySelectorAll('.anim');
+    anims.forEach(function(el) {
+      var delay = parseInt(el.getAttribute('data-delay') || '0', 10);
+      var t = setTimeout(function() {
+        el.classList.add('visible');
+      }, delay);
+      timers.push(t);
+    });
+
+    // Scene-specific animations
+    if (index === 2) {
+      // Rule results
+      var results = scene.querySelectorAll('.rule-result');
+      results.forEach(function(el) {
+        var delay = parseInt(el.getAttribute('data-rule-delay') || '0', 10);
+        var t = setTimeout(function() { el.classList.add('show'); }, delay);
+        timers.push(t);
+      });
+    }
+
+    if (index === 3) {
+      // Confidence bar fill
+      var t1 = setTimeout(function() {
+        var fill = document.getElementById('conf-fill');
+        if (fill) fill.classList.add('animate');
+      }, 3500);
+      timers.push(t1);
+      var t2 = setTimeout(function() {
+        var pct = document.getElementById('conf-pct');
+        if (pct) pct.classList.add('show');
+      }, 4500);
+      timers.push(t2);
+    }
+
+    if (index === 4) {
+      // Funnel bar grow
+      var bars = scene.querySelectorAll('[data-funnel]');
+      bars.forEach(function(bar, i) {
+        var t = setTimeout(function() {
+          bar.classList.add('animate');
+        }, 500 + i * 500);
+        timers.push(t);
+      });
+    }
+  }
+
+  function resetScene(index) {
+    var scene = document.getElementById(SCENES[index].id);
+    if (!scene) return;
+    scene.querySelectorAll('.anim').forEach(function(el) { el.classList.remove('visible'); });
+    scene.querySelectorAll('.rule-result').forEach(function(el) { el.classList.remove('show'); });
+    scene.querySelectorAll('[data-funnel]').forEach(function(el) { el.classList.remove('animate'); });
+    var fill = document.getElementById('conf-fill');
+    if (fill) fill.classList.remove('animate');
+    var pct = document.getElementById('conf-pct');
+    if (pct) pct.classList.remove('show');
+  }
+
+  function showScene(index) {
+    SCENES.forEach(function(s, i) {
+      var el = document.getElementById(s.id);
+      el.classList.toggle('active', i === index);
+    });
+    current = index;
+    updateDots();
+    sceneStartTime = Date.now();
+    animateScene(index);
+    updateProgress();
+  }
+
+  function advanceOrHold() {
+    if (paused) return;
+    // Scene 0 waits for user click — no auto-advance
+    if (current === 0) return;
+    if (current < SCENES.length - 1) {
+      var t = setTimeout(function() {
+        showScene(current + 1);
+        advanceOrHold();
+      }, SCENES[current].duration);
+      timers.push(t);
+    } else {
+      // Final scene — fill progress to 100%
+      progressEl.style.width = '100%';
+    }
+  }
+
+  function goToScene(index) {
+    clearTimers();
+    SCENES.forEach(function(_, i) { resetScene(i); });
+    showScene(index);
+    paused = false;
+    pauseBtn.textContent = 'Pause';
+    if (index === 0) {
+      controlsBar.classList.add('hidden');
+    } else {
+      controlsBar.classList.remove('hidden');
+      advanceOrHold();
+    }
+  }
+
+  function start() {
+    clearTimers();
+    SCENES.forEach(function(_, i) { resetScene(i); });
+    progressEl.style.width = '0';
+    paused = false;
+    pauseBtn.textContent = 'Pause';
+    controlsBar.classList.add('hidden');
+    showScene(0);
+    // Scene 0 waits for "Show me how" click — no advanceOrHold here
+  }
+
+  // Controls
+  pauseBtn.addEventListener('click', function() {
+    paused = !paused;
+    pauseBtn.textContent = paused ? 'Play' : 'Pause';
+    if (!paused) {
+      sceneStartTime = Date.now();
+      advanceOrHold();
+      updateProgress();
+    }
+  });
+
+  replayBtn.addEventListener('click', function() { start(); });
+
+  // "Show me how" button — starts the animation from scene 1
+  var showHowBtn = document.getElementById('btn-show-how');
+  var controlsBar = document.getElementById('controls-bar');
+  showHowBtn.addEventListener('click', function() {
+    controlsBar.classList.remove('hidden');
+    showScene(1);
+    advanceOrHold();
+  });
+
+  // Keyboard
+  document.addEventListener('keydown', function(e) {
+    if (e.code === 'Space' && e.target === document.body) {
+      e.preventDefault();
+      pauseBtn.click();
+    }
+    if (e.code === 'KeyR' && e.target === document.body) {
+      e.preventDefault();
+      start();
+    }
+  });
+
+  // Initial start
+  start();
+})();
+</script>
+
+</body>
+</html>

@@ -7,7 +7,7 @@ type Props = {
 }
 
 export function IntakeScreen({ intake, onComplete }: Props) {
-  const { current, answer, back, isComplete, history, currentSection, progress } = intake
+  const { current, answer, back, isComplete, isEditing, finishEditing, history, currentSection, progress } = intake
 
   if (isComplete) {
     return (
@@ -24,6 +24,11 @@ export function IntakeScreen({ intake, onComplete }: Props) {
     )
   }
 
+  const handleFinishEditing = () => {
+    finishEditing()
+    onComplete()
+  }
+
   return (
     <div className="intake-screen">
       <div className="intake-eyebrow">{currentSection}</div>
@@ -32,14 +37,26 @@ export function IntakeScreen({ intake, onComplete }: Props) {
       </p>
 
       {current && (
-        <QuestionBlock key={current.id} question={current} onAnswer={answer} />
+        <QuestionBlock
+          key={current.id}
+          question={current}
+          onAnswer={answer}
+          existingAnswer={intake.answers[current.id]}
+        />
       )}
 
-      {history.length > 0 && (
-        <button className="back-link" onClick={back}>
-          Back
-        </button>
-      )}
+      <div className="intake-nav">
+        {history.length > 0 && (
+          <button className="back-link" onClick={back}>
+            Back
+          </button>
+        )}
+        {isEditing && (
+          <button className="continue-btn finish-editing-btn" onClick={handleFinishEditing}>
+            Re-run assessment
+          </button>
+        )}
+      </div>
     </div>
   )
 }

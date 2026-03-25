@@ -1,8 +1,10 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import type { EntitlementResult, IntakeAnswers, TransitionAnalysis } from '../../lib/types'
 import type { TriageMode } from '../../engine/questions'
 import { OutcomeSection } from './OutcomeSection'
-import { TransitionSection } from './TransitionSection'
+import { WorkSection, StudySection, VerdictBadge, StudyVerdictBadge } from './TransitionSection'
+
+type AssessmentTab = 'crisis' | 'entitlements' | 'work' | 'upskill'
 
 type Props = {
   results: EntitlementResult[]
@@ -14,6 +16,9 @@ type Props = {
   onContinueFullAssessment: () => void
   answers: IntakeAnswers
   transitionAnalysis: TransitionAnalysis | null
+  intakeComplete: boolean
+  intakeProgress: number
+  onReturnToIntake: () => void
 }
 
 function parseDollar(str?: string): number | null {
@@ -41,7 +46,7 @@ function toTypeKey(name: string): string {
   return name.toUpperCase().replace(/ /g, '_')
 }
 
-export function AssessmentScreen({ results, isEvaluating, onSign, isSigning, alreadyReceiving, triageMode, onContinueFullAssessment, answers, transitionAnalysis }: Props) {
+export function AssessmentScreen({ results, isEvaluating, onSign, isSigning, alreadyReceiving, triageMode, onContinueFullAssessment, answers, transitionAnalysis, intakeComplete, intakeProgress, onReturnToIntake }: Props) {
   const receivingKeys = new Set(
     alreadyReceiving.filter(s => s !== 'None of these').map(toTypeKey)
   )
@@ -169,164 +174,265 @@ export function AssessmentScreen({ results, isEvaluating, onSign, isSigning, alr
     )
   }
 
-  // Full mode — unchanged from original
+  // Full mode
+  const isCrisis = answers['situation.emergency'] === 'Yes'
+    || (answers['housing.arrears'] === 'Yes' && answers['income.benefit'] === 'Yes')
+  const crisisEnabled = isCrisis && emergency.length > 0
+
+  const [activeTab, setActiveTab] = useState<AssessmentTab>('entitlements')
+  useEffect(() => { if (crisisEnabled) setActiveTab('crisis') }, [crisisEnabled])
+  const workEnabled = !!transitionAnalysis
+  const upskillEnabled = !!transitionAnalysis && transitionAnalysis.study_scenarios.length > 0
+
   return (
     <div className="assessment-screen">
-      {/* ── Overview ── */}
-      <section className="dash-section dash-delay-1">
-        <div className="assessment-header">
-          <div>
-            <h2 className="assessment-title">Assessment{isEvaluating ? ' (updating...)' : ''}</h2>
-            <div className="assessment-meta">
-              {results.length} entitlement{results.length !== 1 ? 's' : ''} evaluated
-              {missing.length > 0 && ` \u2022 ${missing.length} you may not be receiving`}
+      {!intakeComplete && (
+        <section className="dash-section dash-section--incomplete dash-delay-0">
+          <div className="incomplete-banner">
+            <div className="incomplete-banner-content">
+              <span className="incomplete-banner-title">Partial assessment — {intakeProgress}% of intake completed</span>
+              <span className="incomplete-banner-desc">
+                Results below are based on the information provided so far. Completing all sections will improve accuracy.
+              </span>
             </div>
+            <button className="continue-btn incomplete-banner-btn" onClick={onReturnToIntake}>
+              Continue intake
+            </button>
           </div>
+        </section>
+      )}
+
+      {/* ── Tab bar ── */}
+      <div className="assessment-tabs">
+        {crisisEnabled && (
           <button
-            className="download-btn"
-            onClick={onSign}
-            disabled={isSigning || results.length === 0}
+            className={`assessment-tab assessment-tab--crisis${activeTab === 'crisis' ? ' assessment-tab--active' : ''}`}
+            onClick={() => setActiveTab('crisis')}
           >
-            {isSigning ? 'Signing...' : 'Sign & generate document'}
+            Act now
           </button>
-        </div>
-
-        <div className="dash-tiers">
-          <div className="dash-tier">
-            <span className="dash-tier-label">Current support</span>
-            <span className="dash-tier-amount">{fmt(currentSum.total)}</span>
-            <span className="dash-tier-detail">
-              {confirmed.length} benefit{confirmed.length !== 1 ? 's' : ''}/wk
-            </span>
-          </div>
-          <div className="dash-tier-arrow">{'\u25B8'}</div>
-          <div className="dash-tier dash-tier--entitled">
-            <span className="dash-tier-label">Conservative estimate</span>
-            <span className="dash-tier-amount">{fmt(conservativeTotal)}</span>
-            <span className="dash-tier-detail">
-              +{entitled.length} entitled/wk
-              {entitledSum.hasUnknown && ' + variable'}
-            </span>
-          </div>
-          <div className="dash-tier-arrow">{'\u25B8'}</div>
-          <div className="dash-tier dash-tier--full">
-            <span className="dash-tier-label">Full potential</span>
-            <span className="dash-tier-amount">{fmt(fullTotal)}</span>
-            <span className="dash-tier-detail">
-              +{actionable.length + contingency.length} possible/wk
-              {(actionableSum.hasUnknown || contingencySum.hasUnknown) && ' + variable'}
-            </span>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Current Support ── */}
-      {confirmed.length > 0 && (
-        <section className="dash-section dash-delay-2">
-          <div className="dash-section-header">
-            <span className="dash-section-title">Current support</span>
-            <span className="dash-section-count">{confirmed.length}</span>
-          </div>
-          <p className="dash-section-desc">
-            Benefits you reported receiving. Verify amounts match your payments.
-          </p>
-          <div className="dash-compact-list">
-            {confirmed.map(r => (
-              <div key={r.entitlement_type} className="dash-row dash-row--confirmed">
-                <span className="dash-row-indicator confirmed-indicator" />
-                <span className="dash-row-name">{r.name}</span>
-                <span className="dash-row-amount">{r.weekly_amount ?? '\u2014'}</span>
-                <span className="dash-row-status">Receiving</span>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* ── You should be receiving ── */}
-      {entitled.length > 0 && (
-        <section className="dash-section dash-delay-3">
-          <div className="dash-section-header">
-            <span className="dash-section-title dash-section-title--entitled">You should be receiving</span>
-            <span className="dash-section-count">{entitled.length}</span>
-          </div>
-          <div className="dash-card-list">
-            {entitled.map(r => (
-              <EntitlementRow key={r.entitlement_type} result={r} />
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* ── Worth investigating ── */}
-      {actionable.length > 0 && (
-        <section className="dash-section dash-delay-4">
-          <div className="dash-section-header">
-            <span className="dash-section-title dash-section-title--possible">Worth investigating</span>
-            <span className="dash-section-count">{actionable.length}</span>
-          </div>
-          <div className="dash-card-list">
-            {actionable.map(r => (
-              <EntitlementRow key={r.entitlement_type} result={r} />
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* ── Contingency — recurring entitlements that need more info ── */}
-      {contingency.length > 0 && (
-        <ContingencySection items={contingency} />
-      )}
-
-      {/* ── Emergency safety net — one-off / hardship provisions ── */}
-      {emergency.length > 0 && (
-        <EmergencySection items={emergency} />
-      )}
-
-      {/* ── Financial Summary ── */}
-      <section className="dash-section dash-delay-6">
-        <div className="dash-section-header">
-          <span className="dash-section-title">Financial summary</span>
-        </div>
-        <div className="dash-summary">
-          <SummaryRow
-            label="Current weekly support"
-            amount={currentSum.total}
-            extra={currentSum.hasUnknown ? '+ variable' : undefined}
-            tier="current"
-          />
-          <SummaryRow
-            label="Conservative estimate"
-            sublabel="Current + entitled benefits"
-            amount={conservativeTotal}
-            delta={entitledSum.total}
-            extra={entitledSum.hasUnknown ? '+ variable' : undefined}
-            tier="entitled"
-          />
-          <SummaryRow
-            label="Full potential"
-            sublabel="All identified entitlements"
-            amount={fullTotal}
-            delta={fullTotal - currentSum.total}
-            extra={contingencySum.hasUnknown || entitledSum.hasUnknown ? '+ variable' : undefined}
-            tier="full"
-          />
-        </div>
-        <div className="dash-summary-note">
-          Amounts are indicative maximums from published MSD rate tables.
-          Actual amounts depend on income testing, abatement, and case assessment.
-        </div>
-      </section>
-
-      {/* ── Transition analysis ── */}
-      {transitionAnalysis && (
-        <TransitionSection analysis={transitionAnalysis} answers={answers} />
-      )}
-
-      {/* ── Outcome logging ── */}
-      <div className="dash-section dash-delay-8">
-        <OutcomeSection results={missing} />
+        )}
+        <button
+          className={`assessment-tab${activeTab === 'entitlements' ? ' assessment-tab--active' : ''}`}
+          onClick={() => setActiveTab('entitlements')}
+        >
+          Your entitlements
+        </button>
+        <button
+          className={`assessment-tab${activeTab === 'work' ? ' assessment-tab--active' : ''}${!workEnabled ? ' assessment-tab--disabled' : ''}`}
+          onClick={() => workEnabled && setActiveTab('work')}
+          disabled={!workEnabled}
+        >
+          What if I work?
+          {workEnabled && transitionAnalysis && (
+            <VerdictBadge verdict={transitionAnalysis.verdict} />
+          )}
+        </button>
+        <button
+          className={`assessment-tab${activeTab === 'upskill' ? ' assessment-tab--active' : ''}${!upskillEnabled ? ' assessment-tab--disabled' : ''}`}
+          onClick={() => upskillEnabled && setActiveTab('upskill')}
+          disabled={!upskillEnabled}
+        >
+          What if I upskill?
+          {upskillEnabled && transitionAnalysis && transitionAnalysis.study_verdict && (
+            <StudyVerdictBadge verdict={transitionAnalysis.study_verdict} />
+          )}
+        </button>
       </div>
+
+      {/* ── Tab: Crisis ── */}
+      {activeTab === 'crisis' && crisisEnabled && (
+        <>
+          <SituationGuidance answers={answers} />
+
+          <section className="dash-section dash-delay-4">
+            <div className="dash-section-header">
+              <span className="dash-section-title dash-section-title--entitled">Emergency grants available now</span>
+              <span className="dash-section-count">{emergency.length}</span>
+            </div>
+            <p className="dash-section-desc">
+              These are separate from your regular benefit. You can request them at any MSD office without an appointment.
+            </p>
+            <div className="dash-card-list">
+              {emergency.map(r => (
+                <EntitlementRow key={r.entitlement_type} result={r} />
+              ))}
+            </div>
+          </section>
+
+          <section className="dash-section dash-delay-5">
+            <p className="dash-summary-note">
+              Switch to "Your entitlements" for your full assessment including recurring benefits and financial summary.
+            </p>
+          </section>
+        </>
+      )}
+
+      {/* ── Tab: Entitlements ── */}
+      {activeTab === 'entitlements' && (
+        <>
+          {/* ── Overview ── */}
+          <section className="dash-section dash-delay-1">
+            <div className="assessment-header">
+              <div>
+                <h2 className="assessment-title">Assessment{isEvaluating ? ' (updating...)' : ''}</h2>
+                <div className="assessment-meta">
+                  {results.length} entitlement{results.length !== 1 ? 's' : ''} evaluated
+                  {missing.length > 0 && ` \u2022 ${missing.length} you may not be receiving`}
+                </div>
+              </div>
+              <button
+                className="download-btn"
+                onClick={onSign}
+                disabled={isSigning || results.length === 0}
+              >
+                {isSigning ? 'Signing...' : 'Sign & generate document'}
+              </button>
+            </div>
+
+            <div className="dash-tiers">
+              <div className="dash-tier">
+                <span className="dash-tier-label">Current support</span>
+                <span className="dash-tier-amount">{fmt(currentSum.total)}</span>
+                <span className="dash-tier-detail">
+                  {confirmed.length} benefit{confirmed.length !== 1 ? 's' : ''}/wk
+                </span>
+              </div>
+              <div className="dash-tier-arrow">{'\u25B8'}</div>
+              <div className="dash-tier dash-tier--entitled">
+                <span className="dash-tier-label">Conservative estimate</span>
+                <span className="dash-tier-amount">{fmt(conservativeTotal)}</span>
+                <span className="dash-tier-detail">
+                  +{entitled.length} entitled/wk
+                  {entitledSum.hasUnknown && ' + variable'}
+                </span>
+              </div>
+              <div className="dash-tier-arrow">{'\u25B8'}</div>
+              <div className="dash-tier dash-tier--full">
+                <span className="dash-tier-label">Full potential</span>
+                <span className="dash-tier-amount">{fmt(fullTotal)}</span>
+                <span className="dash-tier-detail">
+                  +{actionable.length + contingency.length} possible/wk
+                  {(actionableSum.hasUnknown || contingencySum.hasUnknown) && ' + variable'}
+                </span>
+              </div>
+            </div>
+          </section>
+
+          {/* ── Current Support ── */}
+          {confirmed.length > 0 && (
+            <section className="dash-section dash-delay-2">
+              <div className="dash-section-header">
+                <span className="dash-section-title">Current support</span>
+                <span className="dash-section-count">{confirmed.length}</span>
+              </div>
+              <p className="dash-section-desc">
+                Benefits you reported receiving. Verify amounts match your payments.
+              </p>
+              <div className="dash-compact-list">
+                {confirmed.map(r => (
+                  <div key={r.entitlement_type} className="dash-row dash-row--confirmed">
+                    <span className="dash-row-indicator confirmed-indicator" />
+                    <span className="dash-row-name">{r.name}</span>
+                    <span className="dash-row-amount">{r.weekly_amount ?? '\u2014'}</span>
+                    <span className="dash-row-status">Receiving</span>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* ── You should be receiving ── */}
+          {entitled.length > 0 && (
+            <section className="dash-section dash-delay-3">
+              <div className="dash-section-header">
+                <span className="dash-section-title dash-section-title--entitled">You should be receiving</span>
+                <span className="dash-section-count">{entitled.length}</span>
+              </div>
+              <div className="dash-card-list">
+                {entitled.map(r => (
+                  <EntitlementRow key={r.entitlement_type} result={r} />
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* ── Worth investigating ── */}
+          {actionable.length > 0 && (
+            <section className="dash-section dash-delay-4">
+              <div className="dash-section-header">
+                <span className="dash-section-title dash-section-title--possible">Worth investigating</span>
+                <span className="dash-section-count">{actionable.length}</span>
+              </div>
+              <div className="dash-card-list">
+                {actionable.map(r => (
+                  <EntitlementRow key={r.entitlement_type} result={r} />
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* ── Contingency — recurring entitlements that need more info ── */}
+          {contingency.length > 0 && (
+            <ContingencySection items={contingency} />
+          )}
+
+          {/* ── Emergency safety net — one-off / hardship provisions ── */}
+          {emergency.length > 0 && (
+            <EmergencySection items={emergency} />
+          )}
+
+          {/* ── Financial Summary ── */}
+          <section className="dash-section dash-delay-6">
+            <div className="dash-section-header">
+              <span className="dash-section-title">Financial summary</span>
+            </div>
+            <div className="dash-summary">
+              <SummaryRow
+                label="Current weekly support"
+                amount={currentSum.total}
+                extra={currentSum.hasUnknown ? '+ variable' : undefined}
+                tier="current"
+              />
+              <SummaryRow
+                label="Conservative estimate"
+                sublabel="Current + entitled benefits"
+                amount={conservativeTotal}
+                delta={entitledSum.total}
+                extra={entitledSum.hasUnknown ? '+ variable' : undefined}
+                tier="entitled"
+              />
+              <SummaryRow
+                label="Full potential"
+                sublabel="All identified entitlements"
+                amount={fullTotal}
+                delta={fullTotal - currentSum.total}
+                extra={contingencySum.hasUnknown || entitledSum.hasUnknown ? '+ variable' : undefined}
+                tier="full"
+              />
+            </div>
+            <div className="dash-summary-note">
+              Amounts are indicative maximums from published MSD rate tables.
+              Actual amounts depend on income testing, abatement, and case assessment.
+            </div>
+          </section>
+
+          {/* ── Outcome logging ── */}
+          <div className="dash-section dash-delay-8">
+            <OutcomeSection results={missing} />
+          </div>
+        </>
+      )}
+
+      {/* ── Tab: Work ── */}
+      {activeTab === 'work' && transitionAnalysis && (
+        <WorkSection analysis={transitionAnalysis} answers={answers} results={results} />
+      )}
+
+      {/* ── Tab: Upskill ── */}
+      {activeTab === 'upskill' && transitionAnalysis && (
+        <StudySection analysis={transitionAnalysis} answers={answers} />
+      )}
     </div>
   )
 }
@@ -674,6 +780,84 @@ function AppealGuidance({ benefitName }: { benefitName: string }) {
         </div>
       </div>
     </section>
+  )
+}
+
+// ── Situation guidance — crisis signals detected in full assessment ──
+
+function SituationGuidance({ answers }: { answers: IntakeAnswers }) {
+  const onBenefit = answers['income.benefit'] === 'Yes'
+  const benefitType = String(answers['income.benefit_type'] ?? 'your benefit')
+  const hasArrears = answers['housing.arrears'] === 'Yes'
+
+  let step = 0
+
+  return (
+    <>
+      {onBenefit && (
+        <section className="dash-section dash-section--crisis dash-delay-1">
+          <div className="crisis-banner">
+            <div className="crisis-banner-content">
+              <h2 className="assessment-title">Get {benefitType} reinstated</h2>
+              <div className="assessment-meta">
+                If your benefit was reduced or stopped, these are the steps to reverse it.
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      <section className="dash-section dash-delay-2">
+        <div className="dash-section-header">
+          <span className="dash-section-title">{onBenefit ? 'Reinstate your benefit' : 'Immediate steps'}</span>
+        </div>
+        <div className="advocacy-steps">
+          {onBenefit && (
+            <div className="advocacy-step">
+              <span className="advocacy-step-num">{++step}</span>
+              <div className="advocacy-step-content">
+                <span className="advocacy-step-title">Request the written decision</span>
+                <p>Under s12 Social Security Act 2018, MSD must give you written reasons for any reduction or cancellation. If you have not received this, request it immediately. Without a written decision, the sanction may have no lawful basis.</p>
+              </div>
+            </div>
+          )}
+          {onBenefit && (
+            <div className="advocacy-step">
+              <span className="advocacy-step-num">{++step}</span>
+              <div className="advocacy-step-content">
+                <span className="advocacy-step-title">Request the notification record</span>
+                <p>MSD must notify you of obligations before sanctioning non-compliance (s102 Social Security Act 2018). Ask for proof that notification was sent — email, text, or letter. If they cannot produce it, the sanction should be reversed.</p>
+              </div>
+            </div>
+          )}
+          {onBenefit && (
+            <div className="advocacy-step">
+              <span className="advocacy-step-num">{++step}</span>
+              <div className="advocacy-step-content">
+                <span className="advocacy-step-title">File a Review of Decision</span>
+                <p>Under s391 Social Security Act 2018, you can request a formal review within 12 months. The review is free and independent of the original decision maker. Ask for form "Review of Decision" at any MSD office or call 0800 559 009.</p>
+              </div>
+            </div>
+          )}
+          <div className="advocacy-step">
+            <span className="advocacy-step-num">{++step}</span>
+            <div className="advocacy-step-content">
+              <span className="advocacy-step-title">Get free advocacy support</span>
+              <p>Citizens Advice Bureau (0800 367 222) and Community Law Centres provide free help with benefit issues. An advocate can attend your WINZ appointment with you and case managers are less likely to dismiss claims with an advocate present.</p>
+            </div>
+          </div>
+          {hasArrears && (
+            <div className="advocacy-step advocacy-step--warn">
+              <span className="advocacy-step-num">!</span>
+              <div className="advocacy-step-content">
+                <span className="advocacy-step-title">Rent arrears detected</span>
+                <p>Get a letter from your landlord showing the arrears amount. Recoverable Assistance can cover rent arrears — this is repaid from future benefit at $5-10/wk and prevents eviction proceedings.</p>
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+    </>
   )
 }
 

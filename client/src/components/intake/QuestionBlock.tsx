@@ -5,9 +5,10 @@ type Props = {
   question: Question
   onAnswer: (value: unknown) => void
   answered?: unknown
+  existingAnswer?: unknown
 }
 
-export function QuestionBlock({ question, onAnswer, answered }: Props) {
+export function QuestionBlock({ question, onAnswer, answered, existingAnswer }: Props) {
   const isAnswered = answered !== undefined
 
   return (
@@ -20,7 +21,7 @@ export function QuestionBlock({ question, onAnswer, answered }: Props) {
       {isAnswered ? (
         <div className="answered-value">{String(answered)}</div>
       ) : (
-        <AnswerOptions question={question} onAnswer={onAnswer} />
+        <AnswerOptions question={question} onAnswer={onAnswer} existingAnswer={existingAnswer} />
       )}
     </div>
   )

@@ -1,13 +1,22 @@
 import { SECTIONS } from '../engine/questions'
+import type { Question } from '../engine/questions'
 import type { EntitlementResult } from '../lib/types'
 
 type Props = {
   currentSectionIndex: number
   isComplete: boolean
   results: EntitlementResult[]
+  onSectionClick?: (sectionIndex: number) => void
+  answeredQuestions: Question[]
 }
 
-export function Sidebar({ currentSectionIndex, isComplete, results }: Props) {
+export function Sidebar({ currentSectionIndex, isComplete, results, onSectionClick, answeredQuestions }: Props) {
+  // Count answered questions per section
+  const sectionCounts = new Map<number, number>()
+  for (const q of answeredQuestions) {
+    sectionCounts.set(q.sectionIndex, (sectionCounts.get(q.sectionIndex) ?? 0) + 1)
+  }
+
   return (
     <aside className="sidebar">
       <div className="sidebar-section">
@@ -19,10 +28,31 @@ export function Sidebar({ currentSectionIndex, isComplete, results }: Props) {
             else if (i === currentSectionIndex) state = 'active'
             else state = 'pending'
 
-            return (
-              <div key={name} className={`progress-step ${state}`}>
+            const count = sectionCounts.get(i) ?? 0
+
+            const content = (
+              <>
                 <div className="step-indicator" />
                 <span className="step-label">{name}</span>
+                {count > 0 && <span className="step-count">{count}</span>}
+              </>
+            )
+
+            if (state === 'done' && onSectionClick) {
+              return (
+                <button
+                  key={name}
+                  className={`progress-step ${state}`}
+                  onClick={() => onSectionClick(i)}
+                >
+                  {content}
+                </button>
+              )
+            }
+
+            return (
+              <div key={name} className={`progress-step ${state}`}>
+                {content}
               </div>
             )
           })}

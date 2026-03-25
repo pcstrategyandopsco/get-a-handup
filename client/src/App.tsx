@@ -50,7 +50,7 @@ export function App() {
   const [signedDoc, setSignedDoc] = useState<SignedDocument | null>(null)
 
   const triageMode = getTriageMode(intake.answers)
-  const assessmentUnlocked = intake.isComplete
+  const assessmentUnlocked = engine.results.length > 0 || intake.isComplete
   const documentUnlocked = signedDoc !== null
 
   const handleSaveProgress = useCallback(() => {
@@ -90,6 +90,11 @@ export function App() {
     reader.readAsText(file)
   }, [intake.loadScenario])
 
+  const handleSectionClick = useCallback((sectionIndex: number) => {
+    intake.jumpToSection(sectionIndex)
+    setScreen('intake')
+  }, [intake.jumpToSection])
+
   const handleContinueFullAssessment = useCallback(() => {
     intake.continueFullAssessment()
     setScreen('intake')
@@ -108,6 +113,8 @@ export function App() {
         currentSectionIndex={intake.currentSectionIndex}
         isComplete={intake.isComplete}
         results={engine.results}
+        onSectionClick={handleSectionClick}
+        answeredQuestions={intake.answeredQuestions}
       />
       <main>
         <ScreenTabs
@@ -134,6 +141,9 @@ export function App() {
               onContinueFullAssessment={handleContinueFullAssessment}
               answers={intake.answers}
               transitionAnalysis={transition.analysis}
+              intakeComplete={intake.isComplete}
+              intakeProgress={intake.progress}
+              onReturnToIntake={() => setScreen('intake')}
             />
           )}
           {screen === 'document' && signedDoc && (

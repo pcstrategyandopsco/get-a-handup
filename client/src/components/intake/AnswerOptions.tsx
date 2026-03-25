@@ -4,11 +4,22 @@ import type { Question } from '../../engine/questions'
 type Props = {
   question: Question
   onAnswer: (value: unknown) => void
+  existingAnswer?: unknown
 }
 
-export function AnswerOptions({ question, onAnswer }: Props) {
-  const [inputValue, setInputValue] = useState('')
-  const [selected, setSelected] = useState<Set<string>>(new Set())
+export function AnswerOptions({ question, onAnswer, existingAnswer }: Props) {
+  const [inputValue, setInputValue] = useState(() => {
+    if (existingAnswer === undefined) return ''
+    if (question.type === 'number') return String(existingAnswer)
+    if (question.type === 'text') return String(existingAnswer)
+    return ''
+  })
+  const [selected, setSelected] = useState<Set<string>>(() => {
+    if (existingAnswer !== undefined && question.type === 'multi-choice' && Array.isArray(existingAnswer)) {
+      return new Set(existingAnswer as string[])
+    }
+    return new Set()
+  })
 
   if (question.type === 'multi-choice') {
     const options = question.options ?? []
@@ -58,7 +69,7 @@ export function AnswerOptions({ question, onAnswer }: Props) {
         {options.map(opt => (
           <button
             key={opt}
-            className="answer-btn"
+            className={`answer-btn${existingAnswer === opt ? ' selected' : ''}`}
             onClick={() => onAnswer(opt)}
           >
             {opt}

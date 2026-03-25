@@ -26,10 +26,13 @@ eligibility:
     - "Cannot receive alongside a main WINZ benefit"
     - "12% repayment rate on income above $22,828/year after study"
     - "Interest-free while living in NZ"
+    - "Must be at a TEC-approved provider in a recognised programme (NZQA or Universities NZ)"
+    - "Not available if aged 55 or older at study start"
+    - "Entitlement not claimed is lost — cannot be backdated"
 rates:
   effective: "2026-04-01"
-  max_weekly: "$316.98"
-  notes: "Fixed weekly rate. Paid directly to student's bank account."
+  max_weekly: "$323.43"
+  notes: "Weekly maximum as at 1 April 2025. Source: MAP."
 income_test:
   applies: false
   description: "No income test for loan eligibility, but borrowing adds to total debt."
@@ -45,5 +48,7 @@ friction:
     - "Students not always informed this creates a debt obligation"
     - "Living costs amount may not cover actual living expenses"
     - "Repayment obligations begin when earning above threshold, regardless of whether study is complete"
+    - "Not all providers or courses qualify — check StudyLink course eligibility before committing"
+    - "Some private training establishments are not approved for Student Loan funding"
   deflection_patterns:
     - "Students discouraged from borrowing without full explanation of interest-free terms within NZ"

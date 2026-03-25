@@ -182,6 +182,10 @@ expected_entitlements:
     # threshold... actually 73% is above). TODO: add benefit hierarchy rules
     # so lower-tier benefits don't surface when already on a higher tier.
 
+crisis_expected:
+  is_crisis: false
+  crisis_tab: false
+
 notes:
   - >
     STATUTE: SLP is under s40 SSA 2018 (Subpart 4 — main benefits). DA
